@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\Task1_Items.csproj": {}
+    "f:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\Task1_Items.csproj": {}
   },
   "projects": {
-    "F:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\Task1_Items.csproj": {
+    "f:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\Task1_Items.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\Task1_Items.csproj",
+        "projectUniqueName": "f:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\Task1_Items.csproj",
         "projectName": "Task1_Items",
-        "projectPath": "F:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\Task1_Items.csproj",
+        "projectPath": "f:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\Task1_Items.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "F:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\obj\\",
+        "outputPath": "f:\\UnityProjects\\Learn\\HelpLearn\\Task1_Items\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
