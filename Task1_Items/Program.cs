@@ -13,8 +13,8 @@ var fight = new Fight();
 Console.WriteLine("To start fight press Enter");
 
 var fighters = new Fighter[2] { player, enemy };
-int currentIndex = -1;
-int nextIndex = (currentIndex + 1) % fighters.Length;
+
+Fighter currentFighter = player;
 
 while (player.HP > 0 && enemy.HP > 0)
 {
@@ -23,24 +23,16 @@ while (player.HP > 0 && enemy.HP > 0)
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);
         if (keyInfo.Key == ConsoleKey.Enter)
         {
-            currentIndex = nextIndex;
-            nextIndex = fight.MakeTurn(fighters, currentIndex);
+            currentFighter = player;
+            fight.MakeMove(player, enemy);
+            fight.ShowFightersInfo(player, enemy);
 
-            //currentFighter = fighters[currentIndex];
-            //nextFighter = fighters[nextIndex];
-
-            //Console.WriteLine();
-            //Console.WriteLine($"{currentFighter.Name} attacks {nextFighter.Name}");
-
-            //currentFighter.MakeDamage(nextFighter);
-
-            //Console.WriteLine($"{player.Name}: HP = {player.HP}, damage = {player.Damage}");
-            //Console.WriteLine($"{enemy.Name}: HP = {enemy.HP}, damage = {enemy.Damage}");
-
-            //currentIndex = nextIndex;
-            //nextIndex = (currentIndex + 1) % fighters.Length;
-
-            //Console.WriteLine("press Enter to go to a next step");
+            if (enemy.HP > 0)
+            {
+                currentFighter = enemy;
+                fight.MakeMove(enemy, player);
+                fight.ShowFightersInfo(player, enemy);
+            }
         }
 
         else if (keyInfo.Key == ConsoleKey.Q)
@@ -51,5 +43,5 @@ while (player.HP > 0 && enemy.HP > 0)
     }
 }
 
-Console.WriteLine($"{fighters[currentIndex].Name} win! Game end");
+Console.WriteLine($"{currentFighter.Name} win! Game end");
 return;

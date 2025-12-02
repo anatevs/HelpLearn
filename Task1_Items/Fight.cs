@@ -1,32 +1,21 @@
 ﻿namespace Task1_Items
 {
-    public class Fight
+    public sealed class Fight
     {
-        public int MakeTurn(Fighter[] fighters, int currentIndex)
+        public void MakeMove(Fighter activeFighter, Fighter passiveFighter)
         {
-            var nextIndex = (currentIndex + 1) % fighters.Length;
-
-            var currentFighter = fighters[currentIndex];
-            var nextFighter = fighters[nextIndex];
-
             Console.WriteLine();
-            Console.WriteLine($"{currentFighter.Name} attacks {nextFighter.Name}");
+            Console.WriteLine($"{activeFighter.Name} attacks {passiveFighter.Name}");
 
-            currentFighter.MakeDamage(nextFighter);
-
-            ShowFightersInfo(fighters);
+            activeFighter.MakeDamage(passiveFighter);
 
             Console.WriteLine("press Enter to go to a next step");
-
-            return nextIndex;
         }
 
-        private void ShowFightersInfo(Fighter[] fighters)
+        public void ShowFightersInfo(Fighter fighter1, Fighter fighter2)
         {
-            foreach ( Fighter fighter in fighters)
-            {
-                Console.WriteLine($"{fighter.Name}: HP = {fighter.HP}, damage = {fighter.Damage}");
-            }
+            fighter1.ShowFighterInfo();
+            fighter2.ShowFighterInfo();
         }
     }
 }

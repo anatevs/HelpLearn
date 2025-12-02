@@ -39,5 +39,10 @@
             Console.WriteLine($"{_name} has been killed");
         }
 
+
+        public void ShowFighterInfo()
+        {
+            Console.WriteLine($"{Name}: HP = {HP}, damage = {Damage}");
+        }
     }
 }
