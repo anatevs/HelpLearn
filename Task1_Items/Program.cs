@@ -2,7 +2,6 @@
 using Task1_Items;
 
 Console.WriteLine("Game start!");
-Console.WriteLine("To stop the game press q");
 
 var player = new Player("Player", 10, 2);
 
@@ -10,36 +9,41 @@ var enemy = new Enemy("Enemy", 6, 1);
 
 var fight = new Fight();
 
-Console.WriteLine("To start fight press Enter");
+string[] optionsKeys = [ "1", "q" ];
 
-var fighters = new Fighter[2] { player, enemy };
+var gameUI = new GameUI();
+
+gameUI.AddOption(optionsKeys[0], "Attack the enemy");
+gameUI.AddOption(optionsKeys[^1], "Quit");
+
+gameUI.ShowOptions();
 
 Fighter currentFighter = player;
 
 while (player.HP > 0 && enemy.HP > 0)
 {
-    if (Console.KeyAvailable)
+    gameUI.ShowOptions();
+
+    var pressKey = Console.ReadLine();
+
+    if (pressKey == optionsKeys[0])
     {
-        ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-        if (keyInfo.Key == ConsoleKey.Enter)
+        currentFighter = player;
+        fight.MakeMove(player, enemy);
+        fight.ShowFightersInfo(player, enemy);
+
+        if (enemy.HP > 0)
         {
-            currentFighter = player;
-            fight.MakeMove(player, enemy);
+            currentFighter = enemy;
+            fight.MakeMove(enemy, player);
             fight.ShowFightersInfo(player, enemy);
-
-            if (enemy.HP > 0)
-            {
-                currentFighter = enemy;
-                fight.MakeMove(enemy, player);
-                fight.ShowFightersInfo(player, enemy);
-            }
         }
+    }
 
-        else if (keyInfo.Key == ConsoleKey.Q)
-        {
-            Console.WriteLine("The game stopped");
-            return;
-        }
+    else if (pressKey == "q")
+    {
+        Console.WriteLine("The game stopped");
+        return;
     }
 }
 
