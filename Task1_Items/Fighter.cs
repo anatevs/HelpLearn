@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Task1_Items
+﻿namespace Task1_Items
 {
-    public class Fighter :
+    public abstract class Fighter :
         IDamagable,
         IAttacker
     {
