@@ -9,18 +9,19 @@ var enemy = new Enemy("Enemy", 6, 1);
 
 var fight = new Fight();
 
-string[] optionsKeys = [ "1", "q" ];
+var weapon = new WeaponItem("weapon1", 1);
+
+string[] optionsKeys = [ "1", "2", "q" ];
 
 var gameUI = new GameUI();
 
 gameUI.AddOption(optionsKeys[0], "Attack the enemy");
+gameUI.AddOption(optionsKeys[1], "Take weapon");
 gameUI.AddOption(optionsKeys[^1], "Quit");
-
-gameUI.ShowOptions();
 
 Fighter currentFighter = player;
 
-while (player.HP > 0 && enemy.HP > 0)
+while (player.HP > 0)
 {
     gameUI.ShowOptions();
 
@@ -38,6 +39,21 @@ while (player.HP > 0 && enemy.HP > 0)
             fight.MakeMove(enemy, player);
             fight.ShowFightersInfo(player, enemy);
         }
+        else
+        {
+            //enemy killed
+            break;
+        }
+    }
+
+    else if (pressKey == optionsKeys[1])
+    {
+        weapon.Use(player);
+
+
+        currentFighter = enemy;
+        fight.MakeMove(enemy, player);
+        fight.ShowFightersInfo(player, enemy);
     }
 
     else if (pressKey == "q")
@@ -47,5 +63,6 @@ while (player.HP > 0 && enemy.HP > 0)
     }
 }
 
+Console.WriteLine();
 Console.WriteLine($"{currentFighter.Name} win! Game end");
 return;

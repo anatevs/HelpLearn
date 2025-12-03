@@ -2,7 +2,7 @@
 {
     public interface IAttacker
     {
-        public int Damage { get; set; }
+        public int Damage { get; }
 
         public void MakeDamage(IDamagable target);
     }

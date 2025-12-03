@@ -7,26 +7,26 @@
         public string Name => _name;
 
         public int HP { get => _hp; set => _hp = Math.Max(0, value); }
-        public int Damage { get => _damage; set => _damage = Math.Max(0, value); }
+        public virtual int Damage => _damage;
 
         private readonly string _name;
 
-        private int _hp;
+        protected int _hp;
 
-        private int _damage;
+        protected int _damage;
 
         public Fighter(string name, int hp, int damage)
         {
             _name = name;
             HP = hp;
-            Damage = damage;
+            _damage = damage;
 
             Console.WriteLine($"{_name} has been created. It has {HP} hp and {Damage} damage");
         }
 
-        public void MakeDamage(IDamagable target)
+        public virtual void MakeDamage(IDamagable target)
         {
-            target.HP -= _damage;
+            target.HP -= Damage;
 
             if (target.HP == 0)
             {
@@ -36,7 +36,7 @@
 
         public void Kill()
         {
-            Console.WriteLine($"{_name} has been killed");
+            Console.WriteLine($"{Name} has been killed");
         }
 
 
