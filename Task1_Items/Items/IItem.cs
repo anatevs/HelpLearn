@@ -4,6 +4,8 @@
     {
         public string Name { get; }
 
+        public float Cost { get; }
+
         public void Use(Player player);
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task1_Items
+namespace Task1_Items.Items
 {
     public abstract class PotionItem :
         Item,
@@ -12,7 +12,7 @@ namespace Task1_Items
     {
         protected int _hpPower;
 
-        public PotionItem(string name) : base(name)
+        public PotionItem(string name, float cost) : base(name, cost)
         {
             
         }

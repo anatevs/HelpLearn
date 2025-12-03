@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Task1_Items;
+using Task1_Items.Items;
 
 Console.WriteLine("Game start!");
 
@@ -9,7 +10,7 @@ var enemy = new Enemy("Enemy", 6, 1);
 
 var fight = new Fight();
 
-var weapon = new WeaponItem("weapon1", 1);
+var weapon = new WeaponItem("weapon1", 10, 1);
 
 string[] optionsKeys = [ "1", "2", "q" ];
 

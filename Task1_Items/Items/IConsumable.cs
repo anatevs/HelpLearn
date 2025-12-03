@@ -1,4 +1,4 @@
-﻿namespace Task1_Items
+﻿namespace Task1_Items.Items
 {
     public interface IConsumable
     {

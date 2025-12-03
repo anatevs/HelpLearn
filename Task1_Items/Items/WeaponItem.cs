@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Task1_Items
+namespace Task1_Items.Items
 {
     public class WeaponItem : Item,
         IArming
     {
         private readonly int _damage;
 
-        public WeaponItem(string name, int damage)
-            : base(name)
+        public WeaponItem(string name, float cost, int damage)
+            : base(name, cost)
         {
             _damage = damage;
         }
