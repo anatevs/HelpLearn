@@ -2,6 +2,8 @@
 {
     public class Player : Fighter
     {
+        public event Action? OnStriked;
+
         public override int Damage => _damage + _weaponDamage;
 
         public int WeaponDamage => _weaponDamage;
@@ -17,6 +19,13 @@
         public void AddWeaponDamage(int damage)
         {
             _weaponDamage = damage;
+        }
+
+        public override void Strike(IDamagable target)
+        {
+            base.Strike(target);
+
+            OnStriked?.Invoke();
         }
     }
 }

@@ -24,7 +24,7 @@
             Console.WriteLine($"{_name} has been created. It has {HP} hp and {Damage} damage");
         }
 
-        public virtual void MakeDamage(IDamagable target)
+        public virtual void Strike(IDamagable target)
         {
             target.HP -= Damage;
 

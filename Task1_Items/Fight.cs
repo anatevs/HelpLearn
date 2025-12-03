@@ -7,7 +7,7 @@
             Console.WriteLine();
             Console.WriteLine($"{activeFighter.Name} attacks {passiveFighter.Name}");
 
-            activeFighter.MakeDamage(passiveFighter);
+            activeFighter.Strike(passiveFighter);
 
             Console.WriteLine("press Enter to go to a next step");
         }

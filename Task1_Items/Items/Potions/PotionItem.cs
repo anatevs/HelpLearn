@@ -12,9 +12,9 @@ namespace Task1_Items.Items
     {
         protected int _hpPower;
 
-        public PotionItem(string name, float cost) : base(name, cost)
+        public PotionItem(string name, float cost, int hpPower) : base(name, cost)
         {
-            
+            _hpPower = hpPower;
         }
 
         public override void Use(Player player)

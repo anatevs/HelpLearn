@@ -4,6 +4,6 @@
     {
         public int Damage { get; }
 
-        public void MakeDamage(IDamagable target);
+        public void Strike(IDamagable target);
     }
 }
