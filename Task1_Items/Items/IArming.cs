@@ -4,6 +4,6 @@
     {
         public void Equip(Player player);
 
-        public void Disarm(Player player);
+        public void Disarm();
     }
 }

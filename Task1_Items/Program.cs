@@ -14,13 +14,16 @@ var weapon = new WeaponItem("weapon1", 10, 1);
 
 var potion = new HPPotion("HPPotion", 5, 3);
 
+var boostPotion = new BoostPotion("BoostPotion", 6, 2, 1, 2);
+
 string[] optionsKeys = [ "1", "2", "3", "q" ];
 
 var gameUI = new GameUI();
 
 gameUI.AddOption(optionsKeys[0], "Attack the enemy");
-gameUI.AddOption(optionsKeys[1], "Take weapon");
-gameUI.AddOption(optionsKeys[2], "Drink potion");
+gameUI.AddOption(optionsKeys[1], "Drink potion");
+gameUI.AddOption(optionsKeys[2], "Take weapon");
+gameUI.AddOption(optionsKeys[3], "Change active potion");
 gameUI.AddOption(optionsKeys[^1], "Quit");
 
 Fighter currentFighter = player;
@@ -50,7 +53,7 @@ while (player.HP > 0)
         }
     }
 
-    else if (pressKey == optionsKeys[1])
+    else if (pressKey == optionsKeys[2])
     {
         weapon.Use(player);
 
@@ -60,9 +63,9 @@ while (player.HP > 0)
         fight.ShowFightersInfo(player, enemy);
     }
 
-    else if (pressKey == optionsKeys[2])
+    else if (pressKey == optionsKeys[1])
     {
-        potion.Use(player);
+        boostPotion.Use(player);
 
         currentFighter = enemy;
         fight.MakeMove(enemy, player);

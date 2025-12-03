@@ -4,11 +4,9 @@
     {
         public event Action? OnStriked;
 
-        public override int Damage => _damage + _weaponDamage;
+        public override int Damage => _damage + _addDamage;
 
-        public int WeaponDamage => _weaponDamage;
-
-        private int _weaponDamage;
+        private int _addDamage;
 
         public Player(string name, int hp, int damage)
             : base(name, hp, damage)
@@ -16,9 +14,9 @@
 
         }
 
-        public void AddWeaponDamage(int damage)
+        public void AddDamage(int damage)
         {
-            _weaponDamage = damage;
+            _addDamage += damage;
         }
 
         public override void Strike(IDamagable target)

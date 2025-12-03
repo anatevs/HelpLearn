@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Task1_Items.Items
+﻿namespace Task1_Items.Items
 {
     public abstract class PotionItem :
         Item,
@@ -24,7 +18,7 @@ namespace Task1_Items.Items
             ShowUseMessage(player);
         }
 
-        public void Consume(Player player)
+        public virtual void Consume(Player player)
         {
             player.HP += _hpPower;
         }
