@@ -6,7 +6,7 @@
     {
         public string Name => _name;
 
-        public int HP { get => _hp; set => _hp = Math.Max(0, value); }
+        public int HP { get => _hp; private set => _hp = Math.Max(0, value); }
         public virtual int Damage => _damage;
 
         private readonly string _name;
@@ -24,25 +24,42 @@
             Console.WriteLine($"{_name} has been created. It has {HP} hp and {Damage} damage");
         }
 
-        public virtual void Strike(IDamagable target)
+        public virtual void GetDamage(int damage)
         {
-            target.HP -= Damage;
+            HP -= damage;
 
-            if (target.HP == 0)
+            Console.WriteLine();
+            Console.WriteLine($"{_name} health -{damage}");
+
+            if (HP == 0)
             {
-                target.Kill();
+                Kill();
             }
+        }
+
+        public virtual void Heal(int hp)
+        {
+            HP += hp;
+
+            Console.WriteLine($"{_name} health +{hp}");
+        }
+
+        public virtual void Attack(Fighter target)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"{_name} attacks {target.Name}");
+
+            target.GetDamage(Damage);
         }
 
         public void Kill()
         {
-            Console.WriteLine($"{Name} has been killed");
+            Console.WriteLine($"{_name} has been killed");
         }
-
 
         public void ShowFighterInfo()
         {
-            Console.WriteLine($"{Name}: HP = {HP}, damage = {Damage}");
+            Console.WriteLine($"{_name}: HP = {HP}, damage = {Damage}");
         }
     }
 }

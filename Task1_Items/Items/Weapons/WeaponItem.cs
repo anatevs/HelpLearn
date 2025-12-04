@@ -15,19 +15,19 @@
 
         public override void Use(Player player)
         {
-            Disarm();
+            Disarm(player);
 
             Equip(player);
         }
 
-        public virtual void Disarm()
+        public virtual void Disarm(Player player)
         {
-            if (_player != null)
+            if (_player == player)
             {
                 _player.AddDamage(-_damage);
 
                 Console.WriteLine();
-                Console.WriteLine($"{_name} was disarmed, -{_damage} damage from {_player.Name}");
+                Console.WriteLine($"{_name} was unarmed, -{_damage} damage for {_player.Name}");
 
                 _player = null;
             }
@@ -40,7 +40,7 @@
             player.AddDamage(_damage);
 
             Console.WriteLine();
-            Console.WriteLine($"{_name} was equiped, +{_damage} damage to {player.Name}");
+            Console.WriteLine($"{_name} was equiped, +{_damage} damage for {player.Name}");
         }
     }
 }

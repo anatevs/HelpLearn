@@ -20,13 +20,13 @@
 
         public virtual void Consume(Player player)
         {
-            player.HP += _hpPower;
+            player.Heal(_hpPower);
         }
 
         protected virtual void ShowUseMessage(Player player)
         {
             Console.WriteLine();
-            Console.WriteLine($"{_name} has been used, {player.Name} health +{_hpPower}");
+            Console.WriteLine($"{_name} has been used");
         }
     }
 }

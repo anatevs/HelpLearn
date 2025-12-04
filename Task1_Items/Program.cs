@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Task1_Items;
+using Task1_Items.Commands;
 using Task1_Items.Items;
 
 Console.WriteLine("Game start!");
@@ -16,17 +17,25 @@ var potion = new HPPotion("HPPotion", 5, 3);
 
 var boostPotion = new BoostPotion("BoostPotion", 6, 2, 1, 2);
 
-string[] optionsKeys = [ "1", "2", "3", "q" ];
+string[] optionsKeys = [ "1", "2", "3", "4", "5", "q" ];
 
-var gameUI = new GameUI();
+var gameUI = new CommandsController();
 
-gameUI.AddOption(optionsKeys[0], "Attack the enemy");
-gameUI.AddOption(optionsKeys[1], "Drink potion");
-gameUI.AddOption(optionsKeys[2], "Take weapon");
-gameUI.AddOption(optionsKeys[3], "Change active potion");
-gameUI.AddOption(optionsKeys[^1], "Quit");
+Fighter winFighter = player;
 
-Fighter currentFighter = player;
+var cm0 = new PlayerAttackCommand(player, enemy);
+var cm1 = new DrinkPotionCommand(player, enemy, potion);
+var cm2 = new TakeWeaponCommand(player, weapon);
+
+var cm4 = new ShowStateCommand(player, enemy);
+var cm5 = new ExitGameCommand();
+
+gameUI.AddOption(optionsKeys[0], cm0);
+gameUI.AddOption(optionsKeys[1], cm1);
+gameUI.AddOption(optionsKeys[2], cm2);
+
+gameUI.AddOption(optionsKeys[4], cm4);
+gameUI.AddOption(optionsKeys[5], cm5);
 
 while (player.HP > 0)
 {
@@ -34,51 +43,20 @@ while (player.HP > 0)
 
     var pressKey = Console.ReadLine();
 
-    if (pressKey == optionsKeys[0])
+    if (pressKey == null || !gameUI.InvokeOption(pressKey))
     {
-        currentFighter = player;
-        fight.MakeMove(player, enemy);
-        fight.ShowFightersInfo(player, enemy);
-
-        if (enemy.HP > 0)
-        {
-            currentFighter = enemy;
-            fight.MakeMove(enemy, player);
-            fight.ShowFightersInfo(player, enemy);
-        }
-        else
-        {
-            //enemy killed
-            break;
-        }
+        Console.WriteLine("Wrong option number entered");
     }
 
-    else if (pressKey == optionsKeys[2])
+    winFighter = enemy;
+
+    if (enemy.HP == 0)
     {
-        weapon.Use(player);
-
-
-        currentFighter = enemy;
-        fight.MakeMove(enemy, player);
-        fight.ShowFightersInfo(player, enemy);
-    }
-
-    else if (pressKey == optionsKeys[1])
-    {
-        boostPotion.Use(player);
-
-        currentFighter = enemy;
-        fight.MakeMove(enemy, player);
-        fight.ShowFightersInfo(player, enemy);
-    }
-
-    else if (pressKey == "q")
-    {
-        Console.WriteLine("The game stopped");
-        return;
+        winFighter = player;
+        break;
     }
 }
 
 Console.WriteLine();
-Console.WriteLine($"{currentFighter.Name} win! Game end");
+Console.WriteLine($"{winFighter.Name} win! Game end");
 return;

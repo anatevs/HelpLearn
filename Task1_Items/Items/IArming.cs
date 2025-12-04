@@ -1,9 +1,9 @@
 ﻿namespace Task1_Items.Items
 {
-    internal interface IArming
+    public interface IArming
     {
         public void Equip(Player player);
 
-        public void Disarm();
+        public void Disarm(Player player);
     }
 }

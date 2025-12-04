@@ -1,8 +1,10 @@
-﻿namespace Task1_Items
+﻿using Task1_Items.Items;
+
+namespace Task1_Items
 {
     public class Player : Fighter
     {
-        public event Action? OnStriked;
+        public event Action? OnAttacked;
 
         public override int Damage => _damage + _addDamage;
 
@@ -19,11 +21,26 @@
             _addDamage += damage;
         }
 
-        public override void Strike(IDamagable target)
+        public override void Attack(Fighter target)
         {
-            base.Strike(target);
+            base.Attack(target);
 
-            OnStriked?.Invoke();
+            OnAttacked?.Invoke();
+        }
+
+        public void ConsumeItem(IConsumable item)
+        {
+            item.Consume(this);
+        }
+
+        public void EquipItem(IArming item)
+        {
+            item.Equip(this);
+        }
+
+        public void DisarmItem(IArming item)
+        {
+            item.Disarm(this);
         }
     }
 }

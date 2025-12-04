@@ -4,12 +4,7 @@
     {
         public void MakeMove(Fighter activeFighter, Fighter passiveFighter)
         {
-            Console.WriteLine();
-            Console.WriteLine($"{activeFighter.Name} attacks {passiveFighter.Name}");
-
-            activeFighter.Strike(passiveFighter);
-
-            Console.WriteLine("press Enter to go to a next step");
+            activeFighter.Attack(passiveFighter);
         }
 
         public void ShowFightersInfo(Fighter fighter1, Fighter fighter2)

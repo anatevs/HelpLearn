@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Task1_Items.Items
+﻿namespace Task1_Items.Items
 {
     internal class BoostPotion : PotionItem,
         IDisposable
@@ -32,16 +26,16 @@ namespace Task1_Items.Items
             _player = player;
             _boostedCount = 0;
             _player.AddDamage(_boostDamage);
-            _player.OnStriked += MakeOnStrike;
+            _player.OnAttacked += MakeOnAttack;
         }
 
-        private void MakeOnStrike()
+        private void MakeOnAttack()
         {
             _boostedCount++;
 
             if (_boostedCount >= _boostTimes && _player != null)
             {
-                _player.OnStriked -= MakeOnStrike;
+                _player.OnAttacked -= MakeOnAttack;
                 _player.AddDamage(-_boostDamage);
             }
         }
@@ -50,7 +44,7 @@ namespace Task1_Items.Items
         {
             if (_player != null)
             {
-                _player.OnStriked -= MakeOnStrike;
+                _player.OnAttacked -= MakeOnAttack;
             }
         }
     }
