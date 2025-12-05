@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Task1_Items.Commands;
-using Task1_Items.Items;
+﻿using Task1_Items.Items;
 
 namespace Task1_Items.Commands
 {

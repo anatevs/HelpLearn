@@ -8,12 +8,15 @@ namespace Task1_Items
 
         public override int Damage => _damage + _addDamage;
 
-        private int _addDamage;
+        private readonly ItemsStorage<WeaponItem> _weaponsStorage;
 
-        public Player(string name, int hp, int damage)
+        private int _addDamage = 0;
+
+        public Player(string name, int hp, int damage,
+            ItemsStorage<WeaponItem> weaponsStorage)
             : base(name, hp, damage)
         {
-
+            _weaponsStorage = weaponsStorage;
         }
 
         public void AddDamage(int damage)
@@ -28,19 +31,20 @@ namespace Task1_Items
             OnAttacked?.Invoke();
         }
 
-        public void ConsumeItem(IConsumable item)
+        public void UseItem(IItem item)
         {
-            item.Consume(this);
+            item.Use(this);
         }
 
-        public void EquipItem(IArming item)
+        public void SetCurrentWeapon(WeaponItem weapon)
         {
-            item.Equip(this);
+            _weaponsStorage.CurrentActive = weapon;
         }
 
-        public void DisarmItem(IArming item)
+        public void Disarm()
         {
-            item.Disarm(this);
+            _weaponsStorage.CurrentActive?.Disarm(this);
+            _weaponsStorage.CurrentActive = null;
         }
     }
 }

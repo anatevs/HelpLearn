@@ -1,6 +1,4 @@
-﻿using Task1_Items.Commands;
-
-namespace Task1_Items
+﻿namespace Task1_Items.Commands
 {
     public class CommandsController
 

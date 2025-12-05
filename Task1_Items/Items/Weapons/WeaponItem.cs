@@ -5,8 +5,6 @@
     {
         private readonly int _damage;
 
-        private Player? _player;
-
         public WeaponItem(string name, float cost, int damage)
             : base(name, cost)
         {
@@ -15,28 +13,22 @@
 
         public override void Use(Player player)
         {
-            Disarm(player);
+            player.Disarm();
 
             Equip(player);
         }
 
         public virtual void Disarm(Player player)
         {
-            if (_player == player)
-            {
-                _player.AddDamage(-_damage);
+            player.AddDamage(-_damage);
 
-                Console.WriteLine();
-                Console.WriteLine($"{_name} was unarmed, -{_damage} damage for {_player.Name}");
-
-                _player = null;
-            }
+            Console.WriteLine();
+            Console.WriteLine($"{_name} was unarmed, -{_damage} damage for {player.Name}");
         }
 
         public virtual void Equip(Player player)
         {
-            _player = player;
-
+            player.SetCurrentWeapon(this);
             player.AddDamage(_damage);
 
             Console.WriteLine();

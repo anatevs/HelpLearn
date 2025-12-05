@@ -6,29 +6,25 @@ namespace Task1_Items.Commands
     {
         private readonly Player _player;
         private readonly Enemy _enemy;
-        private PotionItem _potion;
+        private readonly ItemsStorage<PotionItem> _storage;
 
-        public DrinkPotionCommand(Player player, Enemy enemy, PotionItem potion)
+        public DrinkPotionCommand(Player player, Enemy enemy,
+            ItemsStorage<PotionItem> storage)
         {
             _name = "Drink potion";
 
             _player = player;
             _enemy = enemy;
-            _potion = potion;
+            _storage = storage;
         }
 
         public override void Execute()
         {
             base.Execute();
 
-            _potion.Use(_player);
+            _storage.CurrentActive?.Use(_player);
 
             _enemy.Attack(_player);
-        }
-
-        public void ChangePotion(PotionItem potion)
-        {
-            _potion = potion;
         }
     }
 }
