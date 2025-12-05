@@ -17,5 +17,7 @@
         }
 
         public abstract void Use(Player player);
+
+        public abstract IItem Clone();
     }
 }

@@ -8,8 +8,6 @@ namespace Task1_Items.Commands
             : base(player, storage)
         {
             _name = "Select active potion";
-
-            _storage.CurrentActive = _storage.Items[0];
         }
 
         protected override GameCommand CreateCommand(PotionItem item)

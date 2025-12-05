@@ -5,7 +5,7 @@ namespace Task1_Items.Commands
     public class TakePotionCommand : GameCommand
     {
         private readonly PotionItem _potion;
-        private readonly ItemsStorage<PotionItem> _storage;
+        private readonly ItemsStorage<PotionItem> _potionsStorage;
 
         public TakePotionCommand(PotionItem potion,
             ItemsStorage<PotionItem> storage)
@@ -13,12 +13,12 @@ namespace Task1_Items.Commands
             _name = $"Set active potion {potion.Name}";
 
             _potion = potion;
-            _storage = storage;
+            _potionsStorage = storage;
         }
 
         public override void Execute()
         {
-            _storage.CurrentActive = _potion;
+            _potionsStorage.CurrentActive = _potion;
         }
     }
 }

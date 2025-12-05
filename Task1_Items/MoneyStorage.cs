@@ -11,16 +11,19 @@
             _money = initMoney;
         }
 
-        public bool IsEnoughMoney(float price)
+        public bool TryChangeMoney(float amount)
         {
-            return _money >= price;
-        }
+            if (amount < 0 && _money < -amount)
+            {
+                Console.WriteLine($"Not enough money: price = {-amount}, money = {_money}");
+                return false;
+            }
 
-        public void ChangeMoney(float amount)
-        {
             _money += amount;
 
-            Console.WriteLine($"{_money} money in storage");
+            Console.WriteLine($"Money changed; {_money} money in storage");
+
+            return true;
         }
     }
 }

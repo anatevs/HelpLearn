@@ -19,6 +19,11 @@
             _boostTimes = lifetimeTimes;
         }
 
+        public override BoostPotion Clone()
+        {
+            return new BoostPotion(_name, _cost, _hpPower, _boostDamage, _boostTimes);
+        }
+
         public override void Consume(Player player)
         {
             base.Consume(player);

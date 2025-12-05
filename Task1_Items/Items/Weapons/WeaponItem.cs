@@ -18,6 +18,11 @@
             Equip(player);
         }
 
+        public override WeaponItem Clone()
+        {
+            return new WeaponItem(_name, _cost, _damage);
+        }
+
         public virtual void Disarm(Player player)
         {
             player.AddDamage(-_damage);

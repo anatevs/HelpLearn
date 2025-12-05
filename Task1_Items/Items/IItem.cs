@@ -7,5 +7,7 @@
         public float Cost { get; }
 
         public void Use(Player player);
+
+        public IItem Clone();
     }
 }

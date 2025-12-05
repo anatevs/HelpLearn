@@ -6,5 +6,10 @@
         {
             
         }
+
+        public override PotionItem Clone()
+        {
+            return new HPPotion(_name, _cost, _hpPower);
+        }
     }
 }

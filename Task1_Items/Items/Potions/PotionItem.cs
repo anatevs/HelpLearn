@@ -1,6 +1,6 @@
 ﻿namespace Task1_Items.Items
 {
-    public abstract class PotionItem :
+    public class PotionItem :
         Item,
         IConsumable
     {
@@ -16,6 +16,11 @@
             Consume(player);
 
             ShowUseMessage(player);
+        }
+
+        public override PotionItem Clone()
+        {
+            return new PotionItem(_name, _cost, _hpPower);
         }
 
         public virtual void Consume(Player player)
