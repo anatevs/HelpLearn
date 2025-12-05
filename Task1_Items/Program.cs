@@ -22,7 +22,21 @@ var moneyStorage = new MoneyStorage(10);
 
 var player = new Player("Player", 10, 2, weaponsStorage, moneyStorage);
 
-var enemy = new Enemy("Enemy", 10, 1, 5);
+
+var enemies = new Queue<Enemy>();
+
+var enemiesController = new EnemiesController();
+
+enemiesController.AddEnemy(new Enemy("Enemy-dmg1-rw5", 10, 1, 5));
+enemiesController.AddEnemy(new Enemy("Enemy-dmg2-rw8", 20, 2, 8));
+enemiesController.AddEnemy(new Enemy("Enemy-dmg4-rw15", 10, 4, 15));
+
+if (!enemiesController.ChangeToNext())
+{
+    Console.WriteLine("no enemies in enemies controller!!");
+}
+
+var enemy = enemiesController.CurrentEnemy;
 
 string[] optionsKeys = [ "1", "2", "3", "4", "5", "q" ];
 
@@ -32,11 +46,11 @@ Fighter winFighter = player;
 
 
 
-var cm0 = new PlayerAttackCommand(player, enemy);
-var cm1 = new DrinkPotionCommand(player, enemy, potionsStorage);
+var cm0 = new PlayerAttackCommand(player, enemiesController);
+var cm1 = new DrinkPotionCommand(player, enemiesController, potionsStorage);
 var cm2 = new SelectWeaponCommand(player, weaponsStorage);
 var cm3 = new SelectPotionCommand(player, potionsStorage);
-var cm4 = new ShowStateCommand(player, enemy);
+var cm4 = new ShowStateCommand(player, enemiesController);
 var cm5 = new ExitGameCommand();
 
 gameCommands.AddOption(optionsKeys[0], cm0);
@@ -63,10 +77,13 @@ while (player.HP > 0)
     {
         enemy.Reward(player);
 
-        //setup new enemy - from enemy storage
+        if (!enemiesController.ChangeToNext())
+        {
+            winFighter = player;
+            break;
+        }
 
-        winFighter = player;
-        break;
+        enemy = enemiesController.CurrentEnemy;
     }
 }
 

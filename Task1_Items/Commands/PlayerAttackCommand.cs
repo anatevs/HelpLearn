@@ -3,25 +3,27 @@
     public class PlayerAttackCommand : GameCommand
     {
         private readonly Player _player;
-        private readonly Enemy _enemy;
+        private readonly EnemiesController _emiesController;
 
-        public PlayerAttackCommand(Player player, Enemy enemy)
+        public PlayerAttackCommand(Player player, EnemiesController enemiesController)
         {
             _name = "Attack the enemy";
 
             _player = player;
-            _enemy = enemy;
+            _emiesController = enemiesController;
         }
 
         public override void Execute()
         {
             base.Execute();
 
-            _player.Attack(_enemy);
+            var enemy = _emiesController.CurrentEnemy;
 
-            if (_enemy.HP > 0)
+            _player.Attack(enemy);
+
+            if (enemy.HP > 0)
             {
-                _enemy.Attack(_player);
+                enemy.Attack(_player);
             }
         }
     }

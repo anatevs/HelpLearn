@@ -15,6 +15,13 @@
 
         protected int _damage;
 
+        public Fighter()
+        {
+            _name = "Default fighter";
+            _hp = 0;
+            _damage = 0;
+        }
+
         public Fighter(string name, int hp, int damage)
         {
             _name = name;

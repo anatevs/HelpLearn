@@ -7,6 +7,11 @@
 
         private readonly float _rewardAmount;
 
+        public Enemy() : base()
+        {
+            _rewardAmount = 0;
+        }
+
         public Enemy(string name, int hp, int damage, float rewardAmount)
             : base(name, hp, damage)
         {

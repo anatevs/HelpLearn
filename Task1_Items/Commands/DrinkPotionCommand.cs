@@ -5,16 +5,16 @@ namespace Task1_Items.Commands
     public class DrinkPotionCommand : GameCommand
     {
         private readonly Player _player;
-        private readonly Enemy _enemy;
+        private readonly EnemiesController _enemiesController;
         private readonly ItemsStorage<PotionItem> _storage;
 
-        public DrinkPotionCommand(Player player, Enemy enemy,
+        public DrinkPotionCommand(Player player, EnemiesController enemiesController,
             ItemsStorage<PotionItem> storage)
         {
             _name = "Drink potion";
 
             _player = player;
-            _enemy = enemy;
+            _enemiesController = enemiesController;
             _storage = storage;
         }
 
@@ -24,7 +24,7 @@ namespace Task1_Items.Commands
 
             _storage.CurrentActive?.Use(_player);
 
-            _enemy.Attack(_player);
+            _enemiesController.CurrentEnemy.Attack(_player);
         }
     }
 }
