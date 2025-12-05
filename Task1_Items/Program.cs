@@ -49,6 +49,12 @@ potionsBuy.Add(new HPPotion("Potion-hp5", 5, 3));
 potionsBuy.Add(new BoostPotion("Potion-hp4-boost4x3", 15, 4, 4, 3));
 var potionsBuyStorage = new ItemsStorage<PotionItem>(potionsBuy);
 
+var weaponsBuy = new List<WeaponItem>();
+weaponsBuy.Add(new WeaponItem("Weapon-power20", 10, 20));
+weaponsBuy.Add(new WeaponItem("Weapon-power100", 50, 100));
+var weaponsBuyStorage = new ItemsStorage<WeaponItem>(weaponsBuy);
+
+
 
 var cm0 = new PlayerAttackCommand(player, enemiesController);
 var cm1 = new DrinkPotionCommand(player, enemiesController);
@@ -56,7 +62,7 @@ var cm2 = new SelectWeaponCommand(player, weaponsStorage);
 var cm3 = new SelectPotionCommand(player, potionsStorage);
 var cm4 = new ShowStateCommand(player, enemiesController);
 var cm5 = new ExitGameCommand();
-var cm6 = new SelectBuyPotionCommand(player, potionsBuyStorage);
+var cm6 = new SelectBuyItemCommand<PotionItem>(player, potionsBuyStorage, player.PotionsStorage, "potion");
 
 gameCommands.AddOption(optionsKeys[0], cm0);
 gameCommands.AddOption(optionsKeys[1], cm1);

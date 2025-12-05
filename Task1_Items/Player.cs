@@ -68,7 +68,7 @@ namespace Task1_Items
         {
             var baseString = base.GetInfoString();
 
-            return $"{baseString}, money = {_moneyStorage.Money}";
+            return $"{baseString}, money = {_moneyStorage.Money}, weapon: {_weaponsStorage.CurrentActive}, potion: {_potionsStorage.CurrentActive}";
         }
     }
 }

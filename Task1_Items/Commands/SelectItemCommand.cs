@@ -55,12 +55,15 @@ namespace Task1_Items.Commands
         protected void AddToOption(int number, T item)
         {
             var takeCommand = CreateCommand(item);
-            _commandsController.AddOption(number.ToString(), takeCommand);
+            if (takeCommand != null)
+            {
+                _commandsController.AddOption(number.ToString(), takeCommand);
+            }
         }
 
-        protected abstract GameCommand CreateCommand(T item);
+        protected abstract GameCommand? CreateCommand(T item);
 
-        private void FillOptionsList()
+        protected void FillOptionsList()
         {
             for (int i = 0; i < _storage.Items.Count; i++)
             {

@@ -18,6 +18,7 @@ namespace Task1_Items.Commands
 
         public override void Execute()
         {
+            Console.WriteLine($"{_potion.Name} is selected now");
             _potionsStorage.CurrentActive = _potion;
         }
     }
