@@ -1,9 +1,23 @@
 ﻿namespace Task1_Items
 {
-    public class Enemy : Fighter
+    public class Enemy : Fighter,
+        IRewarding
     {
-        public Enemy(string name, int hp, int damage) : base(name, hp, damage)
+        public float RewardAmount => _rewardAmount;
+
+        private readonly float _rewardAmount;
+
+        public Enemy(string name, int hp, int damage, float rewardAmount)
+            : base(name, hp, damage)
         {
+            _rewardAmount = rewardAmount;
+        }
+
+        public void Reward(Player player)
+        {
+            player.GetReward(_rewardAmount);
+
+            Console.WriteLine($"{player.Name} rewarded to +{_rewardAmount}");
         }
     }
 }

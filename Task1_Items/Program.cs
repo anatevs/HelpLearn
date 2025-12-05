@@ -18,10 +18,11 @@ potions.Add(new BoostPotion("Potion-hp2-boost1x2", 6, 2, 1, 2));
 
 var potionsStorage = new ItemsStorage<PotionItem>(potions);
 
+var moneyStorage = new MoneyStorage(10);
 
-var player = new Player("Player", 10, 2, weaponsStorage);
+var player = new Player("Player", 10, 2, weaponsStorage, moneyStorage);
 
-var enemy = new Enemy("Enemy", 20, 1);
+var enemy = new Enemy("Enemy", 10, 1, 5);
 
 string[] optionsKeys = [ "1", "2", "3", "4", "5", "q" ];
 
@@ -60,6 +61,10 @@ while (player.HP > 0)
 
     if (enemy.HP == 0)
     {
+        enemy.Reward(player);
+
+        //setup new enemy - from enemy storage
+
         winFighter = player;
         break;
     }

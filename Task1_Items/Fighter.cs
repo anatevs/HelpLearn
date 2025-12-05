@@ -52,14 +52,19 @@
             target.GetDamage(Damage);
         }
 
-        public void Kill()
+        public virtual void Kill()
         {
             Console.WriteLine($"{_name} has been killed");
         }
 
         public void ShowFighterInfo()
         {
-            Console.WriteLine($"{_name}: HP = {HP}, damage = {Damage}");
+            Console.WriteLine(GetInfoString());
+        }
+
+        protected virtual string GetInfoString()
+        {
+            return $"{_name}: HP = {HP}, damage = {Damage}";
         }
     }
 }
