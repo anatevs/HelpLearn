@@ -65,6 +65,8 @@ namespace Task1_Items.Commands
 
         protected void FillOptionsList()
         {
+            _commandsController.ClearOptions();
+
             for (int i = 0; i < _storage.Items.Count; i++)
             {
                 AddToOption(i + 1, _storage.Items[i]);

@@ -19,7 +19,13 @@ namespace Task1_Items.Commands
         public override void Execute()
         {
             Console.WriteLine($"{_potion.Name} is selected now");
+            if ( _potionsStorage.CurrentActive != null)
+            {
+                _potionsStorage.AddItem(_potionsStorage.CurrentActive);
+            }
+
             _potionsStorage.CurrentActive = _potion;
+            _potionsStorage.RemoveItem(_potion);
         }
     }
 }

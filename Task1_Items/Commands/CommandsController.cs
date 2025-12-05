@@ -1,7 +1,6 @@
 ﻿namespace Task1_Items.Commands
 {
     public class CommandsController
-
     {
         private Dictionary<string, ICommand> _commandOptions = new();
 
@@ -13,6 +12,11 @@
             }
 
             _commandOptions.Add(key, command);
+        }
+
+        public void ClearOptions()
+        {
+            _commandOptions = new Dictionary<string, ICommand>();
         }
 
         public bool InvokeOption(string key)

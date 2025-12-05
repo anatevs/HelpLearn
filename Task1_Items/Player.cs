@@ -10,6 +10,8 @@ namespace Task1_Items
 
         public ItemsStorage<PotionItem> PotionsStorage => _potionsStorage;
 
+        public ItemsStorage<WeaponItem> WeaponsStorage => _weaponsStorage;
+
         public MoneyStorage MoneyStorage => _moneyStorage;
 
         private readonly ItemsStorage<WeaponItem> _weaponsStorage;
