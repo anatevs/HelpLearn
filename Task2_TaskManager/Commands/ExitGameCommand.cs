@@ -1,6 +1,6 @@
 ﻿namespace Task2_TaskManager.Commands
 {
-    public class ExitGameCommand : AppCommand
+    public class ExitGameCommand : BaseCommand
     {
         public ExitGameCommand()
         {

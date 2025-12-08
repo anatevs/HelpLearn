@@ -1,6 +1,6 @@
 ﻿namespace Task2_TaskManager.Commands
 {
-    public class AppCommand : ICommand
+    public class BaseCommand : ICommand
     {
         public string Name => _name;
 
