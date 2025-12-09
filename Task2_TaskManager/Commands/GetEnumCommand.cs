@@ -1,17 +1,17 @@
 ﻿using System.Text;
-using Task2_TaskManager.TaskItems;
 
 namespace Task2_TaskManager.Commands
 {
-    public class FilterCommand<T> : WaitingInputCommand where T : Enum
+    public class GetEnumCommand<T> : WaitingInputCommand where T : Enum
     {
-        private readonly TasksList _tasksList;
+        public int EnumIndex => _enumIndex;
 
         private readonly Type _enumType;
 
-        public FilterCommand(TasksList tasksList)
+        private int _enumIndex;
+
+        public GetEnumCommand()
         {
-            _tasksList = tasksList;
             _enumType = typeof(T);
 
             var title = new StringBuilder($"Enter {_enumType.Name.ToLower()} number:");
@@ -28,7 +28,7 @@ namespace Task2_TaskManager.Commands
         {
             if (int.TryParse(inputLine, out var num) && Enum.IsDefined(_enumType, --num))
             {
-                _tasksList.FilterByEnum(_enumType, num);
+                _enumIndex = num;
                 _isCorrectLine = true;
             }
             else

@@ -27,14 +27,17 @@ while (isActive)
     Console.WriteLine("Create new task");
 
     var exitCm = new ExitGameCommand();
-    var flCtCm = new FilterCommand<Category>(tasks);
+    //var flCtCm = new FilterCommand<Category>(tasks);
 
-    flCtCm.Execute();
+    //flCtCm.Execute();
 
-    var flStCm = new FilterCommand<Status>(tasks);
+    //var flStCm = new FilterCommand<Status>(tasks);
 
-    flStCm.Execute();
+    //flStCm.Execute();
 
+
+    var add = new AddTaskCommand(tasks);
+    add.Execute();
 
     Console.WriteLine("press q for exit or other to proceed");
     var key = Console.ReadLine();
