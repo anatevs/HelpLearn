@@ -20,15 +20,42 @@ namespace Task2_TaskManager.TaskItems
             }
         }
 
+
+
         public bool TryRemoveTask(int number)
         {
-            if (number < 1 || number > _tasks.Count)
+            var result = CheckNumber(number);
+
+            if (result)
             {
-                return false;
+                _tasks.RemoveAt(number - 1);
             }
 
-            _tasks.RemoveAt(number - 1);
-            return true;
+            return result;
+        }
+
+        public bool TrySetDone(int number)
+        {
+            var result = CheckNumber(number);
+
+            if (result)
+            {
+                _tasks[number - 1].SetDone();
+            }
+
+            return result;
+        }
+
+        private bool TryMakeAtNumber(int number, Action action)
+        {
+            var result = CheckNumber(number);
+
+            if (result)
+            {
+                action.Invoke();
+            }
+
+            return result;
         }
 
         public void ShowList()
@@ -37,6 +64,15 @@ namespace Task2_TaskManager.TaskItems
             {
                 ShowTask(i + 1, _tasks[i]);
             }
+        }
+
+        public string[] GetNames()
+        {
+            IEnumerable<string> result =
+                _tasks
+                .Select(x => x.Name);
+
+            return result.ToArray();
         }
 
         public void FilterByEnum(Type enumType, int enumValue)
@@ -66,6 +102,11 @@ namespace Task2_TaskManager.TaskItems
             {
                 ShowTask(i, _tasks[i]);
             }
+        }
+
+        private bool CheckNumber(int number)
+        {
+            return (number > 0 && number <= _tasks.Count);
         }
 
         private void ShowFiltered(IEnumerable<(int Index, TaskItem Task)> filteredItems, string? filterName)

@@ -8,6 +8,7 @@ namespace Task2_TaskManager.Commands
 
         public ShowTasksCommand(TasksList tasks)
         {
+            _name = "Show all tasks";
             _tasks = tasks;
         }
 

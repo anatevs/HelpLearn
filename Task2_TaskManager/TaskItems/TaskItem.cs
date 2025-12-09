@@ -9,15 +9,7 @@ namespace Task2_TaskManager.TaskItems
         public string? Description => _description;
         public Priority Priority => _priority;
         public Category Category => _category;
-        public Status Status
-        {
-            get => _status;
-            set
-            {
-                _status = value;
-                _enums[typeof(Status)] = (int)value;
-            }
-        }
+        public Status Status => _status;
 
         private readonly string _name = "";
         private readonly string? _description;
@@ -62,6 +54,12 @@ namespace Task2_TaskManager.TaskItems
             var description = (Description == null || Description == "") ? "" : $" ({Description})";
 
             return $"{Name}{description}\nPriority: {Priority} | Category: {Category} | Status: {Status}";
+        }
+
+        public void SetDone()
+        {
+            _status = Status.Done;
+            _enums[typeof(Status)] = (int)Status.Done;
         }
 
         private void SetEnums()

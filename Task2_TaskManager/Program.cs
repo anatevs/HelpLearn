@@ -39,6 +39,9 @@ while (isActive)
     //var add = new AddTaskCommand(tasks);
     //add.Execute();
 
+    var setDone = new SetDoneCommand(tasks);
+    setDone.Execute();
+
     var show = new ShowTasksCommand(tasks);
     show.Execute();
 
