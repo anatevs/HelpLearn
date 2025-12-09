@@ -1,40 +1,19 @@
-﻿using System.Text;
-using Task2_TaskManager.TaskItems;
+﻿using Task2_TaskManager.TaskItems;
 
 namespace Task2_TaskManager.Commands
 {
-    public class FilterCommand<T> : WaitingInputCommand where T : Enum
+    public class FilterCommand<T> : ChooseEnumCommand<T> where T : Enum
     {
         private readonly TasksList _tasksList;
 
-        private readonly Type _enumType;
-
-        public FilterCommand(TasksList tasksList)
+        public FilterCommand(TasksList tasksList) : base()
         {
             _tasksList = tasksList;
-            _enumType = typeof(T);
-
-            var title = new StringBuilder($"Enter {_enumType.Name.ToLower()} number:");
-
-            foreach (var enumValue in Enum.GetValues(_enumType))
-            {
-                title.Append($"\n{(int)enumValue + 1} - {enumValue}");
-            }
-
-            _name = title.ToString();
         }
 
-        protected override void HandleInput(string? inputLine)
+        protected override void HandleEnumIndex(int enumIndex)
         {
-            if (int.TryParse(inputLine, out var num) && Enum.IsDefined(_enumType, --num))
-            {
-                _tasksList.FilterByEnum(_enumType, num);
-                _isCorrectLine = true;
-            }
-            else
-            {
-                Console.WriteLine($"Incorrect {_enumType} number!");
-            }
+            _tasksList.FilterByEnum(_enumType, enumIndex);
         }
     }
 }
