@@ -60,6 +60,14 @@ namespace Task2_TaskManager.TaskItems
             ShowFiltered(filteredItems, "Sorted by priority");
         }
 
+        public void ShowAll()
+        {
+            for (int i = 0; i < _tasks.Count; i++)
+            {
+                ShowTask(i, _tasks[i]);
+            }
+        }
+
         private void ShowFiltered(IEnumerable<(int Index, TaskItem Task)> filteredItems, string? filterName)
         {
             Console.WriteLine();
@@ -77,7 +85,7 @@ namespace Task2_TaskManager.TaskItems
 
         private void ShowTask(int index, TaskItem task)
         {
-            Console.WriteLine($"{index+1}. {task.Name}");
+            Console.WriteLine($"{index+1}. {task.GetStringInfo()}");
         }
     }
 }

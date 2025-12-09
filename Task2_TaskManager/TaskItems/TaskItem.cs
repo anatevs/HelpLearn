@@ -1,4 +1,5 @@
-﻿using Task2_TaskManager.Enums;
+﻿using System.Threading.Tasks;
+using Task2_TaskManager.Enums;
 
 namespace Task2_TaskManager.TaskItems
 {
@@ -54,6 +55,13 @@ namespace Task2_TaskManager.TaskItems
         public int GetEnumValue(Type type)
         {
             return _enums[type];
+        }
+
+        public string GetStringInfo()
+        {
+            var description = (Description == null || Description == "") ? "" : $" ({Description})";
+
+            return $"{Name}{description}\nPriority: {Priority} | Category: {Category} | Status: {Status}";
         }
 
         private void SetEnums()

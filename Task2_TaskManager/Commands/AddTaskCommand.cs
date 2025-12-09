@@ -15,7 +15,7 @@ namespace Task2_TaskManager.Commands
         private GetEnumCommand<Category> _categoryCommand;
         private GetEnumCommand<Status> _statusCommand;
 
-        private List<ICommand> _commands = new();
+        private readonly List<ICommand> _commands = new();
 
         public AddTaskCommand(TasksList tasksList)
         {
@@ -52,8 +52,8 @@ namespace Task2_TaskManager.Commands
 
 
             var task = new TaskItem(_taskParams);
-            Console.WriteLine($"{task.Name}\n{task.Description}\n{task.Priority} - {task.Category} - {task.Status}");
             _tasksList.AddTask(task);
+            Console.WriteLine($"{task.GetStringInfo()}");
         }
     }
 }
