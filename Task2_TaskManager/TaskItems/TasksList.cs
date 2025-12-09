@@ -1,4 +1,5 @@
-﻿using Task2_TaskManager.Enums;
+﻿using System;
+using Task2_TaskManager.Enums;
 
 namespace Task2_TaskManager.TaskItems
 {
@@ -38,24 +39,15 @@ namespace Task2_TaskManager.TaskItems
             }
         }
 
-        public void FilterStatus(Status status)
+        public void FilterByEnum(Type enumType, int enumValue)
         {
             IEnumerable<(int Index, TaskItem Task)> indexItems =
                 _tasks
                 .Select((item, index) => (index, item))
-                .Where((x) => x.item.Status == status);
-
-            ShowFiltered(indexItems, status.ToString());
-        }
-
-        public void FilterCategory(Category category)
-        {
-            IEnumerable<(int Index, TaskItem Task)> filteredItems =
-                _tasks
-                .Select((item, index) => (index, item))
-                .Where((x) => x.item.Category == category);
-
-            ShowFiltered(filteredItems, category.ToString());
+                .Where((x) => x.item.GetEnumValue(enumType) == enumValue);
+            
+            var enumName = Enum.ToObject(enumType, enumValue);
+            ShowFiltered(indexItems, enumName.ToString());
         }
 
         public void ShowSortPriority()
@@ -68,7 +60,7 @@ namespace Task2_TaskManager.TaskItems
             ShowFiltered(filteredItems, "Sorted by priority");
         }
 
-        private void ShowFiltered(IEnumerable<(int Index, TaskItem Task)> filteredItems, string filterName)
+        private void ShowFiltered(IEnumerable<(int Index, TaskItem Task)> filteredItems, string? filterName)
         {
             Console.WriteLine();
             Console.WriteLine($"{filterName}:");

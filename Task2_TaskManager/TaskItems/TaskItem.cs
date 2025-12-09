@@ -11,7 +11,7 @@ namespace Task2_TaskManager.TaskItems
         public Status Status
         {
             get => _status;
-            set => _status = value;
+            set => _status = value;///////////////////////////make changes in dictionary
         }
 
         private string _name = "";
@@ -19,6 +19,7 @@ namespace Task2_TaskManager.TaskItems
         private Priority _priority;
         private Category _category;
         private Status _status;
+        private Dictionary<Type, int> _enums = new();
 
         public TaskItem(string name,
             string? description,
@@ -31,6 +32,15 @@ namespace Task2_TaskManager.TaskItems
             _priority = priority;
             _category = category;
             _status = status;
+
+            _enums.Add(typeof(Priority), (int)_priority);
+            _enums.Add(typeof(Category), (int)_category);
+            _enums.Add(typeof(Status), (int)_status);
+        }
+
+        public int GetEnumValue(Type type)
+        {
+            return _enums[type];
         }
     }
 }
