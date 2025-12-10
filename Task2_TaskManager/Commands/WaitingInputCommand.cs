@@ -6,8 +6,6 @@
 
         public override void Execute()
         {
-            PrepareExecute();
-
             base.Execute();
 
             _isCorrectLine = false;
@@ -21,7 +19,5 @@
         }
 
         protected abstract void HandleInput(string? input);
-
-        protected virtual void PrepareExecute() { }
     }
 }

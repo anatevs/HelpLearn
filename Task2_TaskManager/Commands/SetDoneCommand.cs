@@ -1,15 +1,11 @@
-﻿using System.Text;
-using Task2_TaskManager.TaskItems;
+﻿using Task2_TaskManager.TaskItems;
 
 namespace Task2_TaskManager.Commands
 {
-    public class SetDoneCommand : WaitingInputCommand
+    public class SetDoneCommand : WaitingTaskNumberCommand
     {
-        private TasksList _tasksList;
-
-        public SetDoneCommand(TasksList tasksList)
+        public SetDoneCommand(TasksList tasksList) : base(tasksList)
         {
-            _tasksList = tasksList;
         }
 
         protected override void HandleInput(string? input)
@@ -22,19 +18,6 @@ namespace Task2_TaskManager.Commands
             {
                 Console.WriteLine("Incorrect task number");
             }
-        }
-
-        protected override void PrepareExecute()
-        {
-            var title = new StringBuilder($"Enter task number:");
-            var names = _tasksList.GetNames();
-
-            for (int i = 0; i < names.Length; i++)
-            {
-                title.Append($"\n{i + 1} - {names[i]}");
-            }
-
-            _name = title.ToString();
         }
     }
 }
