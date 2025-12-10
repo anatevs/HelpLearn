@@ -11,10 +11,9 @@ namespace Task2_TaskManager.Commands
 
         protected override void HandleNumber(int number)
         {
-            if (_tasksList.TryRemoveTask(number, out var removedName))
+            if (_tasksList.TryRemoveTask(number))
             {
                 _isCorrectLine = true;
-                Console.WriteLine($"Task {removedName} has been removed");
             }
         }
     }

@@ -11,7 +11,12 @@ namespace Task2_TaskManager.Commands
 
         public override void Execute()
         {
-            _tasksList.ShowSortPriority();
+            IEnumerable<(int Index, TaskItem Task)> filteredItems =
+                _tasksList.Tasks
+                .Select((item, index) => (index, item))
+                .OrderBy((x) => x.item.Priority);
+
+            TasksView.ShowFiltered(filteredItems, "Sorted by priority");
         }
     }
 }

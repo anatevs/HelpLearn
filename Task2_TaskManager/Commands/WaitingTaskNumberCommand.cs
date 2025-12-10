@@ -36,7 +36,9 @@ namespace Task2_TaskManager.Commands
         protected virtual void PrepareExecute()
         {
             var title = new StringBuilder($"Enter task number:");
-            var names = _tasksList.GetNames();
+            var names = _tasksList.Tasks
+                .Select(x => x.Name)
+                .ToArray();
 
             for (int i = 0; i < names.Length; i++)
             {

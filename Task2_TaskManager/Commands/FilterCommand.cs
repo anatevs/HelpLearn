@@ -15,7 +15,13 @@ namespace Task2_TaskManager.Commands
 
         protected override void HandleEnumIndex(int enumIndex)
         {
-            _tasksList.FilterByEnum(_enumType, enumIndex);
+            IEnumerable<(int Index, TaskItem Task)> indexItems =
+                _tasksList.Tasks
+                .Select((item, index) => (index, item))
+                .Where((x) => x.item.GetEnumValue(_enumType) == enumIndex);
+
+            var enumName = Enum.ToObject(_enumType, enumIndex);
+            TasksView.ShowFiltered(indexItems, enumName.ToString());
         }
     }
 }
