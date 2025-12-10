@@ -2,15 +2,15 @@
 
 namespace Task2_TaskManager.Commands
 {
-    public class SetDoneCommand : WaitingTaskNumberCommand
+    public class RemoveTaskCommand : WaitingTaskNumberCommand
     {
-        public SetDoneCommand(TasksList tasksList) : base(tasksList)
+        public RemoveTaskCommand(TasksList tasksList) : base(tasksList)
         {
         }
 
         protected override void HandleNumber(int number)
         {
-            if (_tasksList.TrySetDone(number))
+            if (_tasksList.TryRemoveTask(number))
             {
                 _isCorrectLine = true;
             }

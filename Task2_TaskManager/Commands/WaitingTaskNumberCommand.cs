@@ -19,7 +19,19 @@ namespace Task2_TaskManager.Commands
             base.Execute();
         }
 
-        protected override abstract void HandleInput(string? input);
+        protected override void HandleInput(string? input)
+        {
+            if (int.TryParse(input, out var number))
+            {
+                HandleNumber(number);
+            }
+            else
+            {
+                Console.WriteLine("Incorrect task number");
+            }
+        }
+
+        protected abstract void HandleNumber(int number);
 
         protected virtual void PrepareExecute()
         {

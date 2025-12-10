@@ -42,6 +42,9 @@ while (isActive)
     var setDone = new SetDoneCommand(tasks);
     setDone.Execute();
 
+    var rm = new RemoveTaskCommand(tasks);
+    rm.Execute();
+
     var show = new ShowTasksCommand(tasks);
     show.Execute();
 
