@@ -28,5 +28,14 @@ namespace Task2_TaskManager.TaskItems
             Category = category;
             Status = status;
         }
+
+        public TaskParams(TaskItem task)
+        {
+            Name = task.Name;
+            Description = task.Description;
+            Priority = task.Priority;
+            Category = task.Category;
+            Status = task.Status;
+        }
     }
 }

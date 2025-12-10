@@ -10,9 +10,13 @@ namespace Task2_TaskManager.Inits
 
         private readonly TasksList _tasksList;
 
-        public MainMenuInit(TasksList tasksList)
+        private readonly SaveLoadInit _saveLoad;
+
+        public MainMenuInit(TasksList tasksList,
+            SaveLoadInit saveLoadInit)
         {
             _tasksList = tasksList;
+            _saveLoad = saveLoadInit;
         }
 
         public CommandsController Init()
@@ -23,7 +27,7 @@ namespace Task2_TaskManager.Inits
             _commandsController.AddOption("4", new FilterCommand<Category>(_tasksList));
             _commandsController.AddOption("5", new SetDoneCommand(_tasksList));
             _commandsController.AddOption("6", new RemoveTaskCommand(_tasksList));
-            _commandsController.AddOption("q", new ExitGameCommand());
+            _commandsController.AddOption("q", new ExitGameCommand(_saveLoad));
 
             return _commandsController;
         }

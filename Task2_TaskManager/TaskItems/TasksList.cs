@@ -1,4 +1,7 @@
-﻿namespace Task2_TaskManager.TaskItems
+﻿using System.Xml.Linq;
+using Task2_TaskManager.Enums;
+
+namespace Task2_TaskManager.TaskItems
 {
     public class TasksList
     {
@@ -14,6 +17,29 @@
             foreach (TaskItem item in tasks)
             {
                 _tasks.Add(item);
+            }
+        }
+
+        public TaskParams[] GetData()
+        {
+            var data = new TaskParams[_tasks.Count];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = new TaskParams(_tasks[i]);
+            }
+
+            return data;
+        }
+
+        public void SetData(TaskParams[]? tasksParams)
+        {
+            if (tasksParams != null)
+            {
+                foreach (var taskParam in tasksParams)
+                {
+                    _tasks.Add(new TaskItem(taskParam));
+                }
             }
         }
 
