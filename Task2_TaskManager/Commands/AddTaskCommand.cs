@@ -20,6 +20,8 @@ namespace Task2_TaskManager.Commands
         public AddTaskCommand(TasksList tasksList)
         {
             _name = "Add new task";
+
+            _executeText = "Set task's parameters";
             _tasksList = tasksList;
 
             _nameCommand = new GetStringCommand("Enter task name:");

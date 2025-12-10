@@ -6,6 +6,7 @@ namespace Task2_TaskManager.Commands
     {
         public SetDoneCommand(TasksList tasksList) : base(tasksList)
         {
+            _name = "Set task as done";
         }
 
         protected override void HandleNumber(int number)

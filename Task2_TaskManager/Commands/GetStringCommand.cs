@@ -1,6 +1,4 @@
-﻿using Task2_TaskManager.TaskItems;
-
-namespace Task2_TaskManager.Commands
+﻿namespace Task2_TaskManager.Commands
 {
     public class GetStringCommand : WaitingInputCommand
     {
@@ -10,7 +8,7 @@ namespace Task2_TaskManager.Commands
 
         public GetStringCommand(string commandName)
         {
-            _name = commandName;
+            _executeText = commandName;
         }
 
         protected override void HandleInput(string? input)

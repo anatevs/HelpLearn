@@ -6,6 +6,11 @@
 
         private int _enumIndex;
 
+        public GetEnumCommand() : base()
+        {
+            _name = $"Set {_enumType.Name.ToLower()}";
+        }
+
         protected override void HandleEnumIndex(int enumIndex)
         {
             _enumIndex = enumIndex;

@@ -9,6 +9,8 @@ namespace Task2_TaskManager.Commands
         public FilterCommand(TasksList tasksList) : base()
         {
             _tasksList = tasksList;
+
+            _name = $"Filter by {_enumType.Name.ToLower()}";
         }
 
         protected override void HandleEnumIndex(int enumIndex)

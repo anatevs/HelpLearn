@@ -8,7 +8,7 @@
 
         public GetStringNullCommand(string commandName)
         {
-            _name = commandName;
+            _executeText = commandName;
         }
 
         protected override void HandleInput(string? input)

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Task2_TaskManager.Enums;
+﻿using Task2_TaskManager.Enums;
 
 namespace Task2_TaskManager.TaskItems
 {

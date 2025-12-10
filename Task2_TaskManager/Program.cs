@@ -36,14 +36,14 @@ while (isActive)
     //flStCm.Execute();
 
 
-    //var add = new AddTaskCommand(tasks);
-    //add.Execute();
+    var add = new AddTaskCommand(tasks);
+    add.Execute();
 
-    var setDone = new SetDoneCommand(tasks);
-    setDone.Execute();
+    //var setDone = new SetDoneCommand(tasks);
+    //setDone.Execute();
 
-    var rm = new RemoveTaskCommand(tasks);
-    rm.Execute();
+    //var rm = new RemoveTaskCommand(tasks);
+    //rm.Execute();
 
     var show = new ShowTasksCommand(tasks);
     show.Execute();

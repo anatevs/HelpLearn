@@ -1,7 +1,4 @@
-﻿using System;
-using Task2_TaskManager.Enums;
-
-namespace Task2_TaskManager.TaskItems
+﻿namespace Task2_TaskManager.TaskItems
 {
     public class TasksList
     {
@@ -20,15 +17,16 @@ namespace Task2_TaskManager.TaskItems
             }
         }
 
-
-
-        public bool TryRemoveTask(int number)
+        public bool TryRemoveTask(int number, out string name)
         {
             var result = CheckNumber(number);
+            name = "";
+            var index = number - 1;
 
             if (result)
             {
-                _tasks.RemoveAt(number - 1);
+                name = _tasks[index].Name;
+                _tasks.RemoveAt(index);
             }
 
             return result;

@@ -17,7 +17,7 @@ namespace Task2_TaskManager.Commands
                 title.Append($"\n{(int)enumValue + 1} - {enumValue}");
             }
 
-            _name = title.ToString();
+            _executeText = title.ToString();
         }
 
         protected override void HandleInput(string? inputLine)

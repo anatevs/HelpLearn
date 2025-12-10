@@ -8,6 +8,7 @@ namespace Task2_TaskManager.Commands
 
         public SortPriorityCommand(TasksList tasksList)
         {
+            _name = "Sort tasks by priority";
             _tasksList = tasksList;
         }
 

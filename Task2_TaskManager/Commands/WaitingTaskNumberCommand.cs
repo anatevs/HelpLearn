@@ -43,7 +43,7 @@ namespace Task2_TaskManager.Commands
                 title.Append($"\n{i + 1} - {names[i]}");
             }
 
-            _name = title.ToString();
+            _executeText = title.ToString();
         }
     }
 }

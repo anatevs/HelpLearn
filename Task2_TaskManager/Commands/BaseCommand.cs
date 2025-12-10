@@ -6,9 +6,11 @@
 
         protected string _name = "";
 
+        protected string _executeText = "";
+
         public virtual void Execute()
         {
-            Console.WriteLine($"{_name}");
+            Console.WriteLine($"{_executeText}");
         }
     }
 }
