@@ -35,6 +35,8 @@ namespace Task2_TaskManager.Inits
                 var data = JsonSerializer.Deserialize<TaskParams[]>(jsonString);
 
                 _tasksList.SetData(data);
+
+                Console.WriteLine("\nTasks loaded from file");
             }
             else
             {

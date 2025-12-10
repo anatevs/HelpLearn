@@ -35,6 +35,8 @@
         {
             if (tasksParams != null)
             {
+                _tasks.Clear();
+
                 foreach (var taskParam in tasksParams)
                 {
                     _tasks.Add(new TaskItem(taskParam));

@@ -28,6 +28,7 @@ namespace Task2_TaskManager.Inits
             _commandsController.AddOption("6", new RemoveTaskCommand(_tasksList));
             _commandsController.AddOption("7", new LoadCommand(_saveLoad));
             _commandsController.AddOption("8", new SortPriorityCommand(_tasksList));
+            _commandsController.AddOption("9", new ShowStatusStatistic(_tasksList));
             _commandsController.AddOption("q", new ExitGameCommand(_saveLoad));
 
             return _commandsController;

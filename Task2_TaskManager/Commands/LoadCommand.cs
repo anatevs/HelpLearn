@@ -14,7 +14,6 @@ namespace Task2_TaskManager.Commands
 
         public override void Execute()
         {
-            base.Execute();
             _saveLoad.Load();
         }
     }
