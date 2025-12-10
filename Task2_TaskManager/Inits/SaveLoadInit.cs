@@ -18,9 +18,12 @@ namespace Task2_TaskManager.Inits
         {
             var data = _tasksList.GetData();
 
-            var jsonString = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
+            if (data.Length != 0)
+            {
+                var jsonString = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
 
-            File.WriteAllText(_filename, jsonString);
+                File.WriteAllText(_filename, jsonString);
+            }
         }
 
         public void Load()
@@ -32,6 +35,10 @@ namespace Task2_TaskManager.Inits
                 var data = JsonSerializer.Deserialize<TaskParams[]>(jsonString);
 
                 _tasksList.SetData(data);
+            }
+            else
+            {
+                Console.WriteLine("No saved tasks");
             }
         }
     }

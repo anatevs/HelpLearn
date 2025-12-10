@@ -5,6 +5,8 @@ namespace Task2_TaskManager.TaskItems
 {
     public class TasksList
     {
+        public IReadOnlyList<TaskItem> Tasks => _tasks;
+
         private readonly List<TaskItem> _tasks = new();
 
         public void AddTask(TaskItem item)

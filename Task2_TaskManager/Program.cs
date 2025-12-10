@@ -17,12 +17,9 @@ var tasks = new TasksList();
 
 //tasks.AddTasks(tArray);
 
-var saveLoad = new SaveLoadInit(tasks);
-
-var mainMenu = new MainMenuInit(tasks, saveLoad);
+var mainMenu = new MainMenuInit(tasks);
 var mainCommands = mainMenu.Init();
 
-saveLoad.Load();
 var isActive = true;
 
 while (isActive)

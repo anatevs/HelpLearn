@@ -52,6 +52,8 @@ namespace Task2_TaskManager.Commands
 
             var task = new TaskItem(_taskParams);
             _tasksList.AddTask(task);
+            Console.WriteLine();
+            Console.WriteLine("Task has been added:");
             Console.WriteLine($"{task.GetStringInfo()}");
         }
     }

@@ -2,14 +2,11 @@
 
 namespace Task2_TaskManager.Commands
 {
-    public class SortPriorityCommand : BaseCommand
+    public class SortPriorityCommand : BaseTasksCommand
     {
-        private readonly TasksList _tasksList;
-
-        public SortPriorityCommand(TasksList tasksList)
+        public SortPriorityCommand(TasksList tasksList) : base(tasksList)
         {
             _name = "Sort tasks by priority";
-            _tasksList = tasksList;
         }
 
         public override void Execute()
