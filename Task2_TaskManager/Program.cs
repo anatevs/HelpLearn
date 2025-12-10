@@ -1,10 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
-using Task2_TaskManager.Commands;
 using Task2_TaskManager.Enums;
+using Task2_TaskManager.Inits;
 using Task2_TaskManager.TaskItems;
-
-Console.WriteLine("Hello, World!");
-
 
 var tasks = new TasksList();
 
@@ -20,43 +17,24 @@ tArray[6] = new TaskItem("t7", "", Priority.Medium, Category.Work, Status.New);
 
 tasks.AddTasks(tArray);
 
+var mainMenu = new MainMenuInit(tasks);
+var mainCommands = mainMenu.Init();
+
 var isActive = true;
 
 while (isActive)
 {
-    Console.WriteLine("Create new task");
+    mainCommands.ShowOptions();
 
-    var exitCm = new ExitGameCommand();
-    //var flCtCm = new FilterCommand<Category>(tasks);
-
-    //flCtCm.Execute();
-
-    //var flStCm = new FilterCommand<Status>(tasks);
-
-    //flStCm.Execute();
-
-
-    var add = new AddTaskCommand(tasks);
-    add.Execute();
-
-    //var setDone = new SetDoneCommand(tasks);
-    //setDone.Execute();
-
-    //var rm = new RemoveTaskCommand(tasks);
-    //rm.Execute();
-
-    var show = new ShowTasksCommand(tasks);
-    show.Execute();
-
-    Console.WriteLine("press q for exit or other to proceed");
     var key = Console.ReadLine();
-    if (key == "q")
+
+    if (key != null)
     {
-        exitCm.Execute();
+        mainCommands.InvokeOption(key);
+    }
+    else
+    {
+        Console.WriteLine("null key entered");
     }
 }
-
-var sortCm = new SortPriorityCommand(tasks);
-sortCm.Execute();
-
 return;

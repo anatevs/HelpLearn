@@ -3,10 +3,8 @@ using Task2_TaskManager.TaskItems;
 
 namespace Task2_TaskManager.Commands
 {
-    public class AddTaskCommand : BaseCommand
+    public class AddTaskCommand : BaseTasksCommand
     {
-        private readonly TasksList _tasksList;
-
         private TaskParams _taskParams = new();
 
         private GetStringCommand _nameCommand;
@@ -17,12 +15,11 @@ namespace Task2_TaskManager.Commands
 
         private readonly List<ICommand> _commands = new();
 
-        public AddTaskCommand(TasksList tasksList)
+        public AddTaskCommand(TasksList tasksList) : base(tasksList)
         {
             _name = "Add new task";
 
             _executeText = "Set task's parameters";
-            _tasksList = tasksList;
 
             _nameCommand = new GetStringCommand("Enter task name:");
             _descriptionCommand = new GetStringNullCommand("Enter task description (could be empty):");

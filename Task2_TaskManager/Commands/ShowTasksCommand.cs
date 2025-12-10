@@ -2,19 +2,16 @@
 
 namespace Task2_TaskManager.Commands
 {
-    public class ShowTasksCommand : BaseCommand
+    public class ShowTasksCommand : BaseTasksCommand
     {
-        private readonly TasksList _tasks;
-
-        public ShowTasksCommand(TasksList tasks)
+        public ShowTasksCommand(TasksList tasks) : base(tasks)
         {
             _name = "Show all tasks";
-            _tasks = tasks;
         }
 
         public override void Execute()
         {
-            _tasks.ShowAll();
+            _tasksList.ShowAll();
         }
     }
 }
