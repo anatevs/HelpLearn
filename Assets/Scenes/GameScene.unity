@@ -692,6 +692,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1691497148}
+  - component: {fileID: 1691497149}
   m_Layer: 0
   m_Name: Targets
   m_TagString: Untagged
@@ -714,6 +715,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1691497149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691497147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b700ef9f8d04e7498d099ff11ac40ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _xPosRange:
+  - -11
+  - 11
+  _yPosRange:
+  - 0
+  - 5.4
+  _zPosRange:
+  - 0
+  - 20
+  _targetPrefab: {fileID: 3808563277526017012, guid: a5c4c5fb8a97e9f45b09d266fbb93c96, type: 3}
+  _targetsParent: {fileID: 1691497148}
 --- !u!1 &1765588411
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,17 +903,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb1544476f055354b924ab9f973e91dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _xPosRange:
-  - -10.5
-  - 10.5
-  _yPosRange:
-  - 0.01
-  - 5.5
-  _zPosRange:
-  - 0
-  - 20
-  _targetPrefab: {fileID: 3808563277526017012, guid: a5c4c5fb8a97e9f45b09d266fbb93c96, type: 3}
-  _targetsParent: {fileID: 1691497148}
+  _targetSpawner: {fileID: 1691497149}
   _countText: {fileID: 1765588413}
 --- !u!4 &1909503962
 Transform:
