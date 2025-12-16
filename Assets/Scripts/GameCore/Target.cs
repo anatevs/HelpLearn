@@ -8,18 +8,18 @@ namespace GameCore
 
         private void Start()
         {
-            Debug.Log($"{gameObject.name}'s start");
+            Debug.Log($"Target created");
             Destroy(gameObject, _destroyTime);
         }
 
         private void Update()
         {
-            Debug.Log($"{gameObject.name} is updating");
+            Debug.Log($"Target still alive");
         }
 
         private void OnDestroy()
         {
-            Debug.Log($"{gameObject.name}'s destroy");
+            Debug.Log($"Target destroyed");
         }
     }
 }
