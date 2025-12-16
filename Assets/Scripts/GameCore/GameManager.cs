@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel;
+using TMPro;
 using UnityEngine;
 
 namespace GameCore
@@ -21,12 +22,19 @@ namespace GameCore
         [SerializeField]
         private Transform _targetsParent;
 
+        [SerializeField]
+        private TMP_Text _countText;
+
         private float _spawnDelay = 4f;
 
         private int _rangeSize = 2;
 
+        private int _targetsCount = 0;
+
         private void Start()
         {
+            SetCountText();
+
             if (_xPosRange.Length != _rangeSize ||
                 _yPosRange.Length != _rangeSize ||
                 _zPosRange.Length != _rangeSize)
@@ -61,6 +69,15 @@ namespace GameCore
                 );
 
             Instantiate(_targetPrefab, pos, Quaternion.identity, _targetsParent);
+
+            _targetsCount++;
+
+            SetCountText();
+        }
+
+        private void SetCountText()
+        {
+            _countText.text = _targetsCount.ToString();
         }
     }
 }
