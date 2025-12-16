@@ -17,7 +17,7 @@ namespace GameCore
         private float[] _zPosRange = new float[2];
 
         [SerializeField]
-        private Target _targetPrefab;
+        private Target[] _targetPrefabs;
 
         [SerializeField]
         private Transform _targetsParent;
@@ -55,7 +55,9 @@ namespace GameCore
                     Random.Range(_zPosRange[0], _zPosRange[1])
                     );
 
-                Instantiate(_targetPrefab, pos, Quaternion.identity, _targetsParent);
+                var prefab = _targetPrefabs[Random.Range(0, _targetPrefabs.Length)];
+
+                Instantiate(prefab, pos, Quaternion.identity, _targetsParent);
 
                 _targetsCount++;
             }

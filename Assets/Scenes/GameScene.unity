@@ -736,7 +736,10 @@ MonoBehaviour:
   _zPosRange:
   - 0
   - 20
-  _targetPrefab: {fileID: 3808563277526017012, guid: a5c4c5fb8a97e9f45b09d266fbb93c96, type: 3}
+  _targetPrefabs:
+  - {fileID: 8471504347935226348, guid: b92f2dc9a8dd0fd499ed19bfb6f6c873, type: 3}
+  - {fileID: 7763761704895924508, guid: d0319e8471afb5645a821588ab39a654, type: 3}
+  - {fileID: 3808563277526017012, guid: a5c4c5fb8a97e9f45b09d266fbb93c96, type: 3}
   _targetsParent: {fileID: 1691497148}
 --- !u!1 &1765588411
 GameObject:
