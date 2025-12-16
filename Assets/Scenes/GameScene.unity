@@ -731,7 +731,7 @@ MonoBehaviour:
   - -11
   - 11
   _yPosRange:
-  - 0
+  - 1
   - 5.4
   _zPosRange:
   - 0

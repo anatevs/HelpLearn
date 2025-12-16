@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameCore
 {
-    public class TargetSpawner : MonoBehaviour
+    public sealed class TargetSpawner : MonoBehaviour
     {
         public int TargetsCount => _targetsCount;
 
