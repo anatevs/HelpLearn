@@ -69,7 +69,7 @@ namespace GameCore
 
         private void Update()
         {
-            Debug.Log($"Target still alive");
+            //Debug.Log($"Target still alive");
 
             RotateX();
 
