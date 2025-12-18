@@ -10,14 +10,19 @@ namespace GameCore
     {
         public event Action<Projectile> Destroyed;
 
-        [SerializeField]
-        private float _speed = 5f;
+        public float Speed
+        {
+            get => _speed;
+            set => _speed = value;
+        }
 
         [SerializeField]
         private float _lifetime = 5f;
 
         [SerializeField]
         private LayerMask _killableLayers;
+
+        private float _speed = 5f;
 
         private Rigidbody _rigidbody;
 

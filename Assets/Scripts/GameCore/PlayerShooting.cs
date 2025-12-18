@@ -6,9 +6,6 @@ namespace GameCore
     public class PlayerShooting : MonoBehaviour
     {
         [SerializeField]
-        private float _shootDelay = 2f;
-
-        [SerializeField]
         private InputController _input;
 
         [SerializeField]
@@ -19,6 +16,9 @@ namespace GameCore
 
         [SerializeField]
         private ProjectileSpawner _spawner;
+
+        [SerializeField]
+        private WeaponConfig _weaponConfig;
 
         private bool _canShoot = true;
 
@@ -39,15 +39,16 @@ namespace GameCore
                 _canShoot = false;
                 _weapon.ShowActive(_canShoot);
 
-                StartCoroutine(Cooldown());
+                StartCoroutine(Cooldown(_weaponConfig.FireCooldown));
 
-                _spawner.Spawn(_firePoint.position, _firePoint.rotation);
+                _spawner.Spawn(_firePoint.position, _firePoint.rotation,
+                    _weaponConfig.ProjectileSpeed);
             }
         }
 
-        private IEnumerator Cooldown()
+        private IEnumerator Cooldown(float cooldown)
         {
-            yield return new WaitForSeconds(_shootDelay);
+            yield return new WaitForSeconds(cooldown);
 
             _canShoot = true;
             _weapon.ShowActive(_canShoot);

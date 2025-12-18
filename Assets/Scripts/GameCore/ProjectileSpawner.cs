@@ -37,7 +37,7 @@ namespace GameCore
             }
         }
 
-        public Projectile Spawn(Vector3 position, Quaternion rotation)
+        public Projectile Spawn(Vector3 position, Quaternion rotation, float speed)
         {
             if (!_pool.TryDequeue(out var item))
             {
@@ -45,6 +45,7 @@ namespace GameCore
                 item.gameObject.SetActive(false);
             }
 
+            item.Speed = speed;
             item.transform.SetParent(transform);
             item.transform.position = position;
             item.transform.rotation = rotation;

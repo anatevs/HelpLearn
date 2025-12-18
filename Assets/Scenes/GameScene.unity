@@ -688,11 +688,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22ba6b089f0857d4ab819a098049ae1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _shootDelay: 2
   _input: {fileID: 1909503964}
   _weapon: {fileID: 1252748042}
   _firePoint: {fileID: 122457844}
   _spawner: {fileID: 741120985}
+  _weaponConfig: {fileID: 11400000, guid: 835ff4c38d4d0ac4b94ab0339d031426, type: 2}
 --- !u!1 &741120984
 GameObject:
   m_ObjectHideFlags: 0
