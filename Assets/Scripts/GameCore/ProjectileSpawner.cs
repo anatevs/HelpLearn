@@ -14,7 +14,7 @@ namespace GameCore
         [SerializeField]
         private int _initCount = 10;
 
-        private Queue<Projectile> _pool = new();
+        private readonly Queue<Projectile> _pool = new();
 
         private void Awake()
         {
