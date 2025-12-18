@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 1494379486354928411}
   - component: {fileID: 9004246458904463468}
   - component: {fileID: 6413515259522652725}
-  - component: {fileID: 2689758354945478295}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,29 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2689758354945478295
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7063542544234887416}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &8326424544477712963
 GameObject:
   m_ObjectHideFlags: 0
@@ -120,7 +96,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6925940031531229237}
   - component: {fileID: 7763761704895924508}
-  m_Layer: 0
+  - component: {fileID: 2033715893738060683}
+  m_Layer: 3
   m_Name: Target 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,3 +132,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc97af5903fe7f442b505871912a80ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotationSpeed: 100
+  _scaleSpeed: 1
+  _shiftSpeed: 4
+--- !u!136 &2033715893738060683
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8326424544477712963}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5000001
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}

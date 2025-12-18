@@ -3,7 +3,7 @@
 namespace GameCore
 {
     [RequireComponent(typeof(MeshRenderer))]
-    public class WeaponBody : MonoBehaviour
+    public sealed class WeaponBody : MonoBehaviour
     {
         [SerializeField]
         private Material _active;

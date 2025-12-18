@@ -16,6 +16,8 @@ namespace GameCore
 
         private Queue<Projectile> _pool = new();
 
+        private List<Projectile> _activeProjectiles = new();
+
         private void Awake()
         {
             for (int i = 0; i < _initCount; i++)
@@ -27,11 +29,20 @@ namespace GameCore
             }
         }
 
+        private void OnDisable()
+        {
+            foreach (var item in _activeProjectiles)
+            {
+                item.Destroyed -= Unspawn;
+            }
+        }
+
         public Projectile Spawn(Vector3 position, Quaternion rotation)
         {
             if (!_pool.TryDequeue(out var item))
             {
                 item = Instantiate(_prefab);
+                item.gameObject.SetActive(false);
             }
 
             item.transform.SetParent(transform);
@@ -39,12 +50,19 @@ namespace GameCore
             item.transform.rotation = rotation;
             item.gameObject.SetActive(true);
 
+            item.Destroyed += Unspawn;
+            _activeProjectiles.Add(item);
+
             return item;
         }
 
         public void Unspawn(Projectile item)
         {
+            item.Destroyed -= Unspawn;
+            _activeProjectiles.Remove(item);
+
             item.gameObject.SetActive(false);
+            item.transform.SetParent(_poolTransform);
             _pool.Enqueue(item);
         }
     }

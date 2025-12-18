@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 6792219081350351161}
   - component: {fileID: 3919218014879715991}
   - component: {fileID: 5640554002210013258}
-  - component: {fileID: 5623214175792671491}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,27 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &5623214175792671491
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1969253043681864930}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5529876781651396314
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,7 +96,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5020025622242525138}
   - component: {fileID: 8471504347935226348}
-  m_Layer: 0
+  - component: {fileID: 932773741082544124}
+  m_Layer: 3
   m_Name: Target 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -153,3 +132,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc97af5903fe7f442b505871912a80ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotationSpeed: 100
+  _scaleSpeed: 1
+  _shiftSpeed: 4
+--- !u!136 &932773741082544124
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5529876781651396314}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
