@@ -11,6 +11,7 @@ namespace GameCore
         [SerializeField]
         private Transform _poolTransform;
 
+        [SerializeField]
         private int _initCount = 10;
 
         private Queue<Projectile> _pool = new();
@@ -23,25 +24,6 @@ namespace GameCore
                 item.gameObject.SetActive(false);
 
                 _pool.Enqueue(item);
-            }
-        }
-
-        [SerializeField]
-        bool _spawn = true;
-        [SerializeField]
-        bool _unspawn = true;
-        Projectile _current;
-        private void Update()
-        {
-            if (_spawn)
-            {
-                _current = Spawn(Vector3.forward, Quaternion.identity);
-                _spawn = false;
-            }
-            if (_unspawn && _current != null)
-            {
-                Unspawn(_current);
-                _unspawn = false;
             }
         }
 

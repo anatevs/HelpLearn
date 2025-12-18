@@ -229,6 +229,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72723378}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &122457843
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 122457844}
+  m_Layer: 0
+  m_Name: FirePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &122457844
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122457843}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.30000007, z: 0.83899957}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1007279479}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,6 +691,8 @@ MonoBehaviour:
   _shootDelay: 2
   _input: {fileID: 1909503964}
   _weapon: {fileID: 1252748042}
+  _firePoint: {fileID: 122457844}
+  _spawner: {fileID: 741120985}
 --- !u!1 &741120984
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,6 +724,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 5722966613617853656, guid: b702da65af0ab3048ba998e2d02ba828, type: 3}
   _poolTransform: {fileID: 850019292}
+  _initCount: 10
 --- !u!4 &741120986
 Transform:
   m_ObjectHideFlags: 0
@@ -848,6 +882,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 122457844}
   - {fileID: 1252748038}
   m_Father: {fileID: 976064574}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1390,7 +1425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfe12cd1fcb34354cb7b55ef627263d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mouseSensitivity: 10
+  _mouseSensitivity: 100
 --- !u!1 &2042780191
 GameObject:
   m_ObjectHideFlags: 0

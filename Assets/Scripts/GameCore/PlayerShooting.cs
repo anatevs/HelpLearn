@@ -14,13 +14,17 @@ namespace GameCore
         [SerializeField]
         private WeaponBody _weapon;
 
+        [SerializeField]
+        private Transform _firePoint;
+
+        [SerializeField]
+        private ProjectileSpawner _spawner;
+
         private bool _canShoot = true;
 
         private void OnEnable()
         {
             _input.ShootClicked += Fire;
-
-            _weapon.ShowActive(_canShoot);
         }
 
         private void OnDisable()
@@ -36,6 +40,8 @@ namespace GameCore
                 _weapon.ShowActive(_canShoot);
 
                 StartCoroutine(Cooldown());
+
+                _spawner.Spawn(_firePoint.position, _firePoint.rotation);
             }
         }
 
