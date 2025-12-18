@@ -42,6 +42,9 @@ namespace GameCore
         private void OnEnable()
         {
             _input.ShootClicked += Fire;
+
+            SetText(_shootsText, _shootCount);
+            SetText(_hitsText, _hitCount);
         }
 
         private void OnDisable()
@@ -72,7 +75,7 @@ namespace GameCore
                 _activeProjectiles.Add(projectile);
 
                 _shootCount++;
-                _shootsText.text = _shootCount.ToString();
+                SetText(_shootsText, _shootCount);
 
                 _audioManager.PlayFire();
             }
@@ -90,7 +93,7 @@ namespace GameCore
         private void OnProjectileHitted()
         {
             _hitCount++;
-            _hitsText.text = _hitCount.ToString();
+            SetText(_hitsText, _hitCount);
 
             _audioManager.PlayTargetDestroy();
         }
@@ -101,6 +104,11 @@ namespace GameCore
 
             _canShoot = true;
             _weapon.ShowActive(_canShoot);
+        }
+
+        private void SetText(TMP_Text text, int value)
+        {
+            text.text = value.ToString();
         }
     }
 }
