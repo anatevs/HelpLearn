@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameCore
 {
-    public class AudioManager : MonoBehaviour
+    public sealed class AudioManager : MonoBehaviour
     {
         [SerializeField]
         private AudioSource _audioSource;
