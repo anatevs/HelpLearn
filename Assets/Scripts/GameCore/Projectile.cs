@@ -10,6 +10,8 @@ namespace GameCore
     {
         public event Action<Projectile> Destroyed;
 
+        public event Action Hitted;
+
         public float Speed
         {
             get => _speed;
@@ -46,6 +48,7 @@ namespace GameCore
             if ((_killableLayers.value & (1 << other.gameObject.layer)) != 0)
             {
                 Destroy(other.gameObject);
+                Hitted?.Invoke();
                 OnDestoryed();
 
                 Debug.Log("Target hit!");
