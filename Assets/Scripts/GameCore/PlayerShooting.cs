@@ -28,7 +28,10 @@ namespace GameCore
         [SerializeField]
         private TMP_Text _hitsText;
 
-        private List<Projectile> _activeProjectiles = new();
+        [SerializeField]
+        private AudioManager _audioManager;
+
+        private readonly List<Projectile> _activeProjectiles = new();
 
         private bool _canShoot = true;
 
@@ -70,6 +73,8 @@ namespace GameCore
 
                 _shootCount++;
                 _shootsText.text = _shootCount.ToString();
+
+                _audioManager.PlayFire();
             }
         }
 
@@ -86,6 +91,8 @@ namespace GameCore
         {
             _hitCount++;
             _hitsText.text = _hitCount.ToString();
+
+            _audioManager.PlayTargetDestroy();
         }
 
         private IEnumerator Cooldown(float cooldown)
