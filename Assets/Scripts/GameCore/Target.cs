@@ -13,6 +13,9 @@ namespace GameCore
         [SerializeField]
         private float _shiftSpeed = 4f;
 
+        [SerializeField]
+        private Animator _animator;
+
         private float[] _scaleFactor = { 1f, 2f };
 
         private float _shiftFactor = 1f;
@@ -30,6 +33,11 @@ namespace GameCore
         private bool _isRotatingX = false;
         private bool _isScaling = false;
         private bool _isShiftingX = false;
+
+        private void Awake()
+        {
+            _animator = GetComponent<Animator>();
+        }
 
         private void Start()
         {
@@ -81,6 +89,22 @@ namespace GameCore
         private void OnDestroy()
         {
             Debug.Log($"Target destroyed");
+        }
+
+        public void ShowDestoryTarget()
+        {
+            if (_animator != null)
+            {
+                _animator.enabled = true;
+                return;
+            }
+
+            EndDestroy();
+        }
+
+        public void EndDestroy()
+        {
+            Destroy(gameObject);
         }
 
         private void RotateX()

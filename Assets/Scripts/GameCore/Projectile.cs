@@ -45,9 +45,9 @@ namespace GameCore
 
         private void OnTriggerEnter(Collider other)
         {
-            if ((_killableLayers.value & (1 << other.gameObject.layer)) != 0)
+            if (other.TryGetComponent<Target>(out var target))
             {
-                Destroy(other.gameObject);
+                target.ShowDestoryTarget();
                 Hitted?.Invoke();
                 OnDestoryed();
 
