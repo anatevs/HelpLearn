@@ -2,11 +2,17 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using GameManagement;
+using System;
 
 namespace GameCore
 {
     public sealed class PlayerShooting : MonoBehaviour
     {
+        public event Action<int> Shooted;
+
+        public event Action<int> Hitted;
+
         [SerializeField]
         private InputController _input;
 
@@ -75,6 +81,7 @@ namespace GameCore
                 _activeProjectiles.Add(projectile);
 
                 _shootCount++;
+                Shooted?.Invoke(_shootCount);
                 SetText(_shootsText, _shootCount);
 
                 _audioManager.PlayFire();
@@ -93,6 +100,7 @@ namespace GameCore
         private void OnProjectileHitted()
         {
             _hitCount++;
+            Hitted?.Invoke(_hitCount);
             SetText(_hitsText, _hitCount);
 
             _audioManager.PlayTargetDestroy();

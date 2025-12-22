@@ -2,7 +2,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace GameCore
+namespace GameManagement
 {
     public class ChangeLevelManager : MonoBehaviour
     {

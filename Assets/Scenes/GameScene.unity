@@ -1729,6 +1729,7 @@ GameObject:
   - component: {fileID: 1909503963}
   - component: {fileID: 1909503964}
   - component: {fileID: 1909503965}
+  - component: {fileID: 1909503966}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1806,6 +1807,20 @@ MonoBehaviour:
   _audioSource: {fileID: 724583872}
   _fire: {fileID: 8300000, guid: c17c2c4c5c752a94d815fbf4be65799e, type: 3}
   _targetDestroy: {fileID: 8300000, guid: d022734bd0d0655498d5186f4a4701ba, type: 3}
+--- !u!114 &1909503966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909503960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7576938cbf35d6e4d8e551418ad306e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerShooting: {fileID: 724583871}
+  _saveLoad: {fileID: 11400000, guid: 801ccde5d9b0a1e4e9664923fc3e8014, type: 2}
 --- !u!1 &2042780191
 GameObject:
   m_ObjectHideFlags: 0

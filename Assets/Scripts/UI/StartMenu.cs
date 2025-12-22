@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,7 +14,17 @@ namespace GameCore
         [SerializeField]
         private Button _quitButton;
 
+        [SerializeField]
+        private TMP_Text _recordText;
+
         private int _gameSceneIndex = 1;
+
+        public void ShowRecord(int Hits, int Shoots)
+        {
+            _recordText.gameObject.SetActive(true);
+
+            _recordText.text = $"Previous hits record:\n{Hits} hits from {Shoots} shoots";
+        }
 
         private void OnEnable()
         {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GameCore
+namespace GameManagement
 {
     public sealed class AudioManager : MonoBehaviour
     {

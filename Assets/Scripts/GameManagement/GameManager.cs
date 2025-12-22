@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using GameCore;
 
-namespace GameCore
+namespace GameManagement
 {
     public sealed class GameManager : MonoBehaviour
     {
