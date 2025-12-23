@@ -86,7 +86,7 @@ namespace GameCore
 
                 _audioManager.PlayFire();
 
-                _weapon.ActivateAnimator(true);
+                _weapon.ShowRecoil(true);
             }
         }
 

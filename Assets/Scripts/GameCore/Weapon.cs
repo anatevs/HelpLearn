@@ -32,7 +32,7 @@ namespace GameCore
             _weaponBody.ShowActive(isActive);
         }
 
-        public void ActivateAnimator(bool isActive)
+        public void ShowRecoil(bool isActive)
         {
             if (_animator != null)
             {
