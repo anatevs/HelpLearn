@@ -28,8 +28,8 @@ namespace GameManagement
 
             if (_saveLoad.Load())
             {
-                _startMenu.ShowRecord(_saveLoad.Hits.Value,
-                    _saveLoad.Shots.Value);
+                _startMenu.ShowRecord(_saveLoad.Hits,
+                    _saveLoad.Shots);
             }
         }
     }

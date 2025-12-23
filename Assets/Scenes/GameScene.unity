@@ -885,10 +885,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _input: {fileID: 1909503964}
-  _weapon: {fileID: 1007279481}
+  _weaponAnimation: {fileID: 1007279481}
   _firePoint: {fileID: 122457844}
   _spawner: {fileID: 741120985}
-  _weaponConfig: {fileID: 11400000, guid: 835ff4c38d4d0ac4b94ab0339d031426, type: 2}
   _shotsText: {fileID: 2046060262}
   _hitsText: {fileID: 456048995}
   _audioManager: {fileID: 1909503965}
@@ -1927,7 +1926,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerShooting: {fileID: 724583871}
-  _saveLoad: {fileID: 11400000, guid: 801ccde5d9b0a1e4e9664923fc3e8014, type: 2}
+  _saveLoad: {fileID: 11400000, guid: 799c2edf25d36b343b8218e1f05d62ec, type: 2}
 --- !u!1 &2042780191
 GameObject:
   m_ObjectHideFlags: 0

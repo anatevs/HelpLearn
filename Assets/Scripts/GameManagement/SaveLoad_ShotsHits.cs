@@ -3,57 +3,43 @@
 namespace GameManagement
 {
     [CreateAssetMenu(fileName = "SaveLoad_ShootsHits",
-        menuName = "Configs/SaveLoad")]
-    public sealed class SaveLoad_ShotsHits : ScriptableObject
+        menuName = "Configs/SaveLoad/Shots")]
+    public class SaveLoad_ShotsHits : SaveLoadSO<ShotsData>
     {
-        public int? Shots { get; set; } = null;
-
-        public int? Hits { get; set; } = null;
-
-        private const string _shotsKey = "shoots";
-        private const string _hitsKey = "hits";
-
-        public void Save()
+        public int Shots
         {
-            if (!(Shots.HasValue && Hits.HasValue))
-            {
-                Debug.Log("No value for shoots or hits to save");
-                return;
-            }
+            get => _currentData.Shots;
+            set => _currentData.Shots = value;
+        }
 
+        public int Hits
+        {
+            get => _currentData.Hits;
+            set => _currentData.Hits = value;
+        }
+
+        public override void Save()
+        {
             if (HasSavedData())
             {
-                var prevHits = PlayerPrefs.GetInt(_hitsKey);
-
-                if (prevHits > Hits.Value)
+                if (_savedData.Hits > Hits)
                 {
                     Debug.Log("current record was not saved because previous record was bigger");
                     return;
                 }
             }
 
-            PlayerPrefs.SetInt(_shotsKey, Shots.Value);
-            PlayerPrefs.SetInt(_hitsKey, Hits.Value);
-
-            Debug.Log("Current hits saved");
+            base.Save();
         }
 
-        public bool Load()
+        public override bool Load()
         {
-            if (HasSavedData())
-            {
-                Shots = PlayerPrefs.GetInt(_shotsKey);
-                Hits = PlayerPrefs.GetInt(_hitsKey);
-
-                return true;
-            }
-
-            return false;
+            return base.Load();
         }
 
-        private bool HasSavedData()
+        protected override bool HasDataToSave()
         {
-            return PlayerPrefs.HasKey(_shotsKey) && PlayerPrefs.HasKey(_hitsKey);
+            return _currentData.Hits != 0;
         }
     }
 }
