@@ -19,11 +19,11 @@ namespace GameCore
 
         private int _gameSceneIndex = 1;
 
-        public void ShowRecord(int Hits, int Shoots)
+        public void ShowRecord(int hits, int shots)
         {
             _recordText.gameObject.SetActive(true);
 
-            _recordText.text = $"Previous hits record:\n{Hits} hits from {Shoots} shoots";
+            _recordText.text = $"Previous hits record:\n{hits} hits from {shots} shoots";
         }
 
         private void OnEnable()

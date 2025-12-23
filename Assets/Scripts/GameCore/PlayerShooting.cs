@@ -29,7 +29,7 @@ namespace GameCore
         private WeaponConfig _weaponConfig;
 
         [SerializeField]
-        private TMP_Text _shootsText;
+        private TMP_Text _shotsText;
 
         [SerializeField]
         private TMP_Text _hitsText;
@@ -41,21 +41,21 @@ namespace GameCore
 
         private bool _canShoot = true;
 
-        private int _shootCount = 0;
+        private int _shotsCount = 0;
 
-        private int _hitCount = 0;
+        private int _hitsCount = 0;
 
         private void OnEnable()
         {
-            _input.ShootClicked += Fire;
+            _input.ShootClicked += Shoot;
 
-            SetText(_shootsText, _shootCount);
-            SetText(_hitsText, _hitCount);
+            SetText(_shotsText, _shotsCount);
+            SetText(_hitsText, _hitsCount);
         }
 
         private void OnDisable()
         {
-            _input.ShootClicked -= Fire;
+            _input.ShootClicked -= Shoot;
 
             foreach (var projectile in _activeProjectiles)
             {
@@ -64,7 +64,7 @@ namespace GameCore
             }
         }
 
-        private void Fire()
+        private void Shoot()
         {
             if (_canShoot)
             {
@@ -80,9 +80,9 @@ namespace GameCore
                 projectile.Destroyed += OnProjectileDestoyed;
                 _activeProjectiles.Add(projectile);
 
-                _shootCount++;
-                Shooted?.Invoke(_shootCount);
-                SetText(_shootsText, _shootCount);
+                _shotsCount++;
+                Shooted?.Invoke(_shotsCount);
+                SetText(_shotsText, _shotsCount);
 
                 _audioManager.PlayFire();
             }
@@ -99,9 +99,9 @@ namespace GameCore
 
         private void OnProjectileHitted()
         {
-            _hitCount++;
-            Hitted?.Invoke(_hitCount);
-            SetText(_hitsText, _hitCount);
+            _hitsCount++;
+            Hitted?.Invoke(_hitsCount);
+            SetText(_hitsText, _hitsCount);
 
             _audioManager.PlayTargetDestroy();
         }

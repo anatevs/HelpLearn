@@ -4,18 +4,18 @@ namespace GameManagement
 {
     [CreateAssetMenu(fileName = "SaveLoad_ShootsHits",
         menuName = "Configs/SaveLoad")]
-    public class SaveLoad_ShootsHits : ScriptableObject
+    public class SaveLoad_ShotsHits : ScriptableObject
     {
-        public int? Shoots { get; set; } = null;
+        public int? Shots { get; set; } = null;
 
         public int? Hits { get; set; } = null;
 
-        private const string _shootsKey = "shoots";
+        private const string _shotsKey = "shoots";
         private const string _hitsKey = "hits";
 
         public void Save()
         {
-            if (!(Shoots.HasValue && Hits.HasValue))
+            if (!(Shots.HasValue && Hits.HasValue))
             {
                 Debug.Log("No value for shoots or hits to save");
                 return;
@@ -32,7 +32,7 @@ namespace GameManagement
                 }
             }
 
-            PlayerPrefs.SetInt(_shootsKey, Shoots.Value);
+            PlayerPrefs.SetInt(_shotsKey, Shots.Value);
             PlayerPrefs.SetInt(_hitsKey, Hits.Value);
         }
 
@@ -40,7 +40,7 @@ namespace GameManagement
         {
             if (HasSavedData())
             {
-                Shoots = PlayerPrefs.GetInt(_shootsKey);
+                Shots = PlayerPrefs.GetInt(_shotsKey);
                 Hits = PlayerPrefs.GetInt(_hitsKey);
 
                 return true;
@@ -51,7 +51,7 @@ namespace GameManagement
 
         private bool HasSavedData()
         {
-            return PlayerPrefs.HasKey(_shootsKey) && PlayerPrefs.HasKey(_hitsKey);
+            return PlayerPrefs.HasKey(_shotsKey) && PlayerPrefs.HasKey(_hitsKey);
         }
     }
 }

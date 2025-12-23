@@ -9,7 +9,7 @@ namespace GameManagement
         private PlayerShooting _playerShooting;
 
         [SerializeField]
-        private SaveLoad_ShootsHits _saveLoad;
+        private SaveLoad_ShotsHits _saveLoad;
 
         private void OnEnable()
         {
@@ -27,7 +27,7 @@ namespace GameManagement
 
         private void OnShotted(int shoots)
         {
-            _saveLoad.Shoots = shoots;
+            _saveLoad.Shots = shoots;
         }
 
         private void OnHitted(int hits)

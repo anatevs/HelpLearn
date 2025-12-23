@@ -9,7 +9,7 @@ namespace GameManagement
         private StartMenu _startMenu;
 
         [SerializeField]
-        private SaveLoad_ShootsHits _saveLoad;
+        private SaveLoad_ShotsHits _saveLoad;
 
         private static LoadManager _instance;
 
@@ -29,7 +29,7 @@ namespace GameManagement
             if (_saveLoad.Load())
             {
                 _startMenu.ShowRecord(_saveLoad.Hits.Value,
-                    _saveLoad.Shoots.Value);
+                    _saveLoad.Shots.Value);
             }
         }
     }
