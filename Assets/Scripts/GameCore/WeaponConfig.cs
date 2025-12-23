@@ -1,11 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameCore
 {
     [CreateAssetMenu(fileName = "WeaponConfig",
         menuName = "Configs/Weapon")]
-    public class WeaponConfig : ScriptableObject
+    public sealed class WeaponConfig : ScriptableObject
     {
         public float ProjectileSpeed => _projectileSpeed;
         public float FireCooldown => _fireCooldown;

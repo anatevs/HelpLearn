@@ -2,7 +2,7 @@
 
 namespace GameCore
 {
-    public sealed class Weapon : MonoBehaviour
+    public sealed class WeaponAnimation : MonoBehaviour
     {
         [SerializeField]
         private WeaponBody _weaponBody;

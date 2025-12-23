@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: WeaponConfig
   m_EditorClassIdentifier: 
   _projectileSpeed: 500
-  _fireCooldown: 2
+  _fireCooldown: 4
   _damage: 0
