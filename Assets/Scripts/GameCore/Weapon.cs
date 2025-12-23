@@ -1,14 +1,17 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameCore
 {
-    public class Weapon : MonoBehaviour
+    public sealed class Weapon : MonoBehaviour
     {
         [SerializeField]
         private WeaponBody _weaponBody;
 
         private Animator _animator;
+
+        private const string _recoilTrigger = "Recoil";
+
+        private int _recoilID;
 
         private void Awake()
         {
@@ -17,6 +20,10 @@ namespace GameCore
             if (_animator == null)
             {
                 Debug.LogWarning("No animator component on weapon");
+            }
+            else
+            {
+                _recoilID = Animator.StringToHash(_recoilTrigger);
             }
         }
 
@@ -29,14 +36,8 @@ namespace GameCore
         {
             if (_animator != null)
             {
-                _animator.enabled = isActive;
+                _animator.SetTrigger(_recoilID);
             }
-        }
-
-        [SerializeField]
-        private void StopAnimator()
-        {
-            _animator.enabled = false;
         }
     }
 }

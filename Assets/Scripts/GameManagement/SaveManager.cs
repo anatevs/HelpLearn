@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameManagement
 {
-    public class SaveManager : MonoBehaviour
+    public sealed class SaveManager : MonoBehaviour
     {
         [SerializeField]
         private PlayerShooting _playerShooting;

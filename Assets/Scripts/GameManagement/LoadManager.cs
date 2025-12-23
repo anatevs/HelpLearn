@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace GameManagement
 {
-    public class LoadManager : MonoBehaviour
+    public sealed class LoadManager : MonoBehaviour
     {
         [SerializeField]
         private StartMenu _startMenu;

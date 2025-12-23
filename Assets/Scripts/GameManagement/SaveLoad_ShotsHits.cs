@@ -4,7 +4,7 @@ namespace GameManagement
 {
     [CreateAssetMenu(fileName = "SaveLoad_ShootsHits",
         menuName = "Configs/SaveLoad")]
-    public class SaveLoad_ShotsHits : ScriptableObject
+    public sealed class SaveLoad_ShotsHits : ScriptableObject
     {
         public int? Shots { get; set; } = null;
 
