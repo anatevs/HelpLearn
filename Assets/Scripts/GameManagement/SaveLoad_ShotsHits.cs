@@ -34,6 +34,8 @@ namespace GameManagement
 
             PlayerPrefs.SetInt(_shotsKey, Shots.Value);
             PlayerPrefs.SetInt(_hitsKey, Hits.Value);
+
+            Debug.Log("Current hits saved");
         }
 
         public bool Load()

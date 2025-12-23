@@ -70,6 +70,7 @@ namespace GameCore
         {
             yield return new WaitForSeconds(_lifetime);
             OnDestoryed();
+            Debug.Log("Projectile missed target");
         }
     }
 }

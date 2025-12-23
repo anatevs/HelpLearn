@@ -51,6 +51,11 @@ namespace GameCore
 
             SetText(_shotsText, _shotsCount);
             SetText(_hitsText, _hitsCount);
+
+            if (_weaponConfig == null)
+            {
+                Debug.LogError($"No weapon config assigned in {this.name} component");
+            }
         }
 
         private void OnDisable()
@@ -87,6 +92,10 @@ namespace GameCore
                 _audioManager.PlayFire();
 
                 _weapon.ShowRecoil(true);
+            }
+            else
+            {
+                Debug.LogWarning("Can't shot as weapon in a cooldown");
             }
         }
 
