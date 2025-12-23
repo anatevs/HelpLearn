@@ -17,7 +17,7 @@ namespace GameCore
         private InputController _input;
 
         [SerializeField]
-        private WeaponBody _weapon;
+        private Weapon _weapon;
 
         [SerializeField]
         private Transform _firePoint;
@@ -69,7 +69,7 @@ namespace GameCore
             if (_canShoot)
             {
                 _canShoot = false;
-                _weapon.ShowActive(_canShoot);
+                _weapon.ShowBodyActive(_canShoot);
 
                 StartCoroutine(Cooldown(_weaponConfig.FireCooldown));
 
@@ -85,6 +85,8 @@ namespace GameCore
                 SetText(_shotsText, _shotsCount);
 
                 _audioManager.PlayFire();
+
+                _weapon.ActivateAnimator(true);
             }
         }
 
@@ -111,7 +113,7 @@ namespace GameCore
             yield return new WaitForSeconds(cooldown);
 
             _canShoot = true;
-            _weapon.ShowActive(_canShoot);
+            _weapon.ShowBodyActive(_canShoot);
         }
 
         private void SetText(TMP_Text text, int value)
