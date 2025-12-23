@@ -1,9 +1,10 @@
 ﻿using GameCore;
+using GameManagement;
 using UnityEngine;
 
 namespace UI
 {
-    public sealed class WeaponSetter : MonoBehaviour
+    public sealed class WeaponDataManager : MonoBehaviour
     {
         [SerializeField]
         private SliderSetter _speedSetter;
@@ -15,19 +16,12 @@ namespace UI
         private PlayerShooting _playerShooting;
 
         [SerializeField]
-        private WeaponConfig _weaponConfig;
-
-        private void Awake()
-        {
-            if (_weaponConfig == null)
-            {
-                Debug.LogError($"No weapon config assigned in {this.name} component");
-            }
-        }
+        private SaveLoad_WeaponParams _saveLoad;
 
         private void Start()
         {
-            SetInitValues(_weaponConfig.FireCooldown, _weaponConfig.ProjectileSpeed);
+            _cooldownSetter.SetValue(_saveLoad.Cooldown);
+            _speedSetter.SetValue(_saveLoad.Speed);
         }
 
         private void OnEnable()
@@ -40,22 +34,20 @@ namespace UI
         {
             _cooldownSetter.ValueChanged -= OnCooldownChanged;
             _speedSetter.ValueChanged -= OnSpeedChanged;
-        }
 
-        private void SetInitValues(float cooldown, float speed)
-        {
-            _cooldownSetter.SetValue(cooldown);
-            _speedSetter.SetValue(speed);
+            _saveLoad.Save();
         }
 
         private void OnCooldownChanged(float cooldown)
         {
             _playerShooting.Cooldown = cooldown;
+            _saveLoad.Cooldown = cooldown;
         }
 
         private void OnSpeedChanged(float speed)
         {
             _playerShooting.Speed = speed;
+            _saveLoad.Speed = speed;
         }
     }
 }

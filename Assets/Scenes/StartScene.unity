@@ -844,7 +844,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _startMenu: {fileID: 2124594763}
-  _saveLoad: {fileID: 11400000, guid: 799c2edf25d36b343b8218e1f05d62ec, type: 2}
+  _saveLoadShots: {fileID: 11400000, guid: 799c2edf25d36b343b8218e1f05d62ec, type: 2}
+  _saveLoadWeapon: {fileID: 11400000, guid: 28504f13443432d409327302b7da5a9d, type: 2}
 --- !u!4 &1437600792
 Transform:
   m_ObjectHideFlags: 0

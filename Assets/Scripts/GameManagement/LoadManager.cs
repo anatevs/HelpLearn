@@ -9,7 +9,10 @@ namespace GameManagement
         private StartMenu _startMenu;
 
         [SerializeField]
-        private SaveLoad_ShotsHits _saveLoad;
+        private SaveLoad_ShotsHits _saveLoadShots;
+
+        [SerializeField]
+        private SaveLoad_WeaponParams _saveLoadWeapon;
 
         private static LoadManager _instance;
 
@@ -26,11 +29,15 @@ namespace GameManagement
                 return;
             }
 
-            if (_saveLoad.Load())
+            _saveLoadShots.Load();
+
+            if (_saveLoadShots.HasLoadedData())
             {
-                _startMenu.ShowRecord(_saveLoad.Hits,
-                    _saveLoad.Shots);
+                _startMenu.ShowRecord(_saveLoadShots.Hits,
+                    _saveLoadShots.Shots);
             }
+
+            _saveLoadWeapon.Load();
         }
     }
 }

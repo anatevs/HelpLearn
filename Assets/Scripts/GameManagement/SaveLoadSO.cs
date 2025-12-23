@@ -24,32 +24,30 @@ namespace GameManagement
             Debug.Log($"Current {_saveKey} saved");
         }
 
-        public virtual bool Load()
+        public virtual void Load()
         {
             _savedData = new();
             _currentData = new();
 
-            if (HasSavedData())
+            if (HasLoadedData())
             {
                 var jsonData = PlayerPrefs.GetString(_saveKey);
                 _savedData = JsonUtility.FromJson<T>(jsonData);
 
                 _currentData = _savedData;
 
-                return true;
+                return;
             }
+        }
 
-            return false;
+        public bool HasLoadedData()
+        {
+            return PlayerPrefs.HasKey(_saveKey);
         }
 
         protected virtual bool HasDataToSave()
         {
             return true;
-        }
-
-        protected bool HasSavedData()
-        {
-            return PlayerPrefs.HasKey(_saveKey);
         }
     }
 }

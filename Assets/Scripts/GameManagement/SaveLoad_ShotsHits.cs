@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GameCore;
+using UnityEngine;
 
 namespace GameManagement
 {
@@ -6,6 +7,9 @@ namespace GameManagement
         menuName = "Configs/SaveLoad/Shots")]
     public class SaveLoad_ShotsHits : SaveLoadSO<ShotsData>
     {
+        [SerializeField]
+        private WeaponConfig _weaponConfig;
+
         public int Shots
         {
             get => _currentData.Shots;
@@ -20,7 +24,7 @@ namespace GameManagement
 
         public override void Save()
         {
-            if (HasSavedData())
+            if (HasLoadedData())
             {
                 if (_savedData.Hits > Hits)
                 {
@@ -30,11 +34,6 @@ namespace GameManagement
             }
 
             base.Save();
-        }
-
-        public override bool Load()
-        {
-            return base.Load();
         }
 
         protected override bool HasDataToSave()

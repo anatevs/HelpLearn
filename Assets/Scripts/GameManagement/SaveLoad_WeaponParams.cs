@@ -1,46 +1,61 @@
-﻿using UnityEngine;
+﻿using GameCore;
+using System;
+using UnityEngine;
 
 namespace GameManagement
 {
-    public class SaveLoad_WeaponParams : ScriptableObject
+    [CreateAssetMenu(fileName = "SaveLoad_Weapon",
+        menuName = "Configs/SaveLoad/Weapon")]
+    public class SaveLoad_WeaponParams : SaveLoadSO<WeaponData>
     {
-        public float? Cooldown { get; set; } = null;
+        [SerializeField]
+        private WeaponConfig _weaponConfig;
 
-        public float? Speed { get; set; } = null;
-
-        private const string _cooldownKey = "weaponCooldown";
-        private const string _speedKey = "weaponSpeed";
-
-        public void Save()
+        public float Cooldown
         {
-            if (!(Cooldown.HasValue && Speed.HasValue))
-            {
-                Debug.Log("No value for shoots or hits to save");
-                return;
-            }
-
-            PlayerPrefs.SetFloat(_cooldownKey, Speed.Value);
-            PlayerPrefs.SetFloat(_speedKey, Speed.Value);
-
-            Debug.Log("Current hits saved");
+            get => _currentData.Cooldown;
+            set => _currentData.Cooldown = value;
         }
 
-        public bool Load()
+        public float Speed
         {
-            if (HasSavedData())
-            {
-                Cooldown = PlayerPrefs.GetFloat(_cooldownKey);
-                Speed = PlayerPrefs.GetFloat(_speedKey);
-
-                return true;
-            }
-
-            return false;
+            get => _currentData.Speed;
+            set => _currentData.Speed = value;
         }
 
-        private bool HasSavedData()
+        public override void Load()
         {
-            return PlayerPrefs.HasKey(_cooldownKey) && PlayerPrefs.HasKey(_speedKey);
+            base.Load();
+
+            if (!(HasLoadedData()))
+            {
+                if (_weaponConfig == null)
+                {
+                    Debug.LogError($"No weapon config assigned in {this.name} component");
+                }
+
+                _currentData = new WeaponData(_weaponConfig);
+            }
+        }
+    }
+
+    [Serializable]
+    public struct WeaponData
+    {
+        public float Cooldown;
+
+        public float Speed;
+
+        public WeaponData(float cooldown, float speed)
+        {
+            Cooldown = cooldown;
+            Speed = speed;
+        }
+
+        public WeaponData(WeaponConfig weaponConfig)
+        {
+            Cooldown = weaponConfig.FireCooldown;
+            Speed = weaponConfig.ProjectileSpeed;
         }
     }
 }
