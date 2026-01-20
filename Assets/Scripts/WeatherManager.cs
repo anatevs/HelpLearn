@@ -46,7 +46,6 @@ namespace Gameplay
 
             if (!TryChangeWeather((WeatherType)nextWeather))
             {
-                Debug.Log("not changed to random weather, try again");
                 StartCoroutine(RandomWeather());
             }
         }
@@ -71,7 +70,7 @@ namespace Gameplay
         {
             _currentWeather = type;
 
-            var e = new WeatherEvent(Time.time, $"weather changed to {type}", type);
+            var e = new WeatherEvent(DateTime.Now, $"weather changed to {type}", type);
 
             GameSingleton.Instance.EventManager.TriggerEvent(e);
 

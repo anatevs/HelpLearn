@@ -1,4 +1,6 @@
-﻿namespace Events
+﻿using System;
+
+namespace Events
 {
     public class GameEventT<T> : GameEvent
     {
@@ -6,7 +8,7 @@
 
         private readonly T _eventParam;
 
-        public GameEventT(float time, string description, T eventParam) :
+        public GameEventT(DateTime time, string description, T eventParam) :
             base(time, description)
         {
             _eventParam = eventParam;
