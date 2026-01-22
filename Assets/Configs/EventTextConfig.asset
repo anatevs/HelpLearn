@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data:
   - EventType: 0
-    Color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    Color: {r: 1, g: 0.12453856, b: 0.015686274, a: 1}
   - EventType: 1
-    Color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    Color: {r: 0.015686274, g: 1, b: 0.08129305, a: 1}
   - EventType: 2
     Color: {r: 0.16030605, g: 0.7618864, b: 0.89433956, a: 0.7882353}
   - EventType: 3
-    Color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+    Color: {r: 1, g: 0.015686274, b: 0.5239557, a: 1}

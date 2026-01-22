@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 namespace Events
 {
@@ -16,8 +15,6 @@ namespace Events
             OnGameEvent?.Invoke(e);
 
             _events.Add(e);
-
-            Debug.Log(_events.Count);
         }
 
         private readonly List<GameEvent> _events = new();

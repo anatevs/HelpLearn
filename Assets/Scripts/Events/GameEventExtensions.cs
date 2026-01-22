@@ -1,6 +1,6 @@
 ﻿namespace Events
 {
-    public static class GameEventExtentions
+    public static class GameEventExtensions
     {
         public static string FormatInfoString(this GameEvent gameEvent, string hexColor, string prefix = "")
         {

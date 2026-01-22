@@ -5,6 +5,6 @@
         BattleStart = 0,
         ItemPicked = 1,
         WeatherChanged = 2,
-        EnemySpotted = 3
+        EnemyAppeared = 3
     }
 }

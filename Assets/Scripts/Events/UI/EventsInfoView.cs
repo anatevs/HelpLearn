@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Gameplay;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI
@@ -48,6 +49,8 @@ namespace UI
 
             _filterButton.gameObject.SetActive(!isFilter);
             _backButton.gameObject.SetActive(isFilter);
+
+            GameSingleton.Instance.GameManager.IsPaused = isFilter;
         }
 
     }
