@@ -4,10 +4,8 @@ using UnityEngine;
 namespace Gameplay
 {
     [RequireComponent(typeof(MoveComponent))]
-    public class Bullet : MonoBehaviour
+    public class Bullet : SpawnableGO
     {
-        public event Action<Bullet> OnCollided;
-
         [SerializeField]
         private int _damage;
 
@@ -32,7 +30,7 @@ namespace Gameplay
 
             if (!other.isTrigger)
             {
-                OnCollided?.Invoke(this);
+                MakeUnspawn();
             }
         }
     }

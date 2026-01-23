@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4012461729308966187}
   - component: {fileID: 6313165966652471897}
   m_Layer: 0
-  m_Name: FOV
+  m_Name: DetectableZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

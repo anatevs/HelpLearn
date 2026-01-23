@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Gameplay
@@ -8,13 +7,9 @@ namespace Gameplay
     [RequireComponent(typeof(RotationComponent))]
     [RequireComponent(typeof(ShootComponent))]
     [RequireComponent(typeof(HPComponent))]
-    public class Enemy : MonoBehaviour
+    public class Enemy : SpawnableGO
     {
-        public event Action<Enemy> OnDestroyed;
-
         public bool IsAttack => _isAttack;
-
-        public string Name { get; set; }
 
         [SerializeField]
         private float _changeDirectionDuration = 3f;
@@ -86,7 +81,7 @@ namespace Gameplay
 
         private void DestroyEnemy()
         {
-            OnDestroyed?.Invoke(this);
+            MakeUnspawn();
         }
 
         private IEnumerator RandomDirection()

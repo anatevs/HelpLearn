@@ -11,7 +11,7 @@ namespace Gameplay
         {
             if (!GameSingleton.Instance.GameManager.IsPaused)
             {
-                GameSingleton.Instance.BulletManager.Shoot(_shootPoint);
+                GameSingleton.Instance.BulletManager.Spawn(_shootPoint);
             }
         }
     }
