@@ -1,11 +1,11 @@
-﻿using System;
-using UnityEngine;
+﻿using Gameplay;
+using System;
 
 namespace Events
 {
-    public class ItemPickedEvent : GameEventT<GameObject>
+    public class ItemPickedEvent : GameEventT<Item>
     {
-        public ItemPickedEvent(DateTime time, string description, GameObject eventParam) :
+        public ItemPickedEvent(DateTime time, string description, Item eventParam) :
             base(time, description, eventParam)
         {
             _type = EventType.ItemPicked;

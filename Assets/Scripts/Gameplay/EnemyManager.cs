@@ -23,6 +23,11 @@ namespace Gameplay
         private float[] _spawnPeriod = { 10f, 20f };
 
         private Pool<Enemy> _pool;
+
+        private int _spawnCount = 0;
+
+        private readonly string _nameStart = "Enemy-";
+
         private void Awake()
         {
             _pool = new Pool<Enemy>(_prefab, _initPoolSize, transform);
@@ -48,7 +53,11 @@ namespace Gameplay
 
                 enemy.OnDestroyed += Pool;
 
-                var e = new EnemyAppearedEvent(DateTime.Now, $"Enemy appeared at x: {position.x}, z: {position.z}", position);
+                _spawnCount++;
+
+                enemy.Name = $"{_nameStart}{_spawnCount}";
+
+                var e = new EnemyAppearedEvent(DateTime.Now, $"Enemy {enemy.Name} appeared at x: {position.x}, z: {position.z}", position);
 
                 GameSingleton.Instance.EventManager.TriggerEvent(e);
             }

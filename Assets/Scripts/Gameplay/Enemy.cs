@@ -14,6 +14,8 @@ namespace Gameplay
 
         public bool IsAttack => _isAttack;
 
+        public string Name { get; set; }
+
         [SerializeField]
         private float _changeDirectionDuration = 3f;
 

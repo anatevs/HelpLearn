@@ -1,7 +1,6 @@
 ﻿using Events;
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Gameplay
 {
@@ -67,7 +66,9 @@ namespace Gameplay
         {
             enemy.SetTarget(this);
 
-            var e = new GameEvent(Events.EventType.BattleStart, DateTime.Now, $"Battle between player and enemy started");
+            var e = new GameEvent(Events.EventType.BattleStart,
+                DateTime.Now,
+                $"Battle between player and {enemy.Name} started");
             GameSingleton.Instance.EventManager.TriggerEvent(e);
         }
 
