@@ -1,0 +1,12 @@
+[
+    {
+        "title": "news1",
+        "content": "first addition news",
+        "timestamp": "2025-10-28"
+    },
+    {
+        "title": null,
+        "content": "proceed addition news",
+        "timestamp": "2025-10-30"
+    }
+]

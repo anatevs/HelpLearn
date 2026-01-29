@@ -1,0 +1,12 @@
+[
+    {
+        "title": "news3",
+        "content": "third addidition news",
+        "timestamp": "2025-11-15"
+    },
+    {
+        "title": null,
+        "content": "Some news without a title",
+        "timestamp": "2025-11-15"
+    }
+]

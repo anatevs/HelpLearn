@@ -9,11 +9,16 @@ namespace NewsFeed
         menuName = "Configs/News")]
     public class NewsShowConfig : ScriptableObject
     {
+        public float ShowDelay => _showDelay;
+
         public string ErrorTitle => _errorTitle;
 
         public ShowStringData TitleParams => _titleParams;
         public ShowStringData ContentParams => _contentParams;
         public ShowStringData DataParams => _dataParams;
+
+        [SerializeField]
+        private float _showDelay = 2f;
 
         [SerializeField]
         private string _dateFormat = "dd.mm.yyyy";

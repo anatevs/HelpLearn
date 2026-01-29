@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace NewsFeed
 {
@@ -7,7 +9,29 @@ namespace NewsFeed
         [SerializeField]
         private NewsFeedView _view;
 
-        private readonly NewsLoader _loader = new();
+        [SerializeField]
+        private ErrorsView _errorsView;
+
+        [SerializeField]
+        private NewsLoaderConfig _newsLoaderConfig;
+
+        [SerializeField]
+        private AdditionLoadConfig _additionLoadConfig;
+
+        private NewsLoader _loader;
+
+        private AdditionLoader _additionLoader;
+
+        private CancellationTokenSource _cts = new();
+
+        private int _mockDelay = 100;
+
+        private void Awake()
+        {
+            _additionLoader = new AdditionLoader(_additionLoadConfig);
+
+            _loader = new NewsLoader(_additionLoader, _newsLoaderConfig);
+        }
 
         private void OnEnable()
         {
@@ -17,18 +41,35 @@ namespace NewsFeed
         private void OnDisable()
         {
             _loader.OnLoadError -= ShowLoadError;
+            _cts.Cancel();
         }
 
         private async void Start()
         {
-            var res = await _loader.LoadNewsAsync();
+            var news = await _loader.LoadNewsAsync(_cts);
 
-            _view.ShowNewsAndErrors(res, _loader.JsonItemsErrors);
+            _view.ShowNews(news);
+
+            while (!_cts.IsCancellationRequested)
+            {
+                _view.IsWaiting = true;
+
+                var newsAdd = await _loader.LoadNewsAsync(_cts);
+
+                _view.IsWaiting = false;
+
+                while (_view.IsShowing)
+                {
+                    await Task.Delay(_mockDelay);
+                }
+
+                _view.ShowNews(newsAdd);
+            }
         }
 
         private void ShowLoadError(string message)
         {
-            _view.ShowString($"{message}\n");
+            _errorsView.ShowText($"{message}\n");
         }
     }
 }
