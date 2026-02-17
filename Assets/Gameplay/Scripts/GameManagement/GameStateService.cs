@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Gameplay
+namespace GameManagement
 {
     public class GameStateService : MonoBehaviour
     {

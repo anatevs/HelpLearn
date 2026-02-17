@@ -7,13 +7,38 @@ namespace Gameplay
     public class EnemyConfig : ScriptableObject
     {
         public string Name => _name;
+        public int HP => _hp;
+        public float PatrolSpeed => _patrolSpeed;
+        public float DetectSqrDistance => _detectSqrDistance;
+        public float FollowSpeed => _followSpeed;
+        public float RotationSpeed => _rotationSpeed;
 
-        public MovementInfo Movement => _movementInfo;
+        private float _detectSqrDistance;
 
+        [Header("Common")]
         [SerializeField]
         private string _name;
 
         [SerializeField]
-        private MovementInfo _movementInfo;
+        private int _hp;
+
+        [SerializeField]
+        private float _rotationSpeed;
+
+        [Header("Patrol")]
+        [SerializeField]
+        private float _patrolSpeed;
+
+        [Header("Following")]
+        [SerializeField]
+        private float _followSpeed;
+
+        [SerializeField]
+        private float _detectDistance;
+
+        public void Init()
+        {
+            _detectSqrDistance = _detectDistance * _detectDistance;
+        }
     }
 }

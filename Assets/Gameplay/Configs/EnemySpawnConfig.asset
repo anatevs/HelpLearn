@@ -9,12 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f9f59f8773ca174797e274954af990b, type: 3}
-  m_Name: EnemyConfig
+  m_Script: {fileID: 11500000, guid: 7c47bf7e680382e458d3f6f5c46be01a, type: 3}
+  m_Name: EnemySpawnConfig
   m_EditorClassIdentifier: 
-  _name: Enemy1
-  _hp: 0
-  _rotationSpeed: 50
-  _patrolSpeed: 2
-  _followSpeed: 4
-  _detectDistance: 3
+  _prefabs:
+  - {fileID: 6115490535625203245, guid: 820f0612105edad44bd0776eb3c15ec2, type: 3}
+  _poolInitCount: 10
+  _xSpawnRange:
+  - -16
+  - 16
+  _ySpawnRange:
+  - -9
+  - 9

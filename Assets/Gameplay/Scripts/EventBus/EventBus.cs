@@ -9,7 +9,7 @@ namespace Gameplay
 
         public IReadOnlyList<GameEvent> Events => _events;
 
-        private List<GameEvent> _events = new();
+        private readonly List<GameEvent> _events = new();
 
         public void RaiseEvent(GameEvent e)
         {

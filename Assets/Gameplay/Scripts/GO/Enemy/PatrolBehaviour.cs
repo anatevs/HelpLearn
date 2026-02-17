@@ -1,17 +1,54 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Gameplay
 {
     public class PatrolBehaviour : EnemyBehaviour
     {
-        public PatrolBehaviour(Enemy enemy) : base(enemy)
+        private readonly Transform[] _patrolPoints;
+
+        private readonly float _speed;
+
+        private int _targetIndex;
+
+        private readonly float _sqrEpsilon = 0.01f;
+
+        private Vector3 _direction;
+
+        public PatrolBehaviour(Enemy enemy,
+            Transform[] patrolPoints) : base(enemy)
         {
+            _patrolPoints = patrolPoints;
+
+            if (patrolPoints == null || patrolPoints.Length == 0)
+            {
+                _patrolPoints = new Transform[1] { _enemy.transform };
+            }
+
+            _speed = _enemy.Config.PatrolSpeed;
+
+            _targetIndex = 0;
+            _direction = GetCurrentDirection().normalized;
         }
 
         public override void ActUpdate()
         {
-            Debug.Log("patrol");
+            _enemy.Movement.MoveUpdate(_direction, _speed);
+
+            if (GetCurrentDirection().sqrMagnitude <= _sqrEpsilon)
+            {
+                SetNextTargetIndex();
+                _direction = GetCurrentDirection().normalized;
+            }
+        }
+
+        private void SetNextTargetIndex()
+        {
+            _targetIndex = (_targetIndex + 1) % _patrolPoints.Length;
+        }
+
+        private Vector3 GetCurrentDirection()
+        {
+            return _patrolPoints[_targetIndex].position - _enemy.Movement.transform.position;
         }
     }
 }

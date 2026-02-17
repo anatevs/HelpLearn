@@ -5,25 +5,58 @@ namespace Gameplay
     [RequireComponent(typeof(MovementComponent))]
     public class Enemy : MonoBehaviour
     {
-        public string Name => _config.Name;
+        public MovementComponent Movement => _movement;
+
+        public EnemyConfig Config => _config;
 
         [SerializeField]
         private EnemyConfig _config;
 
+        private Transform[] _patrolPoints;
+
+        private Player _player;
+
         private MovementComponent _movement;
 
-        private EnemyBehaviour _currentBehaviour;
+        private IEnemyBehaviour _currentBehaviour = null;
+
+        private AttackBehaviour _attackBehaviour;
+
+        private bool _isAttacking = false;
 
         private void Awake()
         {
-            _movement = GetComponent<MovementComponent>();
+            _config.Init();
 
-            _currentBehaviour = new PatrolBehaviour(this);
+            _movement = GetComponent<MovementComponent>();
         }
 
         private void Update()
         {
-            _currentBehaviour.ActUpdate();
+            _currentBehaviour?.ActUpdate();
+
+            if (!_isAttacking && _player != null && (_player.transform.position - transform.position).sqrMagnitude < _config.DetectSqrDistance)
+            {
+                SetStrategy(_attackBehaviour);
+            }
+        }
+
+        public void Init(Transform[] patrolPoints, Player player)
+        {
+            _patrolPoints = patrolPoints;
+            _player = player;
+
+            var startBehaviour = new PatrolBehaviour(this, _patrolPoints);
+            SetStrategy(startBehaviour);
+
+            _attackBehaviour ??= new AttackBehaviour(this, _player.transform);
+        }
+
+        public void SetStrategy(EnemyBehaviour behaviour)
+        {
+            _currentBehaviour = behaviour;
+
+            _isAttacking = (behaviour is AttackBehaviour);
         }
     }
 }

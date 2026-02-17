@@ -25,7 +25,7 @@ namespace Gameplay
             }
         }
 
-        public T Spawn(Transform spawnPoint)
+        public T Spawn(Transform parent)
         {
             if (!_pool.TryDequeue(out var item))
             {
@@ -34,16 +34,13 @@ namespace Gameplay
 
             _pool.Enqueue(item);
 
-            item.transform.SetPositionAndRotation(spawnPoint.position, spawnPoint.rotation);
-
-            item.gameObject.SetActive(true);
+            item.transform.parent = parent;
 
             return item;
         }
 
         public void Unspawn(T item)
         {
-            item.gameObject.SetActive(false);
             item.transform.parent = _poolParent;
 
             _pool.Enqueue(item);

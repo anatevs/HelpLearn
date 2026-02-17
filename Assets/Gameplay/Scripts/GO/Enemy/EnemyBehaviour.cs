@@ -1,8 +1,8 @@
 ﻿namespace Gameplay
 {
-    public abstract class EnemyBehaviour
+    public abstract class EnemyBehaviour : IEnemyBehaviour
     {
-        private readonly Enemy _enemy;
+        protected readonly Enemy _enemy;
 
         protected EnemyBehaviour(Enemy enemy)
         {
