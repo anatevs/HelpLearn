@@ -50,13 +50,11 @@ namespace Gameplay
         {
             var name = _enemyNames[UnityEngine.Random.Range(0, _enemyNames.Length)];
 
-            Debug.Log(name);
-
             var enemy = _pools[name].Spawn(_enemiesTransform);
 
-            var setup = _setupActions[UnityEngine.Random.Range(0, _setupActions.Length)];
+            enemy.Init(new AttackBehaviour(enemy, _player.transform));
 
-            Debug.Log(setup);
+            var setup = _setupActions[UnityEngine.Random.Range(0, _setupActions.Length)];
 
             setup.Invoke(enemy);
         }
@@ -84,26 +82,29 @@ namespace Gameplay
 
         private void SetupAttacking(Enemy enemy)
         {
-            var startBehaviour = new AttackBehaviour(enemy, _player.transform);
-
-            enemy.SetStrategy(startBehaviour);
-
             var pos = _config.GetSpawnPos();
 
-            enemy.transform.position = pos;
+            var startBehaviour = new AttackBehaviour(enemy, _player.transform);
 
-            enemy.gameObject.SetActive(true);
+            SetupEnemy(enemy, startBehaviour, pos);
         }
 
         private void SetupPatrolling(Enemy enemy)
         {
             var location = _locations[UnityEngine.Random.Range(0, _locations.Length)];
 
-            var startBehaviour = new PatrolBehaviour(enemy, location._points);
+            var pos = location.Points[0].position;
 
-            enemy.SetStrategy(startBehaviour);
+            var startBehaviour = new PatrolBehaviour(enemy, location.Points);
 
-            enemy.transform.position = location._points[0].position;
+            SetupEnemy(enemy, startBehaviour, pos);
+        }
+
+        private void SetupEnemy(Enemy enemy, EnemyBehaviour behaviour, Vector3 pos)
+        {
+            enemy.SetStrategy(behaviour);
+
+            enemy.transform.position = pos;
 
             enemy.gameObject.SetActive(true);
         }
@@ -112,6 +113,6 @@ namespace Gameplay
     [Serializable]
     public struct PatrolLocation
     {
-        public Transform[] _points;
+        public Transform[] Points;
     }
 }

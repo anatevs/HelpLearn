@@ -9,11 +9,9 @@ namespace Gameplay
         public string Name => _name;
         public int HP => _hp;
         public float PatrolSpeed => _patrolSpeed;
-        public float DetectSqrDistance => _detectSqrDistance;
+        public float DetectDistance => _detectDistance;
         public float FollowSpeed => _followSpeed;
         public float RotationSpeed => _rotationSpeed;
-
-        private float _detectSqrDistance;
 
         [Header("Common")]
         [SerializeField]
@@ -35,10 +33,5 @@ namespace Gameplay
 
         [SerializeField]
         private float _detectDistance;
-
-        public void Init()
-        {
-            _detectSqrDistance = _detectDistance * _detectDistance;
-        }
     }
 }

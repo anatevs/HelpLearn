@@ -12,9 +12,8 @@ namespace Gameplay
         [SerializeField]
         private EnemyConfig _config;
 
-        private Transform[] _patrolPoints;
-
-        private Player _player;
+        [SerializeField]
+        private AttackDetector _attackDetector;
 
         private MovementComponent _movement;
 
@@ -22,41 +21,43 @@ namespace Gameplay
 
         private AttackBehaviour _attackBehaviour;
 
-        private bool _isAttacking = false;
-
         private void Awake()
         {
-            _config.Init();
-
             _movement = GetComponent<MovementComponent>();
+
+            _attackDetector.Init();
+
+            _attackDetector.SetDetectDistance(_config.DetectDistance);
+        }
+
+        private void OnEnable()
+        {
+            _attackDetector.OnPlayerDetected += SetToAttack;
+        }
+
+        private void OnDisable()
+        {
+            _attackDetector.OnPlayerDetected -= SetToAttack;
         }
 
         private void Update()
         {
             _currentBehaviour?.ActUpdate();
-
-            if (!_isAttacking && _player != null && (_player.transform.position - transform.position).sqrMagnitude < _config.DetectSqrDistance)
-            {
-                SetStrategy(_attackBehaviour);
-            }
         }
 
-        public void Init(Transform[] patrolPoints, Player player)
+        public void Init(AttackBehaviour attackBehaviour)
         {
-            _patrolPoints = patrolPoints;
-            _player = player;
-
-            var startBehaviour = new PatrolBehaviour(this, _patrolPoints);
-            SetStrategy(startBehaviour);
-
-            _attackBehaviour ??= new AttackBehaviour(this, _player.transform);
+            _attackBehaviour ??= attackBehaviour;
         }
 
         public void SetStrategy(EnemyBehaviour behaviour)
         {
             _currentBehaviour = behaviour;
+        }
 
-            _isAttacking = (behaviour is AttackBehaviour);
+        private void SetToAttack()
+        {
+            SetStrategy(_attackBehaviour);
         }
     }
 }
