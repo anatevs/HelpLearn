@@ -3,9 +3,11 @@ using UnityEngine;
 namespace Gameplay
 {
     [RequireComponent(typeof(MovementComponent))]
+    [RequireComponent(typeof(ShotComponent))]
     public class Enemy : MonoBehaviour
     {
         public MovementComponent Movement => _movement;
+        public ShotComponent Shot => _shot;
 
         public EnemyConfig Config => _config;
 
@@ -17,6 +19,8 @@ namespace Gameplay
 
         private MovementComponent _movement;
 
+        private ShotComponent _shot;
+
         private IEnemyBehaviour _currentBehaviour = null;
 
         private AttackBehaviour _attackBehaviour;
@@ -24,6 +28,8 @@ namespace Gameplay
         private void Awake()
         {
             _movement = GetComponent<MovementComponent>();
+
+            _shot = GetComponent<ShotComponent>();
 
             _attackDetector.Init();
 
@@ -45,9 +51,10 @@ namespace Gameplay
             _currentBehaviour?.ActUpdate();
         }
 
-        public void Init(AttackBehaviour attackBehaviour)
+        public void Init(AttackBehaviour attackBehaviour)//, ProjectileSpawnService projectileSpawn)
         {
             _attackBehaviour ??= attackBehaviour;
+            //_shot.Init(projectileSpawn);
         }
 
         public void SetStrategy(EnemyBehaviour behaviour)
@@ -57,6 +64,10 @@ namespace Gameplay
 
         private void SetToAttack()
         {
+            if (_currentBehaviour is AttackBehaviour)
+            {
+                return;
+            }
             SetStrategy(_attackBehaviour);
         }
     }

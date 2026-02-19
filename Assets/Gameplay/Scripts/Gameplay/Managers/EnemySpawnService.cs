@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,8 +22,8 @@ namespace Gameplay
         [SerializeField]
         private Player _player;
 
-        [SerializeField]
-        private GameConfig _gameConfig;
+        //[SerializeField]
+        //private ProjectileSpawnService _projectileSpawn;
 
         private string[] _enemyNames;
 
@@ -30,11 +31,15 @@ namespace Gameplay
 
         private Action<Enemy>[] _setupActions;
 
+        private WaitForSeconds _spawnWait;
+
         private void Awake()
         {
             Init();
 
-            SpawnRandom();
+            _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
+
+            StartCoroutine(SpawnCoroutine());
         }
 
         public void Unspawn(Enemy enemy)
@@ -44,6 +49,18 @@ namespace Gameplay
             enemy.SetStrategy(null);
 
             _pools[enemy.Config.Name].Unspawn(enemy);
+
+            enemy.transform.position = Vector3.zero;
+        }
+
+        private IEnumerator SpawnCoroutine()
+        {
+            while (gameObject.activeSelf)
+            {
+                SpawnRandom();
+
+                yield return _spawnWait;
+            }
         }
 
         private void SpawnRandom()
@@ -52,7 +69,7 @@ namespace Gameplay
 
             var enemy = _pools[name].Spawn(_enemiesTransform);
 
-            enemy.Init(new AttackBehaviour(enemy, _player.transform));
+            enemy.Init(new AttackBehaviour(enemy, _player.transform));//, _projectileSpawn);
 
             var setup = _setupActions[UnityEngine.Random.Range(0, _setupActions.Length)];
 
@@ -78,7 +95,6 @@ namespace Gameplay
                 SetupPatrolling
             };
         }
-
 
         private void SetupAttacking(Enemy enemy)
         {

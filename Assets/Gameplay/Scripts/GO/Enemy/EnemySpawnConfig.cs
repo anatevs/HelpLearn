@@ -10,8 +10,13 @@ namespace Gameplay
 
         public int PoolInitCount => _poolInitCount;
 
+        public float SpawnPeriod => _spawnPeriod;
+
         [SerializeField]
         private Enemy[] _prefabs;
+
+        [SerializeField]
+        private float _spawnPeriod = 5f;
 
         [SerializeField]
         private int _poolInitCount = 10;

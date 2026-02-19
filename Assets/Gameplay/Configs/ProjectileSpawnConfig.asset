@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f9f59f8773ca174797e274954af990b, type: 3}
-  m_Name: EnemyConfig
+  m_Script: {fileID: 11500000, guid: 3f28f155e4fcf8442938cbda9283a3d8, type: 3}
+  m_Name: ProjectileSpawnConfig
   m_EditorClassIdentifier: 
-  _name: Enemy0
-  _hp: 5
-  _rotationSpeed: 50
-  _patrolSpeed: 2
-  _followSpeed: 1
-  _detectDistance: 3
-  _shotPeriod: 10
+  _prefab: {fileID: 2339907463900550738, guid: e2447f60eaa77874fad6770ad679c96a, type: 3}
+  _speed: 6
+  _damage: 1
+  _poolInitCount: 10

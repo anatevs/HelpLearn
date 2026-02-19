@@ -11,6 +11,7 @@ namespace Gameplay
         public float PatrolSpeed => _patrolSpeed;
         public float DetectDistance => _detectDistance;
         public float FollowSpeed => _followSpeed;
+        public float ShotPeriod => _shotPeriod;
         public float RotationSpeed => _rotationSpeed;
 
         [Header("Common")]
@@ -27,11 +28,14 @@ namespace Gameplay
         [SerializeField]
         private float _patrolSpeed;
 
-        [Header("Following")]
+        [Header("Attacking")]
         [SerializeField]
         private float _followSpeed;
 
         [SerializeField]
         private float _detectDistance;
+
+        [SerializeField]
+        private float _shotPeriod;
     }
 }

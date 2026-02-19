@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefabs:
   - {fileID: 6115490535625203245, guid: 820f0612105edad44bd0776eb3c15ec2, type: 3}
+  - {fileID: 6115490535625203245, guid: 622ae0a501021ca4eacb5ed33b485bf1, type: 3}
+  _spawnPeriod: 30
   _poolInitCount: 10
   _xSpawnRange:
   - -16
