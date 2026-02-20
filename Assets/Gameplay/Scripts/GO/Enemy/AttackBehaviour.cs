@@ -10,8 +10,6 @@ namespace Gameplay
 
         private readonly float _period;
 
-        private Vector3 _direction;
-
         private float _timer = 0f;
 
         public AttackBehaviour(Enemy enemy,
@@ -27,6 +25,8 @@ namespace Gameplay
             _direction = (_attacked.position - _enemy.Movement.transform.position).normalized;
 
             _enemy.Movement.MoveUpdate(_direction, _speed);
+            _enemy.Rotation.RotateUpdate(_direction, _enemy.Config.RotationSpeed);
+
 
             _timer += Time.deltaTime;
             if (_timer >= _period)
