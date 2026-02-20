@@ -15,3 +15,4 @@ MonoBehaviour:
   _movementInfo:
     RotationSpeed: 50
     MovementSpeed: 5
+  _hp: 10

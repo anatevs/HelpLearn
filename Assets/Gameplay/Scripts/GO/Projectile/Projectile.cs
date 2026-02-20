@@ -29,9 +29,9 @@ namespace Gameplay
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.TryGetComponent<DamageComponent>(out var damageComponent))
+            if (collision.gameObject.TryGetComponent<HPComponent>(out var hpComponent))
             {
-                damageComponent.TakeDamage(_damage);
+                hpComponent.TakeDamage(_damage);
             }
 
             OnCollided?.Invoke(this);

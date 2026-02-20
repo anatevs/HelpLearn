@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class DamageComponent : MonoBehaviour
+    public class HPComponent : MonoBehaviour
     {
         public Action<int> OnDamaged;
 
@@ -20,6 +20,8 @@ namespace Gameplay
             _hp = _hp < 0 ? 0 : _hp;
 
             OnDamaged?.Invoke(_hp);
+
+            Debug.Log($"damage {damage} to {gameObject.name}, now hp is {_hp}");
         }
     }
 }

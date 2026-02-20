@@ -7,8 +7,12 @@ namespace Gameplay
     public class GameConfig : ScriptableObject
     {
         public MovementInfo Movement => _movementInfo;
+        public int HP => _hp;
 
         [SerializeField]
         private MovementInfo _movementInfo;
+
+        [SerializeField]
+        private int _hp;
     }
 }

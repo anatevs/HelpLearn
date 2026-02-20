@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -5,6 +6,8 @@ namespace Gameplay
 {
     public class InputHandler : MonoBehaviour
     {
+        public event Action OnShoot;
+
         public Vector3 Position => _pointerPosition;
 
         public Vector3 MoveDirection => _moveDirection;
@@ -34,12 +37,16 @@ namespace Gameplay
 
             _actions.Player.Move.performed += Move;
             _actions.Player.Move.canceled += StopMoving;
+
+            _actions.Player.Attack.performed += Shot;
         }
 
         private void OnDisable()
         {
             _actions.Player.Move.performed -= Move;
             _actions.Player.Move.canceled -= StopMoving;
+
+            _actions.Player.Attack.performed -= Shot;
 
             _actions.Disable();
         }
@@ -61,6 +68,11 @@ namespace Gameplay
         private void StopMoving(InputAction.CallbackContext context)
         {
             _moveDirection = Vector3.zero;
+        }
+
+        private void Shot(InputAction.CallbackContext context)
+        {
+            OnShoot?.Invoke();
         }
     }
 }

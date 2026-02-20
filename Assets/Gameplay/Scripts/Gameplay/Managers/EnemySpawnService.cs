@@ -1,11 +1,12 @@
-﻿using System;
+﻿using GameManagement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
 {
-    public class EnemySpawnService : MonoBehaviour
+    public class EnemySpawnService : DDOLClass<EnemySpawnService>
     {
         [SerializeField]
         private EnemySpawnConfig _config;
@@ -16,14 +17,9 @@ namespace Gameplay
         [SerializeField]
         private Transform _enemiesTransform;
 
-        [SerializeField]
-        private PatrolLocation[] _locations;
-
-        [SerializeField]
         private Player _player;
 
-        //[SerializeField]
-        //private ProjectileSpawnService _projectileSpawn;
+        private PatrolLocation[] _locations;
 
         private string[] _enemyNames;
 
@@ -33,17 +29,53 @@ namespace Gameplay
 
         private WaitForSeconds _spawnWait;
 
-        private void Awake()
+        private readonly HashSet<Enemy> _activeEnemies = new();
+
+        private void OnDisable()
         {
-            Init();
+            foreach (var enemy in _activeEnemies)
+            {
+                enemy.OnKilled -= Unspawn;
+            }
+        }
+
+        public void Init(Player player, PatrolLocation[] locations)
+        {
+            _activeEnemies.Clear();
+
+            _player = player;
+
+            _locations = locations;
+
+            _enemyNames = new string[_config.Prefabs.Length];
+
+            for (int i = 0; i < _config.Prefabs.Length; i++)
+            {
+                var enemy = _config.Prefabs[i];
+
+                _pools.Add(enemy.Config.Name, new Pool<Enemy>(enemy, _config.PoolInitCount, _poolTransform));
+
+                _enemyNames[i] = enemy.Config.Name;
+            }
+
+            _setupActions = new Action<Enemy>[]
+            {
+                SetupAttacking,
+                SetupPatrolling
+            };
 
             _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
+        }
 
+        public void StartSpawn()
+        {
             StartCoroutine(SpawnCoroutine());
         }
 
         public void Unspawn(Enemy enemy)
         {
+            _activeEnemies.Remove(enemy);
+
             enemy.gameObject.SetActive(false);
 
             enemy.SetStrategy(null);
@@ -51,6 +83,8 @@ namespace Gameplay
             _pools[enemy.Config.Name].Unspawn(enemy);
 
             enemy.transform.position = Vector3.zero;
+
+            enemy.OnKilled -= Unspawn;
         }
 
         private IEnumerator SpawnCoroutine()
@@ -69,31 +103,15 @@ namespace Gameplay
 
             var enemy = _pools[name].Spawn(_enemiesTransform);
 
-            enemy.Init(new AttackBehaviour(enemy, _player.transform));//, _projectileSpawn);
+            enemy.Init(new AttackBehaviour(enemy, _player.transform));
 
             var setup = _setupActions[UnityEngine.Random.Range(0, _setupActions.Length)];
 
             setup.Invoke(enemy);
-        }
 
-        private void Init()
-        {
-            _enemyNames = new string[_config.Prefabs.Length];
+            _activeEnemies.Add(enemy);
 
-            for (int i = 0; i < _config.Prefabs.Length; i++)
-            {
-                var enemy = _config.Prefabs[i];
-
-                _pools.Add(enemy.Config.Name, new Pool<Enemy>(enemy, _config.PoolInitCount, _poolTransform));
-
-                _enemyNames[i] = enemy.Config.Name;
-            }
-
-            _setupActions = new Action<Enemy>[]
-            {
-                SetupAttacking,
-                SetupPatrolling
-            };
+            enemy.OnKilled += Unspawn;
         }
 
         private void SetupAttacking(Enemy enemy)
@@ -124,11 +142,5 @@ namespace Gameplay
 
             enemy.gameObject.SetActive(true);
         }
-    }
-
-    [Serializable]
-    public struct PatrolLocation
-    {
-        public Transform[] Points;
     }
 }

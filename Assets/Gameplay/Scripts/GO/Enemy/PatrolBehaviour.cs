@@ -12,8 +12,6 @@ namespace Gameplay
 
         private readonly float _sqrEpsilon = 0.01f;
 
-        private Vector3 _direction;
-
         public PatrolBehaviour(Enemy enemy,
             Transform[] patrolPoints) : base(enemy)
         {
@@ -33,6 +31,7 @@ namespace Gameplay
         public override void ActUpdate()
         {
             _enemy.Movement.MoveUpdate(_direction, _speed);
+            _enemy.Rotation.RotateUpdate(_direction, _enemy.Config.RotationSpeed);
 
             if (GetCurrentDirection().sqrMagnitude <= _sqrEpsilon)
             {
