@@ -1,4 +1,5 @@
-﻿using GameManagement;
+﻿using EventBusNamespace;
+using GameManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,19 +30,20 @@ namespace Gameplay
 
         private WaitForSeconds _spawnWait;
 
-        private readonly HashSet<Enemy> _activeEnemies = new();
+        private Coroutine _spawnCoroutine;
 
         private void OnDisable()
         {
-            foreach (var enemy in _activeEnemies)
-            {
-                enemy.OnKilled -= Unspawn;
-            }
+            EventBus.Unsubscribe<EnemyKilledEvent>(Unspawn);
         }
 
         public void Init(Player player, PatrolLocation[] locations)
         {
-            _activeEnemies.Clear();
+            if (_spawnCoroutine != null)
+            {
+                StopCoroutine(_spawnCoroutine);
+                _spawnCoroutine = null;
+            }
 
             _player = player;
 
@@ -65,26 +67,21 @@ namespace Gameplay
             };
 
             _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
+
+            _spawnCoroutine = StartCoroutine(SpawnCoroutine());
         }
 
-        public void StartSpawn()
+        public void Unspawn(EnemyKilledEvent e)
         {
-            StartCoroutine(SpawnCoroutine());
-        }
-
-        public void Unspawn(Enemy enemy)
-        {
-            _activeEnemies.Remove(enemy);
+            var enemy = e.Value;
 
             enemy.gameObject.SetActive(false);
 
             enemy.SetStrategy(null);
 
-            _pools[enemy.Config.Name].Unspawn(enemy);
-
             enemy.transform.position = Vector3.zero;
 
-            enemy.OnKilled -= Unspawn;
+            _pools[enemy.Config.Name].Unspawn(enemy);
         }
 
         private IEnumerator SpawnCoroutine()
@@ -103,22 +100,23 @@ namespace Gameplay
 
             var enemy = _pools[name].Spawn(_enemiesTransform);
 
-            enemy.Init(new AttackBehaviour(enemy, _player.transform));
+            enemy.Init(new AttackStrategy(enemy, _player.transform));
 
             var setup = _setupActions[UnityEngine.Random.Range(0, _setupActions.Length)];
 
             setup.Invoke(enemy);
 
-            _activeEnemies.Add(enemy);
 
-            enemy.OnKilled += Unspawn;
+            EventBus.RaiseEvent(new GameEventT<Enemy>(enemy));
+
+            EventBus.Subscribe<EnemyKilledEvent>(Unspawn);
         }
 
         private void SetupAttacking(Enemy enemy)
         {
             var pos = _config.GetSpawnPos();
 
-            var startBehaviour = new AttackBehaviour(enemy, _player.transform);
+            var startBehaviour = new AttackStrategy(enemy, _player.transform);
 
             SetupEnemy(enemy, startBehaviour, pos);
         }
@@ -129,12 +127,12 @@ namespace Gameplay
 
             var pos = location.Points[0].position;
 
-            var startBehaviour = new PatrolBehaviour(enemy, location.Points);
+            var startBehaviour = new PatrolStrategy(enemy, location.Points);
 
             SetupEnemy(enemy, startBehaviour, pos);
         }
 
-        private void SetupEnemy(Enemy enemy, EnemyBehaviour behaviour, Vector3 pos)
+        private void SetupEnemy(Enemy enemy, EnemyStrategy behaviour, Vector3 pos)
         {
             enemy.SetStrategy(behaviour);
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class Pool<T> where T : Component
+    public sealed class Pool<T> where T : Component
     {
         private readonly T _prefab;
 

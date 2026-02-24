@@ -1,12 +1,18 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Gameplay
+namespace EventBusNamespace
 {
-    public class GameEvent
+    public class GameEvent : IGameEvent
     {
         public string Name => _name;
 
-        private readonly string _name;
+        public string Description => _description;
+
+        public string EventType => this.GetType().Name;
+
+        protected string _name;
+
+        protected string _description;
     }
 }

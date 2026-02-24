@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: EnemyConfig
   m_EditorClassIdentifier: 
   _name: Enemy0
-  _hp: 5
+  _hp: 3
   _rotationSpeed: 50
   _patrolSpeed: 2
   _followSpeed: 1
   _detectDistance: 3
-  _shotPeriod: 10
+  _shotPeriod: 4

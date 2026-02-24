@@ -18,4 +18,4 @@ MonoBehaviour:
   _patrolSpeed: 1
   _followSpeed: 1
   _detectDistance: 3
-  _shotPeriod: 6
+  _shotPeriod: 2

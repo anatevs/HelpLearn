@@ -1,3 +1,4 @@
+using EventBusNamespace;
 using System;
 using UnityEngine;
 
@@ -9,12 +10,11 @@ namespace Gameplay
     [RequireComponent(typeof(HPComponent))]
     public class Enemy : MonoBehaviour
     {
-        public event Action<Enemy> OnKilled;
         public MovementComponent Movement => _movement;
         public RotationZComponent Rotation => _rotation;
         public ShotComponent Shot => _shot;
-
         public EnemyConfig Config => _config;
+        public string StrategyName => _currentStrategy?.GetType().Name;
 
         [SerializeField]
         private EnemyConfig _config;
@@ -30,9 +30,9 @@ namespace Gameplay
 
         private HPComponent _hp;
 
-        private IEnemyBehaviour _currentBehaviour = null;
+        private IEnemyStrategy _currentStrategy = null;
 
-        private AttackBehaviour _attackBehaviour;
+        private AttackStrategy _attackStrategy;
 
         private void Awake()
         {
@@ -65,33 +65,33 @@ namespace Gameplay
 
         private void Update()
         {
-            _currentBehaviour?.ActUpdate();
+            _currentStrategy?.ActUpdate();
         }
 
-        public void Init(AttackBehaviour attackBehaviour)
+        public void Init(AttackStrategy attackBehaviour)
         {
-            _attackBehaviour ??= attackBehaviour;
+            _attackStrategy ??= attackBehaviour;
         }
 
-        public void SetStrategy(EnemyBehaviour behaviour)
+        public void SetStrategy(EnemyStrategy behaviour)
         {
-            _currentBehaviour = behaviour;
+            _currentStrategy = behaviour;
         }
 
         private void SetToAttack()
         {
-            if (_currentBehaviour is AttackBehaviour)
+            if (_currentStrategy is AttackStrategy)
             {
                 return;
             }
-            SetStrategy(_attackBehaviour);
+            SetStrategy(_attackStrategy);
         }
 
         private void TakeDamage(int hp)
         {
             if (hp == 0)
             {
-                OnKilled?.Invoke(this);
+                EventBus.RaiseEvent(new EnemyKilledEvent(this));
             }
         }
     }

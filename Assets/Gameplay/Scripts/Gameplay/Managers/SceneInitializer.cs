@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GameManagement;
+using UnityEngine;
 
 namespace Gameplay
 {
@@ -17,9 +18,11 @@ namespace Gameplay
 
         private void Start()
         {
+            GameStateService.Instance.CurrentState = GameState.Playing;
+
             EnemySpawnService.Instance.Init(_player, _patrolZones.Locations);
 
-            EnemySpawnService.Instance.StartSpawn();
+            ItemsService.Instance.Init();
         }
     }
 }
