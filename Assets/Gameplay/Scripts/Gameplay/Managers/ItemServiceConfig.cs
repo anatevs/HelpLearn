@@ -4,7 +4,7 @@ namespace Gameplay
 {
     [CreateAssetMenu(fileName = "ItemServiceConfig",
         menuName = "Configs/ItemService")]
-    public class ItemServiceConfig : ScriptableObject
+    public sealed class ItemServiceConfig : ScriptableObject
     {
         public Item[] Prefabs => _prefabs;
         public float[] XRange => _xRange;

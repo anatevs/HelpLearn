@@ -1,10 +1,9 @@
 using EventBusNamespace;
-using System;
 using UnityEngine;
 
 namespace Gameplay
 {
-    public class HPComponent : MonoBehaviour
+    public sealed class HPComponent : MonoBehaviour
     {
         public int HP => _hp;
 

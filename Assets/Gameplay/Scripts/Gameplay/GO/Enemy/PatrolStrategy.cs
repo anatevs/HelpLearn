@@ -2,7 +2,7 @@
 
 namespace Gameplay
 {
-    public class PatrolStrategy : EnemyStrategy
+    public sealed class PatrolStrategy : EnemyStrategy
     {
         private readonly Transform[] _patrolPoints;
 
@@ -10,7 +10,9 @@ namespace Gameplay
 
         private int _targetIndex;
 
-        private readonly float _sqrEpsilon = 0.01f;
+        private readonly float _floatEpsilon = 0.01f;
+
+        private Vector3 _toTargetVector;
 
         public PatrolStrategy(Enemy enemy,
             Transform[] patrolPoints) : base(enemy)
@@ -25,18 +27,21 @@ namespace Gameplay
             _speed = _enemy.Config.PatrolSpeed;
 
             _targetIndex = 0;
-            _direction = GetCurrentDirection().normalized;
+            SetCurrentToTarget();
+            _direction = _toTargetVector.normalized;
         }
 
         public override void ActUpdate()
         {
+            SetCurrentToTarget();
+            _direction = _toTargetVector.normalized;
+
             _enemy.Movement.MoveUpdate(_direction, _speed);
             _enemy.Rotation.RotateUpdate(_direction, _enemy.Config.RotationSpeed);
 
-            if (GetCurrentDirection().sqrMagnitude <= _sqrEpsilon)
+            if (_toTargetVector.sqrMagnitude <= _floatEpsilon)
             {
                 SetNextTargetIndex();
-                _direction = GetCurrentDirection().normalized;
             }
         }
 
@@ -45,9 +50,9 @@ namespace Gameplay
             _targetIndex = (_targetIndex + 1) % _patrolPoints.Length;
         }
 
-        private Vector3 GetCurrentDirection()
+        private void SetCurrentToTarget()
         {
-            return _patrolPoints[_targetIndex].position - _enemy.Movement.transform.position;
+            _toTargetVector = _patrolPoints[_targetIndex].position - _enemy.Movement.transform.position;
         }
     }
 }

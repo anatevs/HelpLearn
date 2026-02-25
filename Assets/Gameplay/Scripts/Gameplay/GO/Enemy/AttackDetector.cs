@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Gameplay
 {
     [RequireComponent(typeof(CircleCollider2D))]
-    public class AttackDetector : MonoBehaviour
+    public sealed class AttackDetector : MonoBehaviour
     {
         public event Action OnPlayerDetected;
 

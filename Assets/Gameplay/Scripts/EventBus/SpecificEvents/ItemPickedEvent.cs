@@ -2,7 +2,7 @@
 
 namespace EventBusNamespace
 {
-    public class ItemPickedEvent : GameEventT<Item>
+    public sealed class ItemPickedEvent : GameEventT<Item>
     {
         public ItemPickedEvent(Item item) : base(item)
         {

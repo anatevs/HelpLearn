@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class PatrolZones : MonoBehaviour
+    public sealed class PatrolZones : MonoBehaviour
     {
         public PatrolLocation[] Locations => _locations;
 
@@ -16,6 +16,9 @@ namespace Gameplay
             {
                 var zone = transform.GetChild(i);
                 var location = new PatrolLocation();
+
+                location.CentralPoint = zone;
+
                 location.Points = new Transform[zone.childCount];
 
                 for (int j = 0; j < zone.childCount; j++)

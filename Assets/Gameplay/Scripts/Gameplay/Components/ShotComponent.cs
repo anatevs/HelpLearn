@@ -2,7 +2,7 @@
 
 namespace Gameplay
 {
-    public class ShotComponent : MonoBehaviour
+    public sealed class ShotComponent : MonoBehaviour
     {
         [SerializeField]
         private Transform _shotPoint;

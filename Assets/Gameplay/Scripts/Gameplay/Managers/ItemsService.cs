@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class ItemsService : DDOLClass<ItemsService>
+    public sealed class ItemsService : DDOLClass<ItemsService>
     {
         [SerializeField]
         private ItemServiceConfig _config;

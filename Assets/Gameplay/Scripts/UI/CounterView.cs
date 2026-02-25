@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UI
 {
-    public class CounterView : MonoBehaviour
+    public sealed class CounterView : MonoBehaviour
     {
         [SerializeField]
         private TMP_Text _conterText;

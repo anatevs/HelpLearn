@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class RotationZComponent : MonoBehaviour
+    public sealed class RotationZComponent : MonoBehaviour
     {
         public void RotateUpdate(Vector3 direction, float speed)
         {

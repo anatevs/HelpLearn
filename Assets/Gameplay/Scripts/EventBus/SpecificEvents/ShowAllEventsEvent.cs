@@ -1,6 +1,6 @@
 ﻿namespace EventBusNamespace
 {
-    public class ShowAllEventsEvent : GameEvent
+    public sealed class ShowAllEventsEvent : GameEvent
     {
         public ShowAllEventsEvent()
         {

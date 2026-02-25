@@ -2,7 +2,7 @@
 
 namespace Gameplay
 {
-    public class MovementComponent : MonoBehaviour
+    public sealed class MovementComponent : MonoBehaviour
     {
         public void MoveUpdate(Vector3 direction, float speed)
         {

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class EnemySpawnService : DDOLClass<EnemySpawnService>
+    public sealed class EnemySpawnService : DDOLClass<EnemySpawnService>
     {
         [SerializeField]
         private EnemySpawnConfig _config;
@@ -126,7 +126,6 @@ namespace Gameplay
 
             setup.Invoke(enemy);
 
-
             EventBus.RaiseEvent(new EnemySpawnedEvent(enemy));
 
             EventBus.Subscribe<EnemyKilledEvent>(Unspawn);
@@ -145,7 +144,7 @@ namespace Gameplay
         {
             var location = _locations[UnityEngine.Random.Range(0, _locations.Length)];
 
-            var pos = location.Points[0].position;
+            var pos = location.CentralPoint.position;
 
             var startBehaviour = new PatrolStrategy(enemy, location.Points);
 

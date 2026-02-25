@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UI
 {
-    public class ShowEventsConsole
+    public sealed class ShowEventsConsole
     {
         public void ShowAll()
         {

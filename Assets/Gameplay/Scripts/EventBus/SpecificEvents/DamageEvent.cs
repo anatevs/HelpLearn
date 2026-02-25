@@ -2,7 +2,7 @@
 
 namespace EventBusNamespace
 {
-    public class DamageEvent : GameEventT<(HPComponent hp, int damage)>
+    public sealed class DamageEvent : GameEventT<(HPComponent hp, int damage)>
     {
         public DamageEvent((HPComponent hp, int damage) value) : base(value)
         {

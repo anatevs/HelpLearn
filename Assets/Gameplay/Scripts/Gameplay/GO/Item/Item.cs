@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Gameplay
 {
     [RequireComponent(typeof(Collider2D))]
-    public class Item : MonoBehaviour
+    public sealed class Item : MonoBehaviour
     {
         public ItemConfig Config => _config;
 

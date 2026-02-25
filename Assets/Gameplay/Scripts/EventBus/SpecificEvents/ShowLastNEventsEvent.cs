@@ -1,6 +1,6 @@
 ﻿namespace EventBusNamespace
 {
-    public class ShowLastNEventsEvent : GameEventT<int>
+    public sealed class ShowLastNEventsEvent : GameEventT<int>
     {
         public ShowLastNEventsEvent(int value) : base(value)
         {

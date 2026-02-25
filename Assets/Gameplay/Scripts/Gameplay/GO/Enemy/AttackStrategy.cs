@@ -2,7 +2,7 @@
 
 namespace Gameplay
 {
-    public class AttackStrategy : EnemyStrategy
+    public sealed class AttackStrategy : EnemyStrategy
     {
         private readonly Transform _attacked;
 
@@ -11,6 +11,8 @@ namespace Gameplay
         private readonly float _period;
 
         private float _timer = 0f;
+
+        private float _sqrDistance;
 
         public AttackStrategy(Enemy enemy,
             Transform followed) : base(enemy)
@@ -22,9 +24,14 @@ namespace Gameplay
 
         public override void ActUpdate()
         {
+            _sqrDistance = (_attacked.position - _enemy.Movement.transform.position).sqrMagnitude;
+
             _direction = (_attacked.position - _enemy.Movement.transform.position).normalized;
 
-            _enemy.Movement.MoveUpdate(_direction, _speed);
+            if (_sqrDistance > _enemy.Config.SqrNearDistance)
+            {
+                _enemy.Movement.MoveUpdate(_direction, _speed);
+            }
             _enemy.Rotation.RotateUpdate(_direction, _enemy.Config.RotationSpeed);
 
 

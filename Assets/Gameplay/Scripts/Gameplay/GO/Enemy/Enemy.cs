@@ -7,7 +7,7 @@ namespace Gameplay
     [RequireComponent(typeof(RotationZComponent))]
     [RequireComponent(typeof(ShotComponent))]
     [RequireComponent(typeof(HPComponent))]
-    public class Enemy : MonoBehaviour
+    public sealed class Enemy : MonoBehaviour
     {
         public MovementComponent Movement => _movement;
         public RotationZComponent Rotation => _rotation;
@@ -71,7 +71,7 @@ namespace Gameplay
 
         public void Init(AttackStrategy attackBehaviour)
         {
-            _attackStrategy ??= attackBehaviour;
+            _attackStrategy = attackBehaviour;
         }
 
         public void SetStrategy(EnemyStrategy behaviour)
@@ -86,14 +86,6 @@ namespace Gameplay
                 return;
             }
             SetStrategy(_attackStrategy);
-        }
-
-        private void TakeDamage(int hp)
-        {
-            if (hp == 0)
-            {
-                EventBus.RaiseEvent(new EnemyKilledEvent(this));
-            }
         }
 
         private void TakeDamage(DamageEvent e)

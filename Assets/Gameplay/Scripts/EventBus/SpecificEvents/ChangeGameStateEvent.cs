@@ -2,7 +2,7 @@
 
 namespace EventBusNamespace
 {
-    public class ChangeGameStateEvent : GameEventT<GameState>
+    public sealed class ChangeGameStateEvent : GameEventT<GameState>
     {
         public ChangeGameStateEvent(GameState value) : base(value)
         {

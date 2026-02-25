@@ -48,6 +48,11 @@ namespace UI
             EventBus.Subscribe<ChangeGameStateEvent>(SetLoseWin);
         }
 
+        public void Init()
+        {
+            gameObject.SetActive(true);
+        }
+
         private void SetPause()
         {
             SetPause(true);

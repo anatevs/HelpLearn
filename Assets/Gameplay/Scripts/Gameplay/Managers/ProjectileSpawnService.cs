@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class ProjectileSpawnService : DDOLClass<ProjectileSpawnService>
+    public sealed class ProjectileSpawnService : DDOLClass<ProjectileSpawnService>
     {
         [SerializeField]
         private ProjectileSpawnConfig _config;

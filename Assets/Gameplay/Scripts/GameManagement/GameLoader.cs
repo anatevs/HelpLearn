@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameManagement
 {
-    public class GameLoader : MonoBehaviour
+    public sealed class GameLoader : MonoBehaviour
     {
         private void Start()
         {

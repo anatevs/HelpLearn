@@ -5,7 +5,7 @@ namespace Gameplay
 {
     [RequireComponent(typeof(MovementComponent))]
     [RequireComponent(typeof(Collider2D))]
-    public class Projectile : MonoBehaviour
+    public sealed class Projectile : MonoBehaviour
     {
         public Action<Projectile> OnCollided;
 

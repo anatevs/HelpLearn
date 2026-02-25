@@ -1,5 +1,6 @@
 ﻿using EventBusNamespace;
 using GameManagement;
+using UI;
 using UnityEngine;
 
 namespace Gameplay
@@ -11,11 +12,6 @@ namespace Gameplay
 
         [SerializeField]
         private PatrolZones _patrolZones;
-
-        private void Awake()
-        {
-            _patrolZones.Init();
-        }
 
         private void OnEnable()
         {
@@ -29,6 +25,8 @@ namespace Gameplay
 
         private void Start()
         {
+            _patrolZones.Init();
+
             EnemySpawnService.Instance.Init(_player, _patrolZones.Locations);
 
             ProjectileSpawnService.Instance.Init();
@@ -36,6 +34,8 @@ namespace Gameplay
             ItemsService.Instance.Init();
 
             PlayerCountersController.Instance.Init(_player);
+
+            CanvasView.Instance.Init();
 
             EventBus.RaiseEvent(new ChangeGameStateEvent(GameState.Playing));
         }

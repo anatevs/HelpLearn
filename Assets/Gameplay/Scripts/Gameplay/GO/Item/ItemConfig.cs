@@ -4,7 +4,7 @@ namespace Gameplay
 {
     [CreateAssetMenu(fileName = "ItemConfig",
         menuName = "Configs/Item")]
-    public class ItemConfig : ScriptableObject
+    public sealed class ItemConfig : ScriptableObject
     {
         public string Name => _name;
 

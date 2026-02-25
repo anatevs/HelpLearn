@@ -2,7 +2,7 @@
 
 namespace EventBusNamespace
 {
-    public class EnemySpawnedEvent : GameEventT<Enemy>
+    public sealed class EnemySpawnedEvent : GameEventT<Enemy>
     {
         public EnemySpawnedEvent(Enemy enemy) : base(enemy)
         {

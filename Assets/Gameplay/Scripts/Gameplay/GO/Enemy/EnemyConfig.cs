@@ -4,12 +4,13 @@ namespace Gameplay
 {
     [CreateAssetMenu(fileName = "EnemyConfig",
         menuName = "Configs/Enemy")]
-    public class EnemyConfig : ScriptableObject
+    public sealed class EnemyConfig : ScriptableObject
     {
         public string Name => _name;
         public int HP => _hp;
         public float PatrolSpeed => _patrolSpeed;
         public float DetectDistance => _detectDistance;
+        public float SqrNearDistance => _sqrNearDistance;
         public float FollowSpeed => _followSpeed;
         public float ShotPeriod => _shotPeriod;
         public float RotationSpeed => _rotationSpeed;
@@ -35,6 +36,9 @@ namespace Gameplay
 
         [SerializeField]
         private float _detectDistance;
+
+        [SerializeField]
+        private float _sqrNearDistance = 1;
 
         [SerializeField]
         private float _shotPeriod;

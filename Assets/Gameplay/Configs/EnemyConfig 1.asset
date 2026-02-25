@@ -18,5 +18,6 @@ MonoBehaviour:
   _patrolSpeed: 2.5
   _followSpeed: 3
   _detectDistance: 3
+  _sqrNearDistance: 4
   _shotPeriod: 2
   _killReward: 2

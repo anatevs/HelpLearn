@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class ShowEventsView : MonoBehaviour
+    public sealed class ShowEventsView : MonoBehaviour
     {
         [SerializeField]
         private Button _showAllButton;
