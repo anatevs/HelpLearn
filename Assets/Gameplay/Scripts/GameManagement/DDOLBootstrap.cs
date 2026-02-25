@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameManagement
 {
-    public class DDOLBootstrap : MonoBehaviour
+    public sealed class DDOLBootstrap : MonoBehaviour
     {
         [SerializeField]
         private string _prefabsFolderPath = "GameServices/";
@@ -22,10 +22,10 @@ namespace GameManagement
         private string _canvas = "Canvas";
 
         [SerializeField]
-        private string _countersService = "PlayerCounterService";
+        private string _itemService = "ItemService";
 
         [SerializeField]
-        private string _itemService = "ItemService";
+        private string _countersController = "PlayerCountersController";
 
         private void Awake()
         {
@@ -37,13 +37,9 @@ namespace GameManagement
 
             CanvasView.CreateInstance(GetPathName(_canvas));
 
-
-            PlayerCountersService.CreateInstance(GetPathName(_countersService));
-
-            PlayerCountersService.Instance.Init();
-
-
             ItemsService.CreateInstance(GetPathName(_itemService));
+
+            PlayerCountersController.CreateInstance(GetPathName(_countersController));
         }
 
         private string GetPathName(string prefabName)

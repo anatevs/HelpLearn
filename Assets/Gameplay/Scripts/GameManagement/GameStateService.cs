@@ -1,24 +1,46 @@
+using EventBusNamespace;
 using System;
 using UnityEngine;
 
 namespace GameManagement
 {
-    public class GameStateService : DDOLClass<GameStateService>
+    public sealed class GameStateService : DDOLClass<GameStateService>
     {
-        public event Action<GameState> OnGameStateChanged;
-
-        public GameState CurrentState
-        {
-            get => _currentState;
-            set
-            {
-                _currentState = value;
-                OnGameStateChanged?.Invoke(value);
-            }
-        }
+        public GameState CurrentState => _currentState;
 
         private GameState _currentState = GameState.Init;
 
+        private void OnEnable()
+        {
+            EventBus.Subscribe<ChangeGameStateEvent>(ChangeState);
+        }
 
+        private void OnDisable()
+        {
+            EventBus.Unsubscribe<ChangeGameStateEvent>(ChangeState);
+        }
+
+        private void ChangeState(ChangeGameStateEvent e)
+        {
+            SetState(e.Value);
+        }
+
+        private void SetState(GameState state)
+        {
+            _currentState = state;
+
+            if (_currentState == GameState.Paused)
+            {
+                Time.timeScale = 0;
+            }
+            else if (_currentState == GameState.Playing)
+            {
+                Time.timeScale = 1;
+            }
+            else if (_currentState == GameState.Win || _currentState == GameState.Lose)
+            {
+                Time.timeScale = 0;
+            }
+        }
     }
 }

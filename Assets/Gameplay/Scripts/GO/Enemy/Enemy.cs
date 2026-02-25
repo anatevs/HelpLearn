@@ -1,5 +1,4 @@
 using EventBusNamespace;
-using System;
 using UnityEngine;
 
 namespace Gameplay
@@ -54,13 +53,15 @@ namespace Gameplay
         private void OnEnable()
         {
             _attackDetector.OnPlayerDetected += SetToAttack;
-            _hp.OnDamaged += TakeDamage;
+
+            EventBus.Subscribe<DamageEvent>(TakeDamage);
         }
 
         private void OnDisable()
         {
             _attackDetector.OnPlayerDetected -= SetToAttack;
-            _hp.OnDamaged -= TakeDamage;
+
+            EventBus.Unsubscribe<DamageEvent>(TakeDamage);
         }
 
         private void Update()
@@ -90,6 +91,14 @@ namespace Gameplay
         private void TakeDamage(int hp)
         {
             if (hp == 0)
+            {
+                EventBus.RaiseEvent(new EnemyKilledEvent(this));
+            }
+        }
+
+        private void TakeDamage(DamageEvent e)
+        {
+            if (e.Value.hp == _hp && _hp.HP == 0)
             {
                 EventBus.RaiseEvent(new EnemyKilledEvent(this));
             }

@@ -19,9 +19,24 @@ namespace Gameplay
 
         private readonly HashSet<Projectile> _activeProjectiles = new();
 
-        private void Awake()
+        public void Init()
         {
             _pool = new Pool<Projectile>(_config.Prefab, _config.PoolInitCount, _poolTransform);
+
+            Reset();
+        }
+
+        public void Reset()
+        {
+            if (_projectilesTransform.childCount > 0)
+            {
+                var activeProjectiles = _projectilesTransform.GetComponentsInChildren<Projectile>();
+
+                foreach (var projectile in activeProjectiles)
+                {
+                    Unspawn(projectile);
+                }
+            }
         }
 
         public void Spawn(Vector3 position, Vector3 direction)

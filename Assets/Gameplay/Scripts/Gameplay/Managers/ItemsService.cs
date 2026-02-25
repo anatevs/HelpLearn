@@ -39,12 +39,6 @@ namespace Gameplay
 
         private void Init(ItemServiceConfig config)
         {
-            if (_spawnCoroutine != null)
-            {
-                StopCoroutine(_spawnCoroutine);
-                _spawnCoroutine = null;
-            }
-
             _itemNames = new string[config.Prefabs.Length];
 
             for(int i = 0; i < config.Prefabs.Length; i++)
@@ -61,6 +55,27 @@ namespace Gameplay
             _posRange = (config.XRange, config.YRange);
 
             EventBus.Subscribe<ItemPickedEvent>(Unspawn);
+
+            Reset();
+        }
+
+        public void Reset()
+        {
+            if (_spawnCoroutine != null)
+            {
+                StopCoroutine(_spawnCoroutine);
+                _spawnCoroutine = null;
+            }
+
+            if (_activeItemsTransform.childCount > 0)
+            {
+                var activeEnemies = _activeItemsTransform.GetComponentsInChildren<Item>();
+
+                foreach (var item in activeEnemies)
+                {
+                    Unspawn(item);
+                }
+            }
 
             _spawnCoroutine = StartCoroutine(SpawnCoroutine());
         }
@@ -87,6 +102,11 @@ namespace Gameplay
         {
             var item = e.Value;
 
+            Unspawn(item);
+        }
+
+        private void Unspawn(Item item)
+        {
             item.gameObject.SetActive(false);
 
             item.transform.position = Vector3.zero;

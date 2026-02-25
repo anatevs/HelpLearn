@@ -16,3 +16,4 @@ MonoBehaviour:
     RotationSpeed: 50
     MovementSpeed: 5
   _hp: 10
+  _winScore: 10

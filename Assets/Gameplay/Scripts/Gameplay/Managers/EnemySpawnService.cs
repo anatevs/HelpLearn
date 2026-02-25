@@ -39,12 +39,6 @@ namespace Gameplay
 
         public void Init(Player player, PatrolLocation[] locations)
         {
-            if (_spawnCoroutine != null)
-            {
-                StopCoroutine(_spawnCoroutine);
-                _spawnCoroutine = null;
-            }
-
             _player = player;
 
             _locations = locations;
@@ -68,6 +62,27 @@ namespace Gameplay
 
             _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
 
+            Reset();
+        }
+
+        public void Reset()
+        {
+            if (_spawnCoroutine != null)
+            {
+                StopCoroutine(_spawnCoroutine);
+                _spawnCoroutine = null;
+            }
+
+            if (_enemiesTransform.childCount > 0)
+            {
+                var activeEnemies = _enemiesTransform.GetComponentsInChildren<Enemy>();
+
+                foreach (var enemy in activeEnemies)
+                {
+                    Unspawn(enemy);
+                }
+            }
+
             _spawnCoroutine = StartCoroutine(SpawnCoroutine());
         }
 
@@ -75,6 +90,11 @@ namespace Gameplay
         {
             var enemy = e.Value;
 
+            Unspawn(enemy);
+        }
+
+        private void Unspawn(Enemy enemy)
+        {
             enemy.gameObject.SetActive(false);
 
             enemy.SetStrategy(null);
@@ -107,7 +127,7 @@ namespace Gameplay
             setup.Invoke(enemy);
 
 
-            EventBus.RaiseEvent(new GameEventT<Enemy>(enemy));
+            EventBus.RaiseEvent(new EnemySpawnedEvent(enemy));
 
             EventBus.Subscribe<EnemyKilledEvent>(Unspawn);
         }

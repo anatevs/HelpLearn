@@ -1,3 +1,4 @@
+using EventBusNamespace;
 using System;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace Gameplay
 {
     public class HPComponent : MonoBehaviour
     {
-        public Action<int> OnDamaged;
+        public int HP => _hp;
 
         private int _hp;
 
@@ -19,9 +20,7 @@ namespace Gameplay
             _hp -= damage;
             _hp = _hp < 0 ? 0 : _hp;
 
-            OnDamaged?.Invoke(_hp);
-
-            Debug.Log($"damage {damage} to {gameObject.name}, now hp is {_hp}");
+            EventBus.RaiseEvent(new DamageEvent((this, damage)));
         }
     }
 }

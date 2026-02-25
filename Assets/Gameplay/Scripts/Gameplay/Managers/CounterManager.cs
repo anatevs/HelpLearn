@@ -8,13 +8,13 @@ namespace Gameplay
         IDisposable
         where Tevent : GameEvent
     {
-        private int _counter;
+        protected int _countValue;
 
         private readonly CounterView _counterView;
 
         public CounterManager(int startCount, CounterView counterView)
         {
-            _counter = startCount;
+            _countValue = startCount;
             _counterView = counterView;
 
             SetToView();
@@ -27,16 +27,23 @@ namespace Gameplay
             EventBus.Unsubscribe<Tevent>(HandleEvent);
         }
 
-        private void HandleEvent(Tevent e)
+        public void Reset(int count)
         {
-            _counter++;
+            _countValue = count;
 
             SetToView();
         }
 
-        private void SetToView()
+        protected virtual void HandleEvent(Tevent e)
         {
-            _counterView.SetCountText(_counter.ToString());
+            _countValue++;
+
+            SetToView();
+        }
+
+        protected void SetToView()
+        {
+            _counterView.SetCountText(_countValue.ToString());
         }
     }
 }

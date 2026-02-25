@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5820261150129744519}
   - component: {fileID: 3656213762536253293}
   m_Layer: 0
-  m_Name: PlayerCounters
+  m_Name: PlayerCountersController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8945257217103442176}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5acd59684e94d304d81687079d4489a7, type: 3}
+  m_Script: {fileID: 11500000, guid: 845309206b31dea4e899e9890e0a2f63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _gameConfig: {fileID: 11400000, guid: 642fc3677a3df4e42a5dc17d587add23, type: 2}

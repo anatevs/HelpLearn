@@ -1528,8 +1528,9 @@ MonoBehaviour:
   _enemiesPrefabName: Enemies
   _gameStates: GameStates
   _canvas: Canvas
-  _countersService: PlayerCounters
   _itemService: ItemService
+  _countersController: PlayerCountersController
+  _uiController: UIController
 --- !u!4 &1775346279
 Transform:
   m_ObjectHideFlags: 0

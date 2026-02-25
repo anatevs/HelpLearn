@@ -13,6 +13,7 @@ namespace Gameplay
         public float FollowSpeed => _followSpeed;
         public float ShotPeriod => _shotPeriod;
         public float RotationSpeed => _rotationSpeed;
+        public int KillReward => _killReward;
 
         [Header("Common")]
         [SerializeField]
@@ -37,5 +38,8 @@ namespace Gameplay
 
         [SerializeField]
         private float _shotPeriod;
+
+        [SerializeField]
+        private int _killReward = 1;
     }
 }

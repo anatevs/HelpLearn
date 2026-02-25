@@ -2,7 +2,7 @@
 
 namespace Gameplay
 {
-    public class CameraMovement : MonoBehaviour
+    public sealed class CameraMovement : MonoBehaviour
     {
         [SerializeField]
         private GameObject _target;
