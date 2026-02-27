@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace EventBusNamespace
 {
     public static class EventBus
     {
+        public static event Action<IGameEvent> OnGameEvent;
         public static IReadOnlyList<IGameEvent> Events => _events;
 
         private static readonly List<IGameEvent> _events = new();
@@ -18,6 +18,8 @@ namespace EventBusNamespace
             HandleEvent(e);
 
             _events.Add(e);
+
+            OnGameEvent?.Invoke(e);
         }
 
         public static void Subscribe<T>(Action<T> action) where T : IGameEvent
