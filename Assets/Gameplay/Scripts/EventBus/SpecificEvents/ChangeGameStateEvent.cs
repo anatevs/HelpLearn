@@ -2,9 +2,9 @@
 
 namespace EventBusNamespace
 {
-    public sealed class ChangeGameStateEvent : GameEventT<GameState>
+    public sealed class ChangeGameStateEvent : GameEventT<GameStateType>
     {
-        public ChangeGameStateEvent(GameState value) : base(value)
+        public ChangeGameStateEvent(GameStateType value) : base(value)
         {
             _name = "Change game state";
             _description = $"New state is {value}";

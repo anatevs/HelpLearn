@@ -1,0 +1,12 @@
+﻿using UnityEngine;
+
+namespace GameManagement
+{
+    public class InitGameState : IGameState
+    {
+        public void Enter()
+        {
+            Time.timeScale = 0f;
+        }
+    }
+}

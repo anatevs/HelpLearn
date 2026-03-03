@@ -37,11 +37,13 @@ namespace Gameplay
 
             CanvasView.Instance.Init();
 
-            EventBus.RaiseEvent(new ChangeGameStateEvent(GameState.Playing));
+            EventBus.RaiseEvent(new ChangeGameStateEvent(GameStateType.Playing));
         }
 
         public void ResetLevel(RestartEvent e)
         {
+            _player.Reset();
+
             EnemySpawnService.Instance.Reset();
 
             ProjectileSpawnService.Instance.Reset();
@@ -50,7 +52,7 @@ namespace Gameplay
 
             PlayerCountersController.Instance.Reset();
 
-            EventBus.RaiseEvent(new ChangeGameStateEvent(GameState.Playing));
+            EventBus.RaiseEvent(new ChangeGameStateEvent(GameStateType.Playing));
         }
     }
 }

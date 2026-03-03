@@ -1617,6 +1617,8 @@ MonoBehaviour:
   _canvas: Canvas
   _itemService: ItemService
   _countersController: PlayerCountersController
+  _saveService: SaveService
+  _soundPlayer: SoundPlayer
 --- !u!4 &1775346279
 Transform:
   m_ObjectHideFlags: 0

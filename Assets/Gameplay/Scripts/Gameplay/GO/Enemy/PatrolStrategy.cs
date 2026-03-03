@@ -17,6 +17,8 @@ namespace Gameplay
         public PatrolStrategy(Enemy enemy,
             Transform[] patrolPoints) : base(enemy)
         {
+            _type = EnemyStrategyType.Patrol;
+
             _patrolPoints = patrolPoints;
 
             if (patrolPoints == null || patrolPoints.Length == 0)

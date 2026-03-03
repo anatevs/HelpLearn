@@ -26,7 +26,7 @@ namespace Gameplay
 
         private readonly Dictionary<string, Pool<Enemy>> _pools = new();
 
-        private Action<Enemy>[] _setupActions;
+        private readonly Dictionary<EnemyStrategyType, Action<Enemy>> _setupActions = new();
 
         private WaitForSeconds _spawnWait;
 
@@ -54,11 +54,8 @@ namespace Gameplay
                 _enemyNames[i] = enemy.Config.Name;
             }
 
-            _setupActions = new Action<Enemy>[]
-            {
-                SetupAttacking,
-                SetupPatrolling
-            };
+            _setupActions.Add(EnemyStrategyType.Attack, SetupAttacking);
+            _setupActions.Add(EnemyStrategyType.Patrol, SetupPatrolling);
 
             _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
 
@@ -122,7 +119,7 @@ namespace Gameplay
 
             enemy.Init(new AttackStrategy(enemy, _player.transform));
 
-            var setup = _setupActions[UnityEngine.Random.Range(0, _setupActions.Length)];
+            var setup = _setupActions[enemy.Config.StartStrategy];
 
             setup.Invoke(enemy);
 

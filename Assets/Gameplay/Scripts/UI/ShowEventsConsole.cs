@@ -6,6 +6,8 @@ namespace UI
 {
     public sealed class ShowEventsConsole
     {
+        private const string _enemiesAmountTitle = "Spawned enemies amount: ";
+
         public void ShowAll()
         {
             Debug.Log("");
@@ -32,16 +34,20 @@ namespace UI
             }
         }
 
+        public void ShowSpawnedEnemiesAmount()
+        {
+            Debug.Log("");
+
+            var spawnedCount = EventBus.Events
+                .Where((e) => e.EventType == typeof(EnemySpawnedEvent).Name)
+                .Count();
+
+            Debug.Log($"{_enemiesAmountTitle}{spawnedCount}");
+        }
+
         private void ShowOneEvent(IGameEvent e)
         {
-            var result = $"{e.Name}";
-
-            if (e.Description != "")
-            {
-                result = $"{result}. {e.Description}";
-            }
-
-            Debug.Log(result);
+            Debug.Log(EventUIInfo.GetEventString(e));
         }
     }
 }

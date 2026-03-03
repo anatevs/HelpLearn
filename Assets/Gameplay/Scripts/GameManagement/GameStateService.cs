@@ -1,13 +1,23 @@
 using EventBusNamespace;
-using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 namespace GameManagement
 {
     public sealed class GameStateService : DDOLClass<GameStateService>
     {
-        public GameState CurrentState => _currentState;
+        private IGameState _currentState = new InitGameState();
 
-        private GameState _currentState = GameState.Init;
+        private Dictionary<GameStateType, Func<IGameState>> _newStates = new();
+
+        private void Awake()
+        {
+            _newStates.Add(GameStateType.Init, () => new InitGameState());
+            _newStates.Add(GameStateType.Playing, () => new PlayingGameState());
+            _newStates.Add(GameStateType.Paused, () => new PauseGameState());
+            _newStates.Add(GameStateType.Win, () => new WinGameState());
+            _newStates.Add(GameStateType.Lose, () => new LoseGameState());
+        }
 
         private void OnEnable()
         {
@@ -24,22 +34,11 @@ namespace GameManagement
             SetState(e.Value);
         }
 
-        private void SetState(GameState state)
+        private void SetState(GameStateType state)
         {
-            _currentState = state;
+            _currentState = _newStates[state].Invoke();
 
-            if (_currentState == GameState.Paused)
-            {
-                Time.timeScale = 0;
-            }
-            else if (_currentState == GameState.Playing)
-            {
-                Time.timeScale = 1;
-            }
-            else if (_currentState == GameState.Win || _currentState == GameState.Lose)
-            {
-                Time.timeScale = 0;
-            }
+            _currentState.Enter();
         }
     }
 }

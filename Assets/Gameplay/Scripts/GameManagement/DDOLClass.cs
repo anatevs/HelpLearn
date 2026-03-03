@@ -14,6 +14,11 @@ namespace GameManagement
             {
                 var prefab = Resources.Load<GameObject>(prefabPathName);
 
+                if (prefab == null)
+                {
+                    Debug.LogError($"no prefab for {typeof(T)} in resources folder. Searching path: {prefabPathName}");
+                }
+
                 GameObject instanceGO = Instantiate(prefab);
 
                 _instance = instanceGO.GetComponent<T>();

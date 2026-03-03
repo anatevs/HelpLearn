@@ -12,6 +12,9 @@ namespace UI
         [SerializeField]
         private TMP_InputField _amountInputField;
 
+        [SerializeField]
+        private Button _spawnedEnemiesButton;
+
         private readonly ShowEventsConsole _showEventsConsole = new();
 
         private void OnEnable()
@@ -19,6 +22,8 @@ namespace UI
             _showAllButton.onClick.AddListener(ShowAllEvents);
 
             _amountInputField.onEndEdit.AddListener(ShowNEvents);
+
+            _spawnedEnemiesButton.onClick.AddListener(ShowSpawnedEnemies);
         }
 
         private void OnDisable()
@@ -26,6 +31,8 @@ namespace UI
             _showAllButton.onClick.RemoveListener(ShowAllEvents);
 
             _amountInputField.onEndEdit.RemoveListener(ShowNEvents);
+
+            _spawnedEnemiesButton.onClick.RemoveListener(ShowSpawnedEnemies);
         }
 
         private void ShowAllEvents()
@@ -39,6 +46,11 @@ namespace UI
             {
                 _showEventsConsole.ShowLastN(n);
             }
+        }
+
+        private void ShowSpawnedEnemies()
+        {
+            _showEventsConsole.ShowSpawnedEnemiesAmount();
         }
     }
 }

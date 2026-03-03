@@ -27,6 +27,12 @@ namespace GameManagement
         [SerializeField]
         private string _countersController = "PlayerCountersController";
 
+        [SerializeField]
+        private string _saveService = "SaveService";
+
+        [SerializeField]
+        private string _soundPlayer = "SoundPlayer";
+
         private void Awake()
         {
             ProjectileSpawnService.CreateInstance(GetPathName(_projectilePrefabName));
@@ -40,6 +46,10 @@ namespace GameManagement
             ItemsService.CreateInstance(GetPathName(_itemService));
 
             PlayerCountersController.CreateInstance(GetPathName(_countersController));
+
+            SaveService.CreateInstance(GetPathName(_saveService));
+
+            SoundPlayer.CreateInstance(GetPathName(_soundPlayer));
         }
 
         private string GetPathName(string prefabName)

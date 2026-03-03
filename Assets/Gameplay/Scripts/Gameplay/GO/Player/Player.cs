@@ -2,7 +2,6 @@ using EventBusNamespace;
 using GameManagement;
 using UI;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace Gameplay
 {
@@ -26,6 +25,8 @@ namespace Gameplay
         private ShotComponent _shot;
         private HPComponent _hp;
 
+        private Vector3 _initPos;
+
         private void Awake()
         {
             _rotation = GetComponent<RotationZComponent>();
@@ -34,6 +35,8 @@ namespace Gameplay
             _hp = GetComponent<HPComponent>();
 
             _hp.Init(_config.HP);
+
+            _initPos = transform.position;
         }
 
         private void OnEnable()
@@ -57,6 +60,11 @@ namespace Gameplay
             _movement.MoveUpdate(_input.MoveDirection, _config.Movement.MovementSpeed);
         }
 
+        public void Reset()
+        {
+            transform.position = _initPos;
+        }
+
         private void Shoot()
         {
             _shot.Shoot(transform.up);
@@ -70,7 +78,7 @@ namespace Gameplay
 
                 if (_hp.HP <= 0)
                 {
-                    EventBus.RaiseEvent(new ChangeGameStateEvent(GameState.Lose));
+                    EventBus.RaiseEvent(new ChangeGameStateEvent(GameStateType.Lose));
                 }
             }
         }

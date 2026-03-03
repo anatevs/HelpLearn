@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-
-namespace EventBusNamespace
+﻿namespace EventBusNamespace
 {
     public class GameEvent : IGameEvent
     {

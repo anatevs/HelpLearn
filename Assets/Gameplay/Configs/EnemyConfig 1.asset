@@ -15,6 +15,7 @@ MonoBehaviour:
   _name: Enemy1
   _hp: 5
   _rotationSpeed: 50
+  _startStrategy: 1
   _patrolSpeed: 2.5
   _followSpeed: 3
   _detectDistance: 3

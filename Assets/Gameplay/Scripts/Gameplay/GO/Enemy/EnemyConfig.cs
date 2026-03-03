@@ -8,12 +8,13 @@ namespace Gameplay
     {
         public string Name => _name;
         public int HP => _hp;
+        public float RotationSpeed => _rotationSpeed;
+        public EnemyStrategyType StartStrategy => _startStrategy;
         public float PatrolSpeed => _patrolSpeed;
         public float DetectDistance => _detectDistance;
         public float SqrNearDistance => _sqrNearDistance;
         public float FollowSpeed => _followSpeed;
         public float ShotPeriod => _shotPeriod;
-        public float RotationSpeed => _rotationSpeed;
         public int KillReward => _killReward;
 
         [Header("Common")]
@@ -25,6 +26,9 @@ namespace Gameplay
 
         [SerializeField]
         private float _rotationSpeed;
+
+        [SerializeField]
+        private EnemyStrategyType _startStrategy;
 
         [Header("Patrol")]
         [SerializeField]

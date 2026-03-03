@@ -1,6 +1,8 @@
+using EventBusNamespace;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using GameManagement;
 
 namespace Gameplay
 {
@@ -39,6 +41,8 @@ namespace Gameplay
             _actions.Player.Move.canceled += StopMoving;
 
             _actions.Player.Attack.performed += Shot;
+
+            EventBus.Subscribe<ChangeGameStateEvent>(HandleGameState);
         }
 
         private void OnDisable()
@@ -47,6 +51,8 @@ namespace Gameplay
             _actions.Player.Move.canceled -= StopMoving;
 
             _actions.Player.Attack.performed -= Shot;
+
+            EventBus.Unsubscribe<ChangeGameStateEvent>(HandleGameState);
 
             _actions.Disable();
         }
@@ -73,6 +79,17 @@ namespace Gameplay
         private void Shot(InputAction.CallbackContext context)
         {
             OnShoot?.Invoke();
+        }
+
+        private void HandleGameState(ChangeGameStateEvent e)
+        {
+            if (e.Value == GameStateType.Playing)
+            {
+                _playerActions.Enable();
+                return;
+            }
+
+            _playerActions.Disable();
         }
     }
 }

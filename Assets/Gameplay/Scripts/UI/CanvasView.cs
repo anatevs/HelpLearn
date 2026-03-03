@@ -32,20 +32,19 @@ namespace UI
         [SerializeField]
         private EndGameView _endGameView;
 
+        [SerializeField]
+        private GameObject _playingMenu;
+
         private void OnEnable()
         {
             _pauseButton.onClick.AddListener(SetPause);
             _resumeButton.onClick.AddListener(SetResume);
-
-            EventBus.Subscribe<ChangeGameStateEvent>(SetLoseWin);
         }
 
         private void OnDisable()
         {
             _pauseButton.onClick.RemoveListener(SetPause);
             _resumeButton.onClick.RemoveListener(SetResume);
-
-            EventBus.Subscribe<ChangeGameStateEvent>(SetLoseWin);
         }
 
         public void Init()
@@ -53,45 +52,58 @@ namespace UI
             gameObject.SetActive(true);
         }
 
+        public void ShowLose()
+        {
+            _endGameView.ShowWinLose(false);
+            ShowPlayingMenu(false);
+        }
+
+        public void ShowWin()
+        {
+            _endGameView.ShowWinLose(true);
+            ShowPlayingMenu(false);
+        }
+
+        public void ShowPlaying()
+        {
+            ShowPlayingMenu(true);
+            SetPlaying(true);
+            _endGameView.Hide();
+        }
+
+        private void ShowPlayingMenu(bool isPlay)
+        {
+            _playingMenu.SetActive(isPlay);
+        }
+
+        private void SetPlaying(bool isPlaying)
+        {
+            _pauseButton.gameObject.SetActive(isPlaying);
+
+            _resumeButton.gameObject.SetActive(!isPlaying);
+
+            _showEventsView.gameObject.SetActive(!isPlaying);
+        }
+
         private void SetPause()
         {
-            SetPause(true);
+            SetPauseResume(true);
         }
 
         private void SetResume()
         {
-            SetPause(false);
+            SetPauseResume(false);
         }
 
-        private void SetPause(bool isPause)
+        private void SetPauseResume(bool isPause)
         {
-            _pauseButton.gameObject.SetActive(!isPause);
-
-            _resumeButton.gameObject.SetActive(isPause);
-
-            _showEventsView.gameObject.SetActive(isPause);
+            SetPlaying(!isPause);
 
             var stateEvent = isPause?
-                new ChangeGameStateEvent(GameState.Paused) :
-                new ChangeGameStateEvent(GameState.Playing);
+                new ChangeGameStateEvent(GameStateType.Paused) :
+                new ChangeGameStateEvent(GameStateType.Playing);
 
             EventBus.RaiseEvent(stateEvent);
-        }
-
-        private void SetLoseWin(ChangeGameStateEvent stateEvent)
-        {
-            if (stateEvent.Value == GameState.Lose)
-            {
-                _endGameView.ShowWinLose(false);
-            }
-            else if (stateEvent.Value == GameState.Win)
-            {
-                _endGameView.ShowWinLose(true);
-            }
-            else
-            {
-                _endGameView.Hide();
-            }
         }
     }
 }

@@ -17,6 +17,8 @@ namespace Gameplay
         public AttackStrategy(Enemy enemy,
             Transform followed) : base(enemy)
         {
+            _type = EnemyStrategyType.Attack;
+
             _attacked = followed;
             _speed = _enemy.Config.FollowSpeed;
             _period = _enemy.Config.ShotPeriod;

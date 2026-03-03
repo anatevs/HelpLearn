@@ -21,7 +21,7 @@ namespace Gameplay
 
             if (_countValue >= _winScore)
             {
-                EventBus.RaiseEvent(new ChangeGameStateEvent(GameState.Win));
+                EventBus.RaiseEvent(new ChangeGameStateEvent(GameStateType.Win));
             }
         }
     }

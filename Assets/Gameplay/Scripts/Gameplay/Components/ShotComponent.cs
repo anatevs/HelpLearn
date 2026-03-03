@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using EventBusNamespace;
+using UnityEngine;
 
 namespace Gameplay
 {
@@ -10,6 +11,8 @@ namespace Gameplay
         public void Shoot(Vector3 direction)
         {
             ProjectileSpawnService.Instance.Spawn(_shotPoint.position, direction);
+
+            EventBus.RaiseEvent(new ShotEvent(this));
         }
     }
 }
