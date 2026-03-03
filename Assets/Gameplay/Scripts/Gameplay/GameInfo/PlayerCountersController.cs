@@ -11,7 +11,7 @@ namespace Gameplay
         private int _startScore = 0;
         private int _startPicked = 0;
 
-        private PickedItemsManager _scoreManager;
+        private ScoreManager _scoreManager;
 
         private CounterManager<ItemPickedEvent> _pickedManager;
 

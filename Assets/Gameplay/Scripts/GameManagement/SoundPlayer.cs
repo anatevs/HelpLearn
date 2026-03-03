@@ -19,8 +19,8 @@ namespace GameManagement
         private void OnEnable()
         {
             EventBus.Subscribe<EnemyKilledEvent>(PlayEnemyKilled);
-            EventBus.Subscribe<ChangeGameStateEvent>(PlayWin);
-            EventBus.Subscribe<ChangeGameStateEvent>(PlayLose);
+            EventBus.Subscribe<GameWinEvent>(PlayWin);
+            EventBus.Subscribe<GameLoseEvent>(PlayLose);
             EventBus.Subscribe<ItemPickedEvent>(PlayPickItem);
             EventBus.Subscribe<ShotEvent>(PlayShot);
         }
@@ -28,8 +28,8 @@ namespace GameManagement
         private void OnDisable()
         {
             EventBus.Unsubscribe<EnemyKilledEvent>(PlayEnemyKilled);
-            EventBus.Unsubscribe<ChangeGameStateEvent>(PlayWin);
-            EventBus.Unsubscribe<ChangeGameStateEvent>(PlayLose);
+            EventBus.Unsubscribe<GameWinEvent>(PlayWin);
+            EventBus.Unsubscribe<GameLoseEvent>(PlayLose);
             EventBus.Unsubscribe<ItemPickedEvent>(PlayPickItem);
             EventBus.Unsubscribe<ShotEvent>(PlayShot);
         }
@@ -39,20 +39,14 @@ namespace GameManagement
             PlaySound(SoundType.KillEnemy);
         }
 
-        private void PlayWin(ChangeGameStateEvent e)
+        private void PlayWin(GameWinEvent e)
         {
-            if (e.Value == GameStateType.Win)
-            {
-                PlaySound(SoundType.Win);
-            }
+            PlaySound(SoundType.Win);
         }
 
-        private void PlayLose(ChangeGameStateEvent e)
+        private void PlayLose(GameLoseEvent e)
         {
-            if (e.Value == GameStateType.Lose)
-            {
-                PlaySound(SoundType.Lose);
-            }
+            PlaySound(SoundType.Lose);
         }
 
         private void PlayPickItem(ItemPickedEvent e)
@@ -69,20 +63,5 @@ namespace GameManagement
         {
             _audioSource.PlayOneShot(_config.GetSound(type));
         }
-
-
-        [SerializeField]
-        private bool _isPlay;
-        [SerializeField]
-        private SoundType _type;
-        private void Update()
-        {
-            if (_isPlay)
-            {
-                _isPlay = false;
-                PlaySound(_type);
-            }
-        }
-
     }
 }

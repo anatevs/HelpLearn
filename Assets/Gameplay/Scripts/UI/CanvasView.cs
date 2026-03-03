@@ -99,11 +99,14 @@ namespace UI
         {
             SetPlaying(!isPause);
 
-            var stateEvent = isPause?
-                new ChangeGameStateEvent(GameStateType.Paused) :
-                new ChangeGameStateEvent(GameStateType.Playing);
-
-            EventBus.RaiseEvent(stateEvent);
+            if (isPause)
+            {
+                EventBus.RaiseEvent(new GamePausedEvent());
+            }
+            else
+            {
+                EventBus.RaiseEvent(new GamePlayingEvent());
+            }
         }
     }
 }

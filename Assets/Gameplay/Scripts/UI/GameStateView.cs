@@ -11,17 +11,25 @@ namespace UI
 
         private void OnEnable()
         {
-            EventBus.Subscribe<ChangeGameStateEvent>(ShowState);
+            EventBus.Subscribe<GameInitEvent>(ShowState);
+            EventBus.Subscribe<GamePlayingEvent>(ShowState);
+            EventBus.Subscribe<GamePausedEvent>(ShowState);
+            EventBus.Subscribe<GameWinEvent>(ShowState);
+            EventBus.Subscribe<GameLoseEvent>(ShowState);
         }
 
         private void OnDisable()
         {
-            EventBus.Unsubscribe<ChangeGameStateEvent>(ShowState);
+            EventBus.Unsubscribe<GameInitEvent>(ShowState);
+            EventBus.Unsubscribe<GamePlayingEvent>(ShowState);
+            EventBus.Unsubscribe<GamePausedEvent>(ShowState);
+            EventBus.Unsubscribe<GameWinEvent>(ShowState);
+            EventBus.Unsubscribe<GameLoseEvent>(ShowState);
         }
 
-        private void ShowState(ChangeGameStateEvent e)
+        private void ShowState<T>(T e) where T : ChangeStateEvent
         {
-            SetText(e.Value.ToString());
+            SetText(e.State.ToString());
         }
 
         private void SetText(string text)

@@ -2,7 +2,7 @@ using EventBusNamespace;
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using GameManagement;
+using UnityEngine.EventSystems;
 
 namespace Gameplay
 {
@@ -24,6 +24,8 @@ namespace Gameplay
 
         private Vector3 _moveDirection;
 
+        private bool _isOverUI = false;
+
         private void Awake()
         {
             _actions = new();
@@ -42,7 +44,7 @@ namespace Gameplay
 
             _actions.Player.Attack.performed += Shot;
 
-            EventBus.Subscribe<ChangeGameStateEvent>(HandleGameState);
+            SubscribeEventBus();
         }
 
         private void OnDisable()
@@ -52,7 +54,7 @@ namespace Gameplay
 
             _actions.Player.Attack.performed -= Shot;
 
-            EventBus.Unsubscribe<ChangeGameStateEvent>(HandleGameState);
+            UnsubcribeEventBus();
 
             _actions.Disable();
         }
@@ -64,6 +66,8 @@ namespace Gameplay
             _pointerPosition = _camera.ScreenToWorldPoint(screenPos);
 
             _moveDirection = _playerActions.Move.ReadValue<Vector2>();
+
+            _isOverUI = EventSystem.current.IsPointerOverGameObject();
         }
 
         private void Move(InputAction.CallbackContext context)
@@ -78,17 +82,38 @@ namespace Gameplay
 
         private void Shot(InputAction.CallbackContext context)
         {
-            OnShoot?.Invoke();
+            if (!_isOverUI)
+            {
+                OnShoot?.Invoke();
+            }
         }
 
-        private void HandleGameState(ChangeGameStateEvent e)
+        private void SubscribeEventBus()
         {
-            if (e.Value == GameStateType.Playing)
-            {
-                _playerActions.Enable();
-                return;
-            }
+            EventBus.Subscribe<GamePlayingEvent>(SetPlaying);
+            EventBus.Subscribe<GameInitEvent>(SetUnplaying);
+            EventBus.Subscribe<GamePausedEvent>(SetUnplaying);
+            EventBus.Subscribe<GameWinEvent>(SetUnplaying);
+            EventBus.Subscribe<GameLoseEvent>(SetUnplaying);
+        }
 
+        private void UnsubcribeEventBus()
+        {
+            EventBus.Unsubscribe<GamePlayingEvent>(SetPlaying);
+            EventBus.Unsubscribe<GameInitEvent>(SetUnplaying);
+            EventBus.Unsubscribe<GamePausedEvent>(SetUnplaying);
+            EventBus.Unsubscribe<GameWinEvent>(SetUnplaying);
+            EventBus.Unsubscribe<GameLoseEvent>(SetUnplaying);
+        }
+
+
+        private void SetPlaying(GamePlayingEvent _)
+        {
+            _playerActions.Enable();
+        }
+
+        private void SetUnplaying<T>(T e) where T : ChangeStateEvent
+        {
             _playerActions.Disable();
         }
     }

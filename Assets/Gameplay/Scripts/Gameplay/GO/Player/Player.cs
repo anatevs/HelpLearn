@@ -78,7 +78,7 @@ namespace Gameplay
 
                 if (_hp.HP <= 0)
                 {
-                    EventBus.RaiseEvent(new ChangeGameStateEvent(GameStateType.Lose));
+                    EventBus.RaiseEvent(new GameLoseEvent());
                 }
             }
         }

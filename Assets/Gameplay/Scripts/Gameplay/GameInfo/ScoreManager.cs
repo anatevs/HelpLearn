@@ -4,11 +4,11 @@ using GameManagement;
 
 namespace Gameplay
 {
-    public sealed class PickedItemsManager : CounterManager<ScoreChangedEvent>
+    public sealed class ScoreManager : CounterManager<ScoreChangedEvent>
     {
         private int _winScore;
 
-        public PickedItemsManager(int startCount, CounterView counterView, int winScore) : base(startCount, counterView)
+        public ScoreManager(int startCount, CounterView counterView, int winScore) : base(startCount, counterView)
         {
             _winScore = winScore;
         }
@@ -21,7 +21,7 @@ namespace Gameplay
 
             if (_countValue >= _winScore)
             {
-                EventBus.RaiseEvent(new ChangeGameStateEvent(GameStateType.Win));
+                EventBus.RaiseEvent(new GameWinEvent());
             }
         }
     }

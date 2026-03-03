@@ -21,17 +21,25 @@ namespace GameManagement
 
         private void OnEnable()
         {
-            EventBus.Subscribe<ChangeGameStateEvent>(ChangeState);
+            EventBus.Subscribe<GameInitEvent>(SetState);
+            EventBus.Subscribe<GamePlayingEvent>(SetState);
+            EventBus.Subscribe<GamePausedEvent>(SetState);
+            EventBus.Subscribe<GameWinEvent>(SetState);
+            EventBus.Subscribe<GameLoseEvent>(SetState);
         }
 
         private void OnDisable()
         {
-            EventBus.Unsubscribe<ChangeGameStateEvent>(ChangeState);
+            EventBus.Unsubscribe<GameInitEvent>(SetState);
+            EventBus.Unsubscribe<GamePlayingEvent>(SetState);
+            EventBus.Unsubscribe<GamePausedEvent>(SetState);
+            EventBus.Unsubscribe<GameWinEvent>(SetState);
+            EventBus.Unsubscribe<GameLoseEvent>(SetState);
         }
 
-        private void ChangeState(ChangeGameStateEvent e)
+        private void SetState<T>(T e) where T : ChangeStateEvent
         {
-            SetState(e.Value);
+            SetState(e.State);
         }
 
         private void SetState(GameStateType state)

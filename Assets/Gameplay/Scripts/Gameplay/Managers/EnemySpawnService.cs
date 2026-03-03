@@ -13,6 +13,9 @@ namespace Gameplay
         private EnemySpawnConfig _config;
 
         [SerializeField]
+        private EnemySpawner _spawner;
+
+        [SerializeField]
         private Transform _poolTransform;
 
         [SerializeField]
@@ -21,8 +24,6 @@ namespace Gameplay
         private Player _player;
 
         private PatrolLocation[] _locations;
-
-        private string[] _enemyNames;
 
         private readonly Dictionary<string, Pool<Enemy>> _pools = new();
 
@@ -43,16 +44,7 @@ namespace Gameplay
 
             _locations = locations;
 
-            _enemyNames = new string[_config.Prefabs.Length];
-
-            for (int i = 0; i < _config.Prefabs.Length; i++)
-            {
-                var enemy = _config.Prefabs[i];
-
-                _pools.Add(enemy.Config.Name, new Pool<Enemy>(enemy, _config.PoolInitCount, _poolTransform));
-
-                _enemyNames[i] = enemy.Config.Name;
-            }
+            _spawner.Init(_pools, _config.PoolInitCount, _poolTransform);
 
             _setupActions.Add(EnemyStrategyType.Attack, SetupAttacking);
             _setupActions.Add(EnemyStrategyType.Patrol, SetupPatrolling);
@@ -113,9 +105,7 @@ namespace Gameplay
 
         private void SpawnRandom()
         {
-            var name = _enemyNames[UnityEngine.Random.Range(0, _enemyNames.Length)];
-
-            var enemy = _pools[name].Spawn(_enemiesTransform);
+            var enemy = _spawner.GetRandomEnemy(_pools, _enemiesTransform);
 
             enemy.Init(new AttackStrategy(enemy, _player.transform));
 

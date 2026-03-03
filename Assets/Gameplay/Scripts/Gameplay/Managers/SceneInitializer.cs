@@ -37,7 +37,7 @@ namespace Gameplay
 
             CanvasView.Instance.Init();
 
-            EventBus.RaiseEvent(new ChangeGameStateEvent(GameStateType.Playing));
+            EventBus.RaiseEvent(new GamePlayingEvent());
         }
 
         public void ResetLevel(RestartEvent e)
@@ -52,7 +52,7 @@ namespace Gameplay
 
             PlayerCountersController.Instance.Reset();
 
-            EventBus.RaiseEvent(new ChangeGameStateEvent(GameStateType.Playing));
+            EventBus.RaiseEvent(new GamePlayingEvent());
         }
     }
 }

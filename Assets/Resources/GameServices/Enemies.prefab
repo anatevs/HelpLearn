@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9099657496348456100}
   - component: {fileID: 969712729334454695}
+  - component: {fileID: 6124956129749145629}
   m_Layer: 0
   m_Name: Enemies
   m_TagString: Untagged
@@ -46,8 +47,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: 3bbffc7b5d86cf94e9e39d9b6e2aa32e, type: 2}
+  _spawner: {fileID: 6124956129749145629}
   _poolTransform: {fileID: 2227184118302557436}
   _enemiesTransform: {fileID: 9099657496348456100}
+--- !u!114 &6124956129749145629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395880838114862506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cca1ede1c32b98c458f8810876b8e429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _setConfig: {fileID: 11400000, guid: 29031fdfb42d8144b9d5eea2c9c56aa5, type: 2}
 --- !u!1 &6016910698475202150
 GameObject:
   m_ObjectHideFlags: 0
