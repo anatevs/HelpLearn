@@ -1,50 +1,24 @@
-﻿using Gameplay;
-using UI;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameManagement
 {
     public sealed class DDOLBootstrap : MonoBehaviour
     {
         [SerializeField]
-        private string _prefabsFolderPath = "GameServices/";
-
-        [SerializeField]
-        private string _projectilePrefabName = "Projectiles";
-
-        [SerializeField]
-        private string _enemiesPrefabName = "Enemies";
-
-        [SerializeField]
-        private string _gameStates = "GameStates";
-
-        [SerializeField]
-        private string _canvas = "Canvas";
-
-        [SerializeField]
-        private string _itemService = "ItemService";
-
-        [SerializeField]
-        private string _countersController = "PlayerCountersController";
+        private GameObject[] _prefabsDDOL;
 
         private void Awake()
         {
-            ProjectileSpawnService.CreateInstance(GetPathName(_projectilePrefabName));
+            foreach (var prefabGO in _prefabsDDOL)
+            {
+                if (!prefabGO.TryGetComponent<DDOLAbstract>(out var prefabDDOL))
+                {
+                    Debug.LogWarning($"prefab {prefabGO} does not contain DDOL component");
+                    return;
+                }
 
-            EnemySpawnService.CreateInstance(GetPathName(_enemiesPrefabName));
-
-            GameStateService.CreateInstance(GetPathName(_gameStates));
-
-            CanvasView.CreateInstance(GetPathName(_canvas));
-
-            ItemsService.CreateInstance(GetPathName(_itemService));
-
-            PlayerCountersController.CreateInstance(GetPathName(_countersController));
-        }
-
-        private string GetPathName(string prefabName)
-        {
-            return $"{_prefabsFolderPath}{prefabName}";
+                prefabDDOL.CreateInstance(prefabGO);
+            }
         }
     }
 }

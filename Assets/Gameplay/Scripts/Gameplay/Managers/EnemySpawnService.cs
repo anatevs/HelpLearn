@@ -32,6 +32,11 @@ namespace Gameplay
 
         private Coroutine _spawnCoroutine;
 
+        private void OnEnable()
+        {
+            EventBus.Subscribe<EnemyKilledEvent>(Unspawn);
+        }
+
         private void OnDisable()
         {
             EventBus.Unsubscribe<EnemyKilledEvent>(Unspawn);
@@ -86,7 +91,7 @@ namespace Gameplay
             _spawnCoroutine = StartCoroutine(SpawnCoroutine());
         }
 
-        public void Unspawn(EnemyKilledEvent e)
+        private void Unspawn(EnemyKilledEvent e)
         {
             var enemy = e.Value;
 
@@ -95,8 +100,6 @@ namespace Gameplay
 
         private void Unspawn(Enemy enemy)
         {
-            enemy.gameObject.SetActive(false);
-
             enemy.SetStrategy(null);
 
             enemy.transform.position = Vector3.zero;
@@ -127,8 +130,6 @@ namespace Gameplay
             setup.Invoke(enemy);
 
             EventBus.RaiseEvent(new EnemySpawnedEvent(enemy));
-
-            EventBus.Subscribe<EnemyKilledEvent>(Unspawn);
         }
 
         private void SetupAttacking(Enemy enemy)

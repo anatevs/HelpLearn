@@ -53,15 +53,13 @@ namespace Gameplay
         private void OnEnable()
         {
             _attackDetector.OnPlayerDetected += SetToAttack;
-
-            EventBus.Subscribe<DamageEvent>(TakeDamage);
+            _hp.OnDamaged += HandleDamage;
         }
 
         private void OnDisable()
         {
             _attackDetector.OnPlayerDetected -= SetToAttack;
-
-            EventBus.Unsubscribe<DamageEvent>(TakeDamage);
+            _hp.OnDamaged -= HandleDamage;
         }
 
         private void Update()
@@ -71,6 +69,7 @@ namespace Gameplay
 
         public void Init(AttackStrategy attackBehaviour)
         {
+            _hp.Init(_config.HP);
             _attackStrategy = attackBehaviour;
         }
 
@@ -88,9 +87,11 @@ namespace Gameplay
             SetStrategy(_attackStrategy);
         }
 
-        private void TakeDamage(DamageEvent e)
+        private void HandleDamage(int damage)
         {
-            if (e.Value.hp == _hp && _hp.HP == 0)
+            EventBus.RaiseEvent(new EnemyDamageEvent((this, damage)));
+
+            if (_hp.HP == 0)
             {
                 EventBus.RaiseEvent(new EnemyKilledEvent(this));
             }

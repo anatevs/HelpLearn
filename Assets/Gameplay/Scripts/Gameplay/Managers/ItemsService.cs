@@ -27,6 +27,11 @@ namespace Gameplay
 
         private Coroutine _spawnCoroutine;
 
+        private void OnEnable()
+        {
+            EventBus.Subscribe<ItemPickedEvent>(Unspawn);
+        }
+
         private void OnDisable()
         {
             EventBus.Unsubscribe<ItemPickedEvent>(Unspawn);
@@ -53,8 +58,6 @@ namespace Gameplay
             _spawnWait = new WaitForSeconds(config.SpawnPeriod);
 
             _posRange = (config.XRange, config.YRange);
-
-            EventBus.Subscribe<ItemPickedEvent>(Unspawn);
 
             Reset();
         }
@@ -107,8 +110,6 @@ namespace Gameplay
 
         private void Unspawn(Item item)
         {
-            item.gameObject.SetActive(false);
-
             item.transform.position = Vector3.zero;
 
             _pools[item.Config.Name].Unspawn(item);

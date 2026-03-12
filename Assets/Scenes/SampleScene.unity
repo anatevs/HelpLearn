@@ -1610,13 +1610,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88f83b2a21d82414593b661b5798974e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabsFolderPath: GameServices/
-  _projectilePrefabName: Projectiles
-  _enemiesPrefabName: Enemies
-  _gameStates: GameStates
-  _canvas: Canvas
-  _itemService: ItemService
-  _countersController: PlayerCountersController
+  _prefabsDDOL:
+  - {fileID: 7992745607025205871, guid: 2b6f3159c07a3c4448266592cfe8ceab, type: 3}
+  - {fileID: 1395880838114862506, guid: a3578630d93995749ba3aaaaa56b7947, type: 3}
+  - {fileID: 1801613407686577441, guid: 5dccc4fc37065094cbbd98d142dc17d1, type: 3}
+  - {fileID: 2824368686560710403, guid: 334da9c640591a44ca24344a712e7c9c, type: 3}
+  - {fileID: 8945257217103442176, guid: 376695a60381d5248b34b7d26c70640c, type: 3}
+  - {fileID: 7341206987113166290, guid: ef3c5e0d04b1b5e4097c5d388bf89219, type: 3}
 --- !u!4 &1775346279
 Transform:
   m_ObjectHideFlags: 0

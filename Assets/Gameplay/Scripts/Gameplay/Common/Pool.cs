@@ -41,6 +41,8 @@ namespace Gameplay
 
         public void Unspawn(T item)
         {
+            item.gameObject.SetActive(false);
+
             item.transform.parent = _poolParent;
 
             _pool.Enqueue(item);

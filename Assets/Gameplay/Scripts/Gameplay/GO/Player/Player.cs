@@ -2,7 +2,6 @@ using EventBusNamespace;
 using GameManagement;
 using UI;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace Gameplay
 {
@@ -39,13 +38,13 @@ namespace Gameplay
         private void OnEnable()
         {
             _input.OnShoot += Shoot;
-            EventBus.Subscribe<DamageEvent>(HandleDamage);
+            _hp.OnDamaged += HandleDamage;
         }
 
         private void OnDisable()
         {
             _input.OnShoot -= Shoot;
-            EventBus.Unsubscribe<DamageEvent>(HandleDamage);
+            _hp.OnDamaged -= HandleDamage;
         }
 
         private void Update()
@@ -62,16 +61,15 @@ namespace Gameplay
             _shot.Shoot(transform.up);
         }
 
-        private void HandleDamage(DamageEvent e)
+        private void HandleDamage(int damage)
         {
-            if (e.Value.hp == _hp)
-            {
-                CanvasView.Instance.HPView.SetCountText(_hp.HP.ToString());
+            EventBus.RaiseEvent(new PlayerDamageEvent(damage));
 
-                if (_hp.HP <= 0)
-                {
-                    EventBus.RaiseEvent(new ChangeGameStateEvent(GameState.Lose));
-                }
+            CanvasView.Instance.HPView.SetCountText(_hp.HP.ToString());
+
+            if (_hp.HP <= 0)
+            {
+                EventBus.RaiseEvent(new ChangeGameStateEvent(GameState.Lose));
             }
         }
     }
