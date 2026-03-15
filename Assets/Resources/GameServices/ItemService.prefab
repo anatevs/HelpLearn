@@ -48,6 +48,7 @@ MonoBehaviour:
   _config: {fileID: 11400000, guid: 57a26b11d09ea6948974be3ecb2ebdc2, type: 2}
   _poolTransform: {fileID: 4555521167992483864}
   _activeItemsTransform: {fileID: 5581164068096533789}
+  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
 --- !u!1 &4334917273199971167
 GameObject:
   m_ObjectHideFlags: 0

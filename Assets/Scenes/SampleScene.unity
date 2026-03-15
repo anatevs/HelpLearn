@@ -273,8 +273,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06bc8f2d4ebbee54591430e8b9004650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _instancesService: {fileID: 11400000, guid: 8eac2b63b0c929a4da15b037407972d8, type: 2}
+  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
   _player: {fileID: 1345598535}
   _patrolZones: {fileID: 42142370}
+  _startScore: 0
+  _startPickedItems: 0
 --- !u!1 &147241894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1287,6 +1291,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _input: {fileID: 1007530913}
   _config: {fileID: 11400000, guid: 642fc3677a3df4e42a5dc17d587add23, type: 2}
+  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
 --- !u!114 &1345598536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1590,33 +1595,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1775346279}
-  - component: {fileID: 1775346278}
+  - component: {fileID: 1775346280}
   m_Layer: 0
   m_Name: MockBootstrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1775346278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1775346277}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88f83b2a21d82414593b661b5798974e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _prefabsDDOL:
-  - {fileID: 7992745607025205871, guid: 2b6f3159c07a3c4448266592cfe8ceab, type: 3}
-  - {fileID: 1395880838114862506, guid: a3578630d93995749ba3aaaaa56b7947, type: 3}
-  - {fileID: 1801613407686577441, guid: 5dccc4fc37065094cbbd98d142dc17d1, type: 3}
-  - {fileID: 2824368686560710403, guid: 334da9c640591a44ca24344a712e7c9c, type: 3}
-  - {fileID: 8945257217103442176, guid: 376695a60381d5248b34b7d26c70640c, type: 3}
-  - {fileID: 7341206987113166290, guid: ef3c5e0d04b1b5e4097c5d388bf89219, type: 3}
+  m_IsActive: 0
 --- !u!4 &1775346279
 Transform:
   m_ObjectHideFlags: 0
@@ -1632,6 +1618,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1775346280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775346277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09f61a849e5378645b8f9ee64c0305f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _instancesService: {fileID: 11400000, guid: 8eac2b63b0c929a4da15b037407972d8, type: 2}
+  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
+  _enemyServicePrefab: {fileID: 969712729334454695, guid: a3578630d93995749ba3aaaaa56b7947, type: 3}
+  _projectileSpawnServicePrefab: {fileID: 7024083307618645781, guid: ef3c5e0d04b1b5e4097c5d388bf89219, type: 3}
+  _itemServicePrefab: {fileID: 7383594074420975722, guid: 334da9c640591a44ca24344a712e7c9c, type: 3}
+  _canvasViewPrefab: {fileID: 7737575323373693019, guid: 2b6f3159c07a3c4448266592cfe8ceab, type: 3}
 --- !u!1 &1895542302
 GameObject:
   m_ObjectHideFlags: 0

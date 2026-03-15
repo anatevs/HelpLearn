@@ -15,6 +15,8 @@ namespace UI
         [SerializeField]
         private GameObject _winView;
 
+        private EventBus _eventBus;
+
         private void OnEnable()
         {
             _restartButton.onClick.AddListener(Restart);
@@ -23,6 +25,11 @@ namespace UI
         private void OnDisable()
         {
             _restartButton.onClick.RemoveListener(Restart);
+        }
+
+        public void Init(EventBus eventBus)
+        {
+            _eventBus = eventBus;
         }
 
         public void ShowWinLose(bool isWin)
@@ -40,7 +47,7 @@ namespace UI
 
         private void Restart()
         {
-            EventBus.RaiseEvent(new RestartEvent());
+            _eventBus.RaiseEvent(new RestartEvent());
         }
     }
 }

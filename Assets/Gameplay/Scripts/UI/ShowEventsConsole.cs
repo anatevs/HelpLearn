@@ -6,12 +6,19 @@ namespace UI
 {
     public sealed class ShowEventsConsole
     {
+        private EventBus _eventBus;
+
+        public ShowEventsConsole(EventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
+
         public void ShowAll()
         {
             Debug.Log("");
             Debug.Log("All events:");
 
-            foreach (var e in EventBus.Events)
+            foreach (var e in _eventBus.Events)
             {
                 ShowOneEvent(e);
             }
@@ -22,7 +29,7 @@ namespace UI
             Debug.Log("");
             Debug.Log($"Last {n} events:");
 
-            var lastN = EventBus.Events
+            var lastN = _eventBus.Events
                 .Reverse()
                 .Take(n);
 

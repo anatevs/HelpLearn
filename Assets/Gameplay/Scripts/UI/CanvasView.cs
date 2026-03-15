@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public sealed class CanvasView : DDOLClass<CanvasView>
+    public sealed class CanvasView : MonoBehaviour
     {
         public CounterView ScoreView => _scoreView;
         public CounterView PickedItemsView => _pickedItemsView;
@@ -32,12 +32,15 @@ namespace UI
         [SerializeField]
         private EndGameView _endGameView;
 
+        [SerializeField]
+        private EventBus _eventBus;
+
         private void OnEnable()
         {
             _pauseButton.onClick.AddListener(SetPause);
             _resumeButton.onClick.AddListener(SetResume);
 
-            EventBus.Subscribe<ChangeGameStateEvent>(SetLoseWin);
+            _eventBus.Subscribe<ChangeGameStateEvent>(SetLoseWin);
         }
 
         private void OnDisable()
@@ -45,12 +48,16 @@ namespace UI
             _pauseButton.onClick.RemoveListener(SetPause);
             _resumeButton.onClick.RemoveListener(SetResume);
 
-            EventBus.Subscribe<ChangeGameStateEvent>(SetLoseWin);
+            _eventBus.Subscribe<ChangeGameStateEvent>(SetLoseWin);
         }
 
         public void Init()
         {
             gameObject.SetActive(true);
+
+            _showEventsView.Init(_eventBus);
+
+            _endGameView.Init(_eventBus);
         }
 
         private void SetPause()
@@ -75,7 +82,7 @@ namespace UI
                 new ChangeGameStateEvent(GameState.Paused) :
                 new ChangeGameStateEvent(GameState.Playing);
 
-            EventBus.RaiseEvent(stateEvent);
+            _eventBus.RaiseEvent(stateEvent);
         }
 
         private void SetLoseWin(ChangeGameStateEvent stateEvent)

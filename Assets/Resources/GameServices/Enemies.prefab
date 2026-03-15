@@ -42,12 +42,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1395880838114862506}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 532365ec4af41dd4aad1b13bd2639a2c, type: 3}
+  m_Script: {fileID: 11500000, guid: d0c366f88542adf4f83b558bf45cdae5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: 3bbffc7b5d86cf94e9e39d9b6e2aa32e, type: 2}
   _poolTransform: {fileID: 2227184118302557436}
   _enemiesTransform: {fileID: 9099657496348456100}
+  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
 --- !u!1 &6016910698475202150
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,52 +1,67 @@
 ﻿using EventBusNamespace;
-using GameManagement;
+using System;
 using UI;
 
 namespace Gameplay
 {
-    public sealed class PlayerCountersController : DDOLClass<PlayerCountersController>
+    public sealed class PlayerCountersController : 
+        IDisposable
     {
+        private readonly EventBus _eventBus;
+
+        private CanvasView _canvasView;
+
         private Player _player;
 
-        private int _startScore = 0;
-        private int _startPicked = 0;
+        private ScoreController _scoreController;
 
-        private PickedItemsManager _scoreManager;
+        private CounterController<ItemPickedEvent> _pickedController;
 
-        private CounterManager<ItemPickedEvent> _pickedManager;
-
-        private void OnEnable()
+        public PlayerCountersController(EventBus eventBus)
         {
-            EventBus.Subscribe<EnemyKilledEvent>(HandleEnemyKill);
+            _eventBus = eventBus;
+            _eventBus.Subscribe<PlayerDamageEvent>(HandlePlayerDamage);
+            _eventBus.Subscribe<EnemyKilledEvent>(HandleEnemyKill);
         }
 
-        private void OnDisable()
+        void IDisposable.Dispose()
         {
-            EventBus.Unsubscribe<EnemyKilledEvent>(HandleEnemyKill);
+            _eventBus.Unsubscribe<PlayerDamageEvent>(HandlePlayerDamage);
+            _eventBus.Unsubscribe<EnemyKilledEvent>(HandleEnemyKill);
         }
 
-        public void Init(Player player)
+        public void Init(CanvasView canvasView,
+            Player player,
+            ScoreStorage scoreStorage,
+            PickedItemsStorage pickedItemsStorage)
         {
+            _canvasView = canvasView;
+
             _player = player;
 
-            _scoreManager = new(_startScore, CanvasView.Instance.ScoreView, player.Config.WinScore);
+            _scoreController = new(scoreStorage, _canvasView.ScoreView, _eventBus);
 
-            _pickedManager = new(_startPicked, CanvasView.Instance.PickedItemsView);
+            _pickedController = new(pickedItemsStorage, _canvasView.PickedItemsView, _eventBus);
 
             Reset();
         }
 
         public void Reset()
         {
-            _scoreManager.Reset(_startScore);
-            _pickedManager.Reset(_startPicked);
+            _scoreController.Reset();
+            _pickedController.Reset();
 
-            CanvasView.Instance.HPView.SetCountText(_player.Config.HP.ToString());
+            _canvasView.HPView.SetCountText(_player.Config.HP.ToString());
+        }
+
+        private void HandlePlayerDamage(PlayerDamageEvent e)
+        {
+            _canvasView.HPView.SetCountText(e.Value.newHP.ToString());
         }
 
         private void HandleEnemyKill(EnemyKilledEvent e)
         {
-            EventBus.RaiseEvent(new ScoreChangedEvent(e.Value.Config.KillReward));
+            _eventBus.RaiseEvent(new ScoreChangedEvent(e.Value.Config.KillReward));
         }
     }
 }

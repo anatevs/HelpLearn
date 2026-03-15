@@ -1,6 +1,5 @@
 using EventBusNamespace;
 using GameManagement;
-using UI;
 using UnityEngine;
 
 namespace Gameplay
@@ -20,10 +19,22 @@ namespace Gameplay
         [SerializeField]
         private GameConfig _config;
 
+        [SerializeField]
+        private EventBus _eventBus;
+
         private RotationZComponent _rotation;
         private MovementComponent _movement;
         private ShotComponent _shot;
         private HPComponent _hp;
+
+        private ProjectileSpawnService _projectileService;
+
+        public void Construct(ProjectileSpawnService projectileService)
+        {
+            _projectileService = projectileService;
+
+            _shot.Init(_projectileService);
+        }
 
         private void Awake()
         {
@@ -63,13 +74,11 @@ namespace Gameplay
 
         private void HandleDamage(int damage)
         {
-            EventBus.RaiseEvent(new PlayerDamageEvent(damage));
-
-            CanvasView.Instance.HPView.SetCountText(_hp.HP.ToString());
+            _eventBus.RaiseEvent(new PlayerDamageEvent((damage, _hp.HP)));
 
             if (_hp.HP <= 0)
             {
-                EventBus.RaiseEvent(new ChangeGameStateEvent(GameState.Lose));
+                _eventBus.RaiseEvent(new ChangeGameStateEvent(GameState.Lose));
             }
         }
     }

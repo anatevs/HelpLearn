@@ -1,5 +1,4 @@
 ﻿using EventBusNamespace;
-using GameManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public sealed class EnemySpawnService : DDOLClass<EnemySpawnService>
+    public sealed class EnemySpawnService : MonoBehaviour
     {
         [SerializeField]
         private EnemySpawnConfig _config;
@@ -17,6 +16,9 @@ namespace Gameplay
 
         [SerializeField]
         private Transform _enemiesTransform;
+
+        [SerializeField]
+        private EventBus _eventBus;
 
         private Player _player;
 
@@ -32,21 +34,26 @@ namespace Gameplay
 
         private Coroutine _spawnCoroutine;
 
+        private ProjectileSpawnService _projectileService;
+
         private void OnEnable()
         {
-            EventBus.Subscribe<EnemyKilledEvent>(Unspawn);
+            _eventBus.Subscribe<EnemyKilledEvent>(Unspawn);
         }
 
         private void OnDisable()
         {
-            EventBus.Unsubscribe<EnemyKilledEvent>(Unspawn);
+            _eventBus.Unsubscribe<EnemyKilledEvent>(Unspawn);
         }
 
-        public void Init(Player player, PatrolLocation[] locations)
+        public void Construct(Player player, PatrolLocation[] locations,
+            ProjectileSpawnService projectileService)
         {
             _player = player;
 
             _locations = locations;
+
+            _projectileService = projectileService;
 
             _enemyNames = new string[_config.Prefabs.Length];
 
@@ -123,13 +130,13 @@ namespace Gameplay
 
             var enemy = _pools[name].Spawn(_enemiesTransform);
 
-            enemy.Init(new AttackStrategy(enemy, _player.transform));
+            enemy.Init(new AttackStrategy(enemy, _player.transform), _projectileService);
 
             var setup = _setupActions[UnityEngine.Random.Range(0, _setupActions.Length)];
 
             setup.Invoke(enemy);
 
-            EventBus.RaiseEvent(new EnemySpawnedEvent(enemy));
+            _eventBus.RaiseEvent(new EnemySpawnedEvent(enemy));
         }
 
         private void SetupAttacking(Enemy enemy)

@@ -1990,6 +1990,7 @@ MonoBehaviour:
   _resumeButton: {fileID: 2935782689766193381}
   _showEventsView: {fileID: 7335044031971948296}
   _endGameView: {fileID: 3315043957459197252}
+  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
 --- !u!1 &8365147988964463383
 GameObject:
   m_ObjectHideFlags: 0

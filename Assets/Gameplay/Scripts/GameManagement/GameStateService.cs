@@ -1,22 +1,32 @@
 using EventBusNamespace;
+using System;
 using UnityEngine;
 
 namespace GameManagement
 {
-    public sealed class GameStateService : DDOLClass<GameStateService>
+    public sealed class GameStateService : 
+        IDisposable
     {
+        private readonly EventBus _eventBus;
+
         public GameState CurrentState => _currentState;
 
         private GameState _currentState = GameState.Init;
 
-        private void OnEnable()
+        public GameStateService(EventBus eventBus)
         {
-            EventBus.Subscribe<ChangeGameStateEvent>(ChangeState);
+            _eventBus = eventBus;
+            Init();
         }
 
-        private void OnDisable()
+        private void Init()
         {
-            EventBus.Unsubscribe<ChangeGameStateEvent>(ChangeState);
+            _eventBus.Subscribe<ChangeGameStateEvent>(ChangeState);
+        }
+
+        void IDisposable.Dispose()
+        {
+            _eventBus.Unsubscribe<ChangeGameStateEvent>(ChangeState);
         }
 
         private void ChangeState(ChangeGameStateEvent e)

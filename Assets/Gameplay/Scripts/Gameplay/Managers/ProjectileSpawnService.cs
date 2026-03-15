@@ -1,10 +1,9 @@
-﻿using GameManagement;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
 {
-    public sealed class ProjectileSpawnService : DDOLClass<ProjectileSpawnService>
+    public sealed class ProjectileSpawnService : MonoBehaviour
     {
         [SerializeField]
         private ProjectileSpawnConfig _config;

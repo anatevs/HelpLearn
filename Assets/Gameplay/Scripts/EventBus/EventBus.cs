@@ -1,19 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace EventBusNamespace
 {
-    public static class EventBus
+    [CreateAssetMenu(fileName = "EventBus",
+        menuName = "Configs/GameSystem/EventBus")]
+    public class EventBus : ScriptableObject
     {
-        public static event Action<IGameEvent> OnGameEvent;
-        public static IReadOnlyList<IGameEvent> Events => _events;
+        public event Action<IGameEvent> OnGameEvent;
+        public IReadOnlyList<IGameEvent> Events => _events;
 
-        private static readonly List<IGameEvent> _events = new();
+        private readonly List<IGameEvent> _events = new();
 
-        private static readonly Dictionary<string, List<Delegate>> _listeners = new();
+        private readonly Dictionary<string, List<Delegate>> _listeners = new();
 
-        public static void RaiseEvent<T>(T e) where T : IGameEvent
+        public void RaiseEvent<T>(T e) where T : IGameEvent
         {
             HandleEvent(e);
 
@@ -22,7 +25,7 @@ namespace EventBusNamespace
             OnGameEvent?.Invoke(e);
         }
 
-        public static void Subscribe<T>(Action<T> action) where T : IGameEvent
+        public void Subscribe<T>(Action<T> action) where T : IGameEvent
         {
             var typeName = typeof(T).Name;
 
@@ -34,7 +37,7 @@ namespace EventBusNamespace
             _listeners[typeName].Add(action);
         }
 
-        public static void Unsubscribe<T>(Action<T> action) where T : IGameEvent
+        public void Unsubscribe<T>(Action<T> action) where T : IGameEvent
         {
             var typeName = typeof(T).Name;
 
@@ -51,7 +54,7 @@ namespace EventBusNamespace
             }
         }
 
-        private static void HandleEvent<T>(T e) where T : IGameEvent
+        private void HandleEvent<T>(T e) where T : IGameEvent
         {
             if (_listeners.TryGetValue(e.EventType, out var listeners))
             {

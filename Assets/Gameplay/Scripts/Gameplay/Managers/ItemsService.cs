@@ -1,12 +1,11 @@
 ﻿using EventBusNamespace;
-using GameManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
 {
-    public sealed class ItemsService : DDOLClass<ItemsService>
+    public sealed class ItemsService : MonoBehaviour
     {
         [SerializeField]
         private ItemServiceConfig _config;
@@ -16,6 +15,9 @@ namespace Gameplay
 
         [SerializeField]
         private Transform _activeItemsTransform;
+
+        [SerializeField]
+        private EventBus _eventBus;
 
         private readonly Dictionary<string, Pool<Item>> _pools = new();
 
@@ -29,12 +31,12 @@ namespace Gameplay
 
         private void OnEnable()
         {
-            EventBus.Subscribe<ItemPickedEvent>(Unspawn);
+            _eventBus.Subscribe<ItemPickedEvent>(Unspawn);
         }
 
         private void OnDisable()
         {
-            EventBus.Unsubscribe<ItemPickedEvent>(Unspawn);
+            _eventBus.Unsubscribe<ItemPickedEvent>(Unspawn);
         }
 
         public void Init()
