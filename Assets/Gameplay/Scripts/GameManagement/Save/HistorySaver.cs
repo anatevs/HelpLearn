@@ -14,28 +14,11 @@ namespace GameManagement
 
         private const string _sessionsDelimiter = "\n\n\n";
 
-        private readonly EventBus _eventBus;
-
-        public HistorySaver(EventBus eventBus)
-        {
-            _eventBus = eventBus;
-        }
-
         public void Init()
         {
             _path = Path.Combine(Application.persistentDataPath, _filename);
 
             SetTitle();
-        }
-
-        public void OnEnable()
-        {
-            _eventBus.OnGameEvent += WriteEvent;
-        }
-
-        public void OnDisable()
-        {
-            _eventBus.OnGameEvent -= WriteEvent;
         }
 
         public void SetTitle()

@@ -9,5 +9,10 @@ namespace GameManagement
         {
             Time.timeScale = 1.0f;
         }
+
+        public void Exit()
+        {
+
+        }
     }
 }

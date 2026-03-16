@@ -51,6 +51,8 @@ namespace GameManagement
 
         private void SetState(GameStateType state)
         {
+            _currentState.Exit();
+
             _currentState = _newStates[state].Invoke();
 
             _currentState.Enter();

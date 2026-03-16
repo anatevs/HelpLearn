@@ -6,24 +6,22 @@ namespace GameManagement
     public class SaveService :
         IDisposable
     {
-        private EventBus _eventBus;
+        private readonly EventBus _eventBus;
 
-        private HistorySaver _historySaver;
+        private readonly HistorySaver _historySaver = new();
 
         public SaveService(EventBus eventBus)
         {
             _eventBus = eventBus;
 
-            _historySaver = new HistorySaver(_eventBus);
-
             _historySaver.Init();
 
-            _historySaver.OnEnable();
+            _eventBus.OnGameEvent += _historySaver.WriteEvent;
         }
 
         void IDisposable.Dispose()
         {
-            _historySaver.OnDisable();
+            _eventBus.OnGameEvent -= _historySaver.WriteEvent;
         }
     }
 }
