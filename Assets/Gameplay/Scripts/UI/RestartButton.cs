@@ -6,6 +6,9 @@ namespace UI
 {
     public class RestartButton : MonoBehaviour
     {
+        [SerializeField]
+        private EventBus _eventBus;
+
         private Button _restartButton;
 
         private void Awake()
@@ -25,7 +28,7 @@ namespace UI
 
         private void Restart()
         {
-            EventBus.RaiseEvent(new RestartEvent());
+            _eventBus.RaiseEvent(new RestartEvent());
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using EventBusNamespace;
-using GameManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
 {
-    public sealed class ItemsService : DDOLClass<ItemsService>
+    public sealed class ItemsService : MonoBehaviour
     {
         [SerializeField]
         private ItemServiceConfig _config;
@@ -16,6 +15,9 @@ namespace Gameplay
 
         [SerializeField]
         private Transform _activeItemsTransform;
+
+        [SerializeField]
+        private EventBus _eventBus;
 
         private readonly Dictionary<string, Pool<Item>> _pools = new();
 
@@ -27,9 +29,14 @@ namespace Gameplay
 
         private Coroutine _spawnCoroutine;
 
+        private void OnEnable()
+        {
+            _eventBus.Subscribe<ItemPickedEvent>(Unspawn);
+        }
+
         private void OnDisable()
         {
-            EventBus.Unsubscribe<ItemPickedEvent>(Unspawn);
+            _eventBus.Unsubscribe<ItemPickedEvent>(Unspawn);
         }
 
         public void Init()
@@ -53,8 +60,6 @@ namespace Gameplay
             _spawnWait = new WaitForSeconds(config.SpawnPeriod);
 
             _posRange = (config.XRange, config.YRange);
-
-            EventBus.Subscribe<ItemPickedEvent>(Unspawn);
 
             Reset();
         }
@@ -107,8 +112,6 @@ namespace Gameplay
 
         private void Unspawn(Item item)
         {
-            item.gameObject.SetActive(false);
-
             item.transform.position = Vector3.zero;
 
             _pools[item.Config.Name].Unspawn(item);

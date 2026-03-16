@@ -11,6 +11,9 @@ namespace Gameplay
         [SerializeField]
         private ItemConfig _config;
 
+        [SerializeField]
+        private EventBus _eventBus;
+
         private void Awake()
         {
             GetComponent<Collider2D>().isTrigger = true;
@@ -20,7 +23,7 @@ namespace Gameplay
         {
             if (collision.TryGetComponent<Player>(out var _))
             {
-                EventBus.RaiseEvent(new ItemPickedEvent(this));
+                _eventBus.RaiseEvent(new ItemPickedEvent(this));
             }
         }
     }

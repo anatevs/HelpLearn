@@ -1,5 +1,4 @@
-﻿using UI;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace GameManagement
 {
@@ -8,8 +7,6 @@ namespace GameManagement
         public void Enter()
         {
             Time.timeScale = 0f;
-
-            CanvasView.Instance.ShowWin();
         }
     }
 }

@@ -1,20 +1,27 @@
-﻿namespace GameManagement
+﻿using EventBusNamespace;
+using System;
+
+namespace GameManagement
 {
-    public class SaveService : DDOLClass<SaveService>
+    public class SaveService :
+        IDisposable
     {
-        private readonly HistorySaver _historySaver = new();
+        private EventBus _eventBus;
 
-        private void Awake()
+        private HistorySaver _historySaver;
+
+        public SaveService(EventBus eventBus)
         {
+            _eventBus = eventBus;
+
+            _historySaver = new HistorySaver(_eventBus);
+
             _historySaver.Init();
-        }
 
-        private void OnEnable()
-        {
             _historySaver.OnEnable();
         }
 
-        private void OnDisable()
+        void IDisposable.Dispose()
         {
             _historySaver.OnDisable();
         }

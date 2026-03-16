@@ -658,16 +658,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1850338859}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88f83b2a21d82414593b661b5798974e, type: 3}
+  m_Script: {fileID: 11500000, guid: 09f61a849e5378645b8f9ee64c0305f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabsFolderPath: GameServices/
-  _projectilePrefabName: Projectiles
-  _enemiesPrefabName: Enemies
-  _gameStates: GameStates
-  _canvas: Canvas
-  _itemService: ItemService
-  _countersController: PlayerCountersController
+  _instancesService: {fileID: 11400000, guid: 8eac2b63b0c929a4da15b037407972d8, type: 2}
+  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
+  _enemyServicePrefab: {fileID: 969712729334454695, guid: a3578630d93995749ba3aaaaa56b7947, type: 3}
+  _projectileSpawnServicePrefab: {fileID: 7024083307618645781, guid: ef3c5e0d04b1b5e4097c5d388bf89219, type: 3}
+  _itemServicePrefab: {fileID: 7383594074420975722, guid: 334da9c640591a44ca24344a712e7c9c, type: 3}
+  _canvasViewPrefab: {fileID: 7737575323373693019, guid: 2b6f3159c07a3c4448266592cfe8ceab, type: 3}
+  _soundPlayerPrefab: {fileID: 578469507243395579, guid: 7a2f00a255baa7442b3ea8a3088b7303, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

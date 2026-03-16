@@ -21,6 +21,9 @@ namespace Gameplay
         [SerializeField]
         private AttackDetector _attackDetector;
 
+        [SerializeField]
+        private EventBus _eventBus;
+
         private MovementComponent _movement;
 
         private RotationZComponent _rotation;
@@ -32,6 +35,8 @@ namespace Gameplay
         private IEnemyStrategy _currentStrategy = null;
 
         private AttackStrategy _attackStrategy;
+
+        private ProjectileSpawnService _projectileService;
 
         private void Awake()
         {
@@ -53,15 +58,13 @@ namespace Gameplay
         private void OnEnable()
         {
             _attackDetector.OnPlayerDetected += SetToAttack;
-
-            EventBus.Subscribe<DamageEvent>(TakeDamage);
+            _hp.OnDamaged += HandleDamage;
         }
 
         private void OnDisable()
         {
             _attackDetector.OnPlayerDetected -= SetToAttack;
-
-            EventBus.Unsubscribe<DamageEvent>(TakeDamage);
+            _hp.OnDamaged -= HandleDamage;
         }
 
         private void Update()
@@ -69,9 +72,13 @@ namespace Gameplay
             _currentStrategy?.ActUpdate();
         }
 
-        public void Init(AttackStrategy attackBehaviour)
+        public void Init(AttackStrategy attackBehaviour, ProjectileSpawnService projectileService)
         {
+            _hp.Init(_config.HP);
             _attackStrategy = attackBehaviour;
+
+            _projectileService = projectileService;
+            _shot.Init(_projectileService);
         }
 
         public void SetStrategy(EnemyStrategy behaviour)
@@ -88,11 +95,13 @@ namespace Gameplay
             SetStrategy(_attackStrategy);
         }
 
-        private void TakeDamage(DamageEvent e)
+        private void HandleDamage(int damage)
         {
-            if (e.Value.hp == _hp && _hp.HP == 0)
+            _eventBus.RaiseEvent(new EnemyDamageEvent((this, damage)));
+
+            if (_hp.HP == 0)
             {
-                EventBus.RaiseEvent(new EnemyKilledEvent(this));
+                _eventBus.RaiseEvent(new EnemyKilledEvent(this));
             }
         }
     }

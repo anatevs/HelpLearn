@@ -14,6 +14,13 @@ namespace GameManagement
 
         private const string _sessionsDelimiter = "\n\n\n";
 
+        private readonly EventBus _eventBus;
+
+        public HistorySaver(EventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
+
         public void Init()
         {
             _path = Path.Combine(Application.persistentDataPath, _filename);
@@ -23,12 +30,12 @@ namespace GameManagement
 
         public void OnEnable()
         {
-            EventBus.OnGameEvent += WriteEvent;
+            _eventBus.OnGameEvent += WriteEvent;
         }
 
         public void OnDisable()
         {
-            EventBus.OnGameEvent -= WriteEvent;
+            _eventBus.OnGameEvent -= WriteEvent;
         }
 
         public void SetTitle()

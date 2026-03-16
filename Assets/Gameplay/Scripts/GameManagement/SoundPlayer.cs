@@ -3,13 +3,16 @@ using UnityEngine;
 
 namespace GameManagement
 {
-    public class SoundPlayer : DDOLClass<SoundPlayer>
+    public class SoundPlayer : MonoBehaviour
     {
         [SerializeField]
         private SoundsConfig _config;
 
         [SerializeField]
         private AudioSource _audioSource;
+
+        [SerializeField]
+        private EventBus _eventBus;
 
         private void Awake()
         {
@@ -18,20 +21,20 @@ namespace GameManagement
 
         private void OnEnable()
         {
-            EventBus.Subscribe<EnemyKilledEvent>(PlayEnemyKilled);
-            EventBus.Subscribe<GameWinEvent>(PlayWin);
-            EventBus.Subscribe<GameLoseEvent>(PlayLose);
-            EventBus.Subscribe<ItemPickedEvent>(PlayPickItem);
-            EventBus.Subscribe<ShotEvent>(PlayShot);
+            _eventBus.Subscribe<EnemyKilledEvent>(PlayEnemyKilled);
+            _eventBus.Subscribe<GameWinEvent>(PlayWin);
+            _eventBus.Subscribe<GameLoseEvent>(PlayLose);
+            _eventBus.Subscribe<ItemPickedEvent>(PlayPickItem);
+            _eventBus.Subscribe<ShotEvent>(PlayShot);
         }
 
         private void OnDisable()
         {
-            EventBus.Unsubscribe<EnemyKilledEvent>(PlayEnemyKilled);
-            EventBus.Unsubscribe<GameWinEvent>(PlayWin);
-            EventBus.Unsubscribe<GameLoseEvent>(PlayLose);
-            EventBus.Unsubscribe<ItemPickedEvent>(PlayPickItem);
-            EventBus.Unsubscribe<ShotEvent>(PlayShot);
+            _eventBus.Unsubscribe<EnemyKilledEvent>(PlayEnemyKilled);
+            _eventBus.Unsubscribe<GameWinEvent>(PlayWin);
+            _eventBus.Unsubscribe<GameLoseEvent>(PlayLose);
+            _eventBus.Unsubscribe<ItemPickedEvent>(PlayPickItem);
+            _eventBus.Unsubscribe<ShotEvent>(PlayShot);
         }
 
         private void PlayEnemyKilled(EnemyKilledEvent e)

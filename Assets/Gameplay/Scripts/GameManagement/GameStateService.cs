@@ -4,37 +4,44 @@ using System.Collections.Generic;
 
 namespace GameManagement
 {
-    public sealed class GameStateService : DDOLClass<GameStateService>
+    public sealed class GameStateService : 
+        IDisposable
     {
+        private readonly EventBus _eventBus;
+
         private IGameState _currentState = new InitGameState();
 
         private Dictionary<GameStateType, Func<IGameState>> _newStates = new();
 
-        private void Awake()
+        public GameStateService(EventBus eventBus)
         {
+            _eventBus = eventBus;
+
             _newStates.Add(GameStateType.Init, () => new InitGameState());
             _newStates.Add(GameStateType.Playing, () => new PlayingGameState());
             _newStates.Add(GameStateType.Paused, () => new PauseGameState());
             _newStates.Add(GameStateType.Win, () => new WinGameState());
             _newStates.Add(GameStateType.Lose, () => new LoseGameState());
+
+            Init();
         }
 
-        private void OnEnable()
+        private void Init()
         {
-            EventBus.Subscribe<GameInitEvent>(SetState);
-            EventBus.Subscribe<GamePlayingEvent>(SetState);
-            EventBus.Subscribe<GamePausedEvent>(SetState);
-            EventBus.Subscribe<GameWinEvent>(SetState);
-            EventBus.Subscribe<GameLoseEvent>(SetState);
+            _eventBus.Subscribe<GameInitEvent>(SetState);
+            _eventBus.Subscribe<GamePlayingEvent>(SetState);
+            _eventBus.Subscribe<GamePausedEvent>(SetState);
+            _eventBus.Subscribe<GameWinEvent>(SetState);
+            _eventBus.Subscribe<GameLoseEvent>(SetState);
         }
 
-        private void OnDisable()
+        void IDisposable.Dispose()
         {
-            EventBus.Unsubscribe<GameInitEvent>(SetState);
-            EventBus.Unsubscribe<GamePlayingEvent>(SetState);
-            EventBus.Unsubscribe<GamePausedEvent>(SetState);
-            EventBus.Unsubscribe<GameWinEvent>(SetState);
-            EventBus.Unsubscribe<GameLoseEvent>(SetState);
+            _eventBus.Unsubscribe<GameInitEvent>(SetState);
+            _eventBus.Unsubscribe<GamePlayingEvent>(SetState);
+            _eventBus.Unsubscribe<GamePausedEvent>(SetState);
+            _eventBus.Unsubscribe<GameWinEvent>(SetState);
+            _eventBus.Unsubscribe<GameLoseEvent>(SetState);
         }
 
         private void SetState<T>(T e) where T : ChangeStateEvent

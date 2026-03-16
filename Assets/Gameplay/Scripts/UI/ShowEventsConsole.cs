@@ -6,15 +6,22 @@ namespace UI
 {
     public sealed class ShowEventsConsole
     {
+        private EventBus _eventBus;
+
         private const string _enemiesAmountTitle = "Spawned enemies amount: ";
         private const string _delimiter = "**************";
+
+        public ShowEventsConsole(EventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
 
         public void ShowAll()
         {
             Debug.Log(_delimiter);
             Debug.Log("All events:");
 
-            foreach (var e in EventBus.Events)
+            foreach (var e in _eventBus.Events)
             {
                 ShowOneEvent(e);
             }
@@ -25,7 +32,7 @@ namespace UI
             Debug.Log(_delimiter);
             Debug.Log($"Last {n} events:");
 
-            var lastN = EventBus.Events
+            var lastN = _eventBus.Events
                 .Reverse()
                 .Take(n);
 
@@ -39,7 +46,7 @@ namespace UI
         {
             Debug.Log(_delimiter);
 
-            var spawnedCount = EventBus.Events
+            var spawnedCount = _eventBus.Events
                 .Where((e) => e.EventType == typeof(EnemySpawnedEvent).Name)
                 .Count();
 

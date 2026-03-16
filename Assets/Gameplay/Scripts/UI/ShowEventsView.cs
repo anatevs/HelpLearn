@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using EventBusNamespace;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,7 @@ namespace UI
         [SerializeField]
         private Button _spawnedEnemiesButton;
 
-        private readonly ShowEventsConsole _showEventsConsole = new();
+        private ShowEventsConsole _showEventsConsole;
 
         private void OnEnable()
         {
@@ -33,6 +34,11 @@ namespace UI
             _amountInputField.onEndEdit.RemoveListener(ShowNEvents);
 
             _spawnedEnemiesButton.onClick.RemoveListener(ShowSpawnedEnemies);
+        }
+
+        public void Init(EventBus eventBus)
+        {
+            _showEventsConsole = new ShowEventsConsole(eventBus);
         }
 
         private void ShowAllEvents()

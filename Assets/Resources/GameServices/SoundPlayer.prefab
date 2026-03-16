@@ -144,3 +144,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: 3ece7f79e003fb44f8453c320d911113, type: 2}
   _audioSource: {fileID: 5435447748915149489}
+  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}

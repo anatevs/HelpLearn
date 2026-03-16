@@ -8,8 +8,6 @@ namespace GameManagement
         public void Enter()
         {
             Time.timeScale = 1.0f;
-
-            CanvasView.Instance.ShowPlaying();
         }
     }
 }

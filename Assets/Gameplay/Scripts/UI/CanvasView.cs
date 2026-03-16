@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public sealed class CanvasView : DDOLClass<CanvasView>
+    public sealed class CanvasView : MonoBehaviour
     {
         public CounterView ScoreView => _scoreView;
         public CounterView PickedItemsView => _pickedItemsView;
@@ -33,12 +33,17 @@ namespace UI
         private EndGameView _endGameView;
 
         [SerializeField]
+        private EventBus _eventBus;
+
+        [SerializeField]
         private GameObject _playingMenu;
 
         private void OnEnable()
         {
             _pauseButton.onClick.AddListener(SetPause);
             _resumeButton.onClick.AddListener(SetResume);
+
+            //_eventBus.Subscribe<ChangeGameStateEvent>(SetLoseWin);
         }
 
         private void OnDisable()
@@ -50,6 +55,10 @@ namespace UI
         public void Init()
         {
             gameObject.SetActive(true);
+
+            _showEventsView.Init(_eventBus);
+
+            _endGameView.Init(_eventBus);
         }
 
         public void ShowLose()
@@ -82,6 +91,7 @@ namespace UI
 
             _resumeButton.gameObject.SetActive(!isPlaying);
 
+            //_eventBus.RaiseEvent(stateEvent);
             _showEventsView.gameObject.SetActive(!isPlaying);
         }
 
@@ -101,11 +111,11 @@ namespace UI
 
             if (isPause)
             {
-                EventBus.RaiseEvent(new GamePausedEvent());
+                _eventBus.RaiseEvent(new GamePausedEvent());
             }
             else
             {
-                EventBus.RaiseEvent(new GamePlayingEvent());
+                _eventBus.RaiseEvent(new GamePlayingEvent());
             }
         }
     }

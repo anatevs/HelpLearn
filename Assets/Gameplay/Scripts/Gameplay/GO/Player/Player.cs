@@ -1,6 +1,4 @@
 using EventBusNamespace;
-using GameManagement;
-using UI;
 using UnityEngine;
 
 namespace Gameplay
@@ -20,12 +18,24 @@ namespace Gameplay
         [SerializeField]
         private GameConfig _config;
 
+        [SerializeField]
+        private EventBus _eventBus;
+
         private RotationZComponent _rotation;
         private MovementComponent _movement;
         private ShotComponent _shot;
         private HPComponent _hp;
 
         private Vector3 _initPos;
+
+        private ProjectileSpawnService _projectileService;
+
+        public void Construct(ProjectileSpawnService projectileService)
+        {
+            _projectileService = projectileService;
+
+            _shot.Init(_projectileService);
+        }
 
         private void Awake()
         {
@@ -42,13 +52,13 @@ namespace Gameplay
         private void OnEnable()
         {
             _input.OnShoot += Shoot;
-            EventBus.Subscribe<DamageEvent>(HandleDamage);
+            _hp.OnDamaged += HandleDamage;
         }
 
         private void OnDisable()
         {
             _input.OnShoot -= Shoot;
-            EventBus.Unsubscribe<DamageEvent>(HandleDamage);
+            _hp.OnDamaged -= HandleDamage;
         }
 
         private void Update()
@@ -70,16 +80,13 @@ namespace Gameplay
             _shot.Shoot(transform.up);
         }
 
-        private void HandleDamage(DamageEvent e)
+        private void HandleDamage(int damage)
         {
-            if (e.Value.hp == _hp)
-            {
-                CanvasView.Instance.HPView.SetCountText(_hp.HP.ToString());
+            _eventBus.RaiseEvent(new PlayerDamageEvent((damage, _hp.HP)));
 
-                if (_hp.HP <= 0)
-                {
-                    EventBus.RaiseEvent(new GameLoseEvent());
-                }
+            if (_hp.HP <= 0)
+            {
+                _eventBus.RaiseEvent(new GameLoseEvent());
             }
         }
     }

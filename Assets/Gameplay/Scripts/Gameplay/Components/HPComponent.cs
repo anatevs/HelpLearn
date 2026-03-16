@@ -1,10 +1,12 @@
-using EventBusNamespace;
+using System;
 using UnityEngine;
 
 namespace Gameplay
 {
     public sealed class HPComponent : MonoBehaviour
     {
+        public event Action<int> OnDamaged;
+
         public int HP => _hp;
 
         private int _hp;
@@ -19,7 +21,7 @@ namespace Gameplay
             _hp -= damage;
             _hp = _hp < 0 ? 0 : _hp;
 
-            EventBus.RaiseEvent(new DamageEvent((this, damage)));
+            OnDamaged?.Invoke(damage);
         }
     }
 }

@@ -14,6 +14,9 @@ namespace Gameplay
 
         public Vector3 MoveDirection => _moveDirection;
 
+        [SerializeField]
+        private EventBus _eventBus;
+
         private InputSystem_Actions _actions;
 
         private InputSystem_Actions.PlayerActions _playerActions;
@@ -90,20 +93,20 @@ namespace Gameplay
 
         private void SubscribeEventBus()
         {
-            EventBus.Subscribe<GamePlayingEvent>(SetPlaying);
-            EventBus.Subscribe<GameInitEvent>(SetUnplaying);
-            EventBus.Subscribe<GamePausedEvent>(SetUnplaying);
-            EventBus.Subscribe<GameWinEvent>(SetUnplaying);
-            EventBus.Subscribe<GameLoseEvent>(SetUnplaying);
+            _eventBus.Subscribe<GamePlayingEvent>(SetPlaying);
+            _eventBus.Subscribe<GameInitEvent>(SetUnplaying);
+            _eventBus.Subscribe<GamePausedEvent>(SetUnplaying);
+            _eventBus.Subscribe<GameWinEvent>(SetUnplaying);
+            _eventBus.Subscribe<GameLoseEvent>(SetUnplaying);
         }
 
         private void UnsubcribeEventBus()
         {
-            EventBus.Unsubscribe<GamePlayingEvent>(SetPlaying);
-            EventBus.Unsubscribe<GameInitEvent>(SetUnplaying);
-            EventBus.Unsubscribe<GamePausedEvent>(SetUnplaying);
-            EventBus.Unsubscribe<GameWinEvent>(SetUnplaying);
-            EventBus.Unsubscribe<GameLoseEvent>(SetUnplaying);
+            _eventBus.Unsubscribe<GamePlayingEvent>(SetPlaying);
+            _eventBus.Unsubscribe<GameInitEvent>(SetUnplaying);
+            _eventBus.Unsubscribe<GamePausedEvent>(SetUnplaying);
+            _eventBus.Unsubscribe<GameWinEvent>(SetUnplaying);
+            _eventBus.Unsubscribe<GameLoseEvent>(SetUnplaying);
         }
 
 

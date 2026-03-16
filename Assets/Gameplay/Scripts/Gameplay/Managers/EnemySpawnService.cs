@@ -1,5 +1,4 @@
 ﻿using EventBusNamespace;
-using GameManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public sealed class EnemySpawnService : DDOLClass<EnemySpawnService>
+    public sealed class EnemySpawnService : MonoBehaviour
     {
         [SerializeField]
         private EnemySpawnConfig _config;
@@ -21,6 +20,9 @@ namespace Gameplay
         [SerializeField]
         private Transform _enemiesTransform;
 
+        [SerializeField]
+        private EventBus _eventBus;
+
         private Player _player;
 
         private PatrolLocation[] _locations;
@@ -33,16 +35,27 @@ namespace Gameplay
 
         private Coroutine _spawnCoroutine;
 
-        private void OnDisable()
+        private ProjectileSpawnService _projectileService;
+
+
+        private void OnEnable()
         {
-            EventBus.Unsubscribe<EnemyKilledEvent>(Unspawn);
+            _eventBus.Subscribe<EnemyKilledEvent>(Unspawn);
         }
 
-        public void Init(Player player, PatrolLocation[] locations)
+        private void OnDisable()
+        {
+            _eventBus.Unsubscribe<EnemyKilledEvent>(Unspawn);
+        }
+
+        public void Construct(Player player, PatrolLocation[] locations,
+            ProjectileSpawnService projectileService)
         {
             _player = player;
 
             _locations = locations;
+
+            _projectileService = projectileService;
 
             _spawner.Init(_pools, _config.PoolInitCount, _poolTransform);
 
@@ -75,7 +88,7 @@ namespace Gameplay
             _spawnCoroutine = StartCoroutine(SpawnCoroutine());
         }
 
-        public void Unspawn(EnemyKilledEvent e)
+        private void Unspawn(EnemyKilledEvent e)
         {
             var enemy = e.Value;
 
@@ -84,8 +97,6 @@ namespace Gameplay
 
         private void Unspawn(Enemy enemy)
         {
-            enemy.gameObject.SetActive(false);
-
             enemy.SetStrategy(null);
 
             enemy.transform.position = Vector3.zero;
@@ -107,15 +118,13 @@ namespace Gameplay
         {
             var enemy = _spawner.GetRandomEnemy(_pools, _enemiesTransform);
 
-            enemy.Init(new AttackStrategy(enemy, _player.transform));
+            enemy.Init(new AttackStrategy(enemy, _player.transform), _projectileService);
 
             var setup = _setupActions[enemy.Config.StartStrategy];
 
             setup.Invoke(enemy);
 
-            EventBus.RaiseEvent(new EnemySpawnedEvent(enemy));
-
-            EventBus.Subscribe<EnemyKilledEvent>(Unspawn);
+            _eventBus.RaiseEvent(new EnemySpawnedEvent(enemy));
         }
 
         private void SetupAttacking(Enemy enemy)
