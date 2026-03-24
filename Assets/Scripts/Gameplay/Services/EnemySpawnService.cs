@@ -40,11 +40,9 @@ namespace Gameplay
             _waveWait = new WaitForSeconds(_config.WavePeriod);
 
             _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
-
-            Reset();
         }
 
-        public void Reset()
+        public void Init()
         {
             if (_wavesCoroutine != null)
             {

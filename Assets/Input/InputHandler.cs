@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Assets.Input
@@ -23,6 +24,8 @@ namespace Assets.Input
         private Vector2 _inputMove;
 
         private Camera _camera;
+
+        private bool _isOverUI = false;
 
         private void Awake()
         {
@@ -49,29 +52,40 @@ namespace Assets.Input
 
         private void Update()
         {
-            _inputMove = _inputActions.Game.Move.ReadValue<Vector2>();
+            _isOverUI = EventSystem.current.IsPointerOverGameObject();
 
-            _move.x = _inputMove.x;
-            _move.z = _inputMove.y;
-
-            _move = _move.normalized;
-
-            var lookPointScreen = _inputActions.Game.Look.ReadValue<Vector2>();
-
-            if (Physics.Raycast(_camera.ScreenPointToRay(lookPointScreen), out var hitInfo))
+            if (!_isOverUI)
             {
-                _lookPoint = hitInfo.point;
+                _inputMove = _inputActions.Game.Move.ReadValue<Vector2>();
+
+                _move.x = _inputMove.x;
+                _move.z = _inputMove.y;
+
+                _move = _move.normalized;
+
+                var lookPointScreen = _inputActions.Game.Look.ReadValue<Vector2>();
+
+                if (Physics.Raycast(_camera.ScreenPointToRay(lookPointScreen), out var hitInfo))
+                {
+                    _lookPoint = hitInfo.point;
+                }
             }
         }
 
         private void HandleJump(InputAction.CallbackContext context)
         {
-            OnJupmed?.Invoke();
+            if (!_isOverUI)
+            {
+                OnJupmed?.Invoke();
+            }
         }
 
         private void HandleShoot(InputAction.CallbackContext context)
         {
-            OnShoot?.Invoke();
+            if (!_isOverUI)
+            {
+                OnShoot?.Invoke();
+            }
         }
     }
 }

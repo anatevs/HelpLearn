@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ProjectileSpawnConfig
   m_EditorClassIdentifier: 
   _prefab: {fileID: 2758822855618126416, guid: d1dd6afbce5284846a61989f88c76c4d, type: 3}
-  _speed: 15
+  _speed: 30
   _damage: 1
-  _castDistance: 1
+  _castDistance: 0.8
   _poolInitCount: 10

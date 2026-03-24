@@ -16,12 +16,14 @@ namespace Gameplay
 
         private float _groundCastLength = 1f;
 
+        private Vector3 _currentVelocity = Vector3.zero;
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
         }
 
-        public void Init(PlayerMovementConfig config)
+        public void Construct(PlayerMovementConfig config)
         {
             _config = config;
         }
@@ -49,6 +51,26 @@ namespace Gameplay
 
                 _isJumping = true;
             }
+        }
+
+        public void Init()
+        {
+            _currentVelocity = Vector3.zero;
+
+            _rb.isKinematic = false;
+            _rb.linearVelocity = _currentVelocity;
+        }
+
+        public void Pause()
+        {
+            _currentVelocity = _rb.linearVelocity;
+            _rb.isKinematic = true;
+        }
+
+        public void Resume()
+        {
+            _rb.isKinematic = false;
+            _rb.linearVelocity = _currentVelocity;
         }
     }
 }

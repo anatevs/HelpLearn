@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace Gameplay
 {
-    public class CameraMovement : MonoBehaviour
+    public class CameraFollowMovement : MonoBehaviour
     {
         [SerializeField]
-        private Transform _target;
+        protected Transform _target;
 
         [SerializeField]
         private Transform[] _leftRightBorders;
@@ -13,12 +14,7 @@ namespace Gameplay
         [SerializeField]
         private Transform[] _bottomTopBorders;
 
-        private void LateUpdate()
-        {
-            Move(_target);
-        }
-
-        private void Move(Transform followPoint)
+        protected Vector3 GetFollowingPosition(Transform followPoint)
         {
             var targetPoint = followPoint.position;
 
@@ -28,8 +24,7 @@ namespace Gameplay
             targetPoint.x = xPos;
             targetPoint.z = zPos;
 
-            transform.SetPositionAndRotation
-                (targetPoint, followPoint.rotation);
+            return targetPoint;
         }
     }
 }

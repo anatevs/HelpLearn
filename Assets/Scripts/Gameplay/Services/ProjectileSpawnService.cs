@@ -18,14 +18,12 @@ namespace Gameplay
 
         private readonly HashSet<Projectile> _activeProjectiles = new();
 
-        public void Init()
+        public void Construct()
         {
             _pool = new Pool<Projectile>(_config.Prefab, _config.PoolInitCount, _poolTransform);
-
-            ResetService();
         }
 
-        public void ResetService()
+        public void Init()
         {
             if (_projectilesTransform.childCount > 0)
             {

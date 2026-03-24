@@ -9,7 +9,7 @@ namespace Gameplay
 
         private ProjectileSpawnService _spawnService;
 
-        public void Init(ProjectileSpawnService spawnService)
+        public void Construct(ProjectileSpawnService spawnService)
         {
             _spawnService = spawnService;
         }

@@ -1,4 +1,5 @@
 ﻿using Assets.Input;
+using System;
 using UnityEngine;
 
 namespace Gameplay
@@ -8,6 +9,8 @@ namespace Gameplay
     [RequireComponent(typeof(ShotComponent))]
     public sealed class Player : MonoBehaviour
     {
+        public event Action OnPlayerKilled;
+
         public HPComponent HP => _hp;
 
         public CharacterDataConfig DataConfig => _dataConfig;
@@ -34,37 +37,22 @@ namespace Gameplay
 
         private ProjectileSpawnService _projectileService;
 
-        public void Construct(ProjectileSpawnService projectileService)
-        {
-            _projectileService = projectileService;
-
-            _shot.Init(_projectileService);
-        }
-
-        public void Init()
-        {
-            _hp.Init(_dataConfig.StartHP);
-        }
-
-        private void Awake()
-        {
-            _movement = GetComponent<MoveRBComponent>();
-            _movement.Init(_movementConfig);
-
-            _hp = GetComponent<HPComponent>();
-            _shot = GetComponent<ShotComponent>();
-        }
+        private Vector3 _startPosition;
 
         private void OnEnable()
         {
             _input.OnJupmed += _movement.Jump;
             _input.OnShoot += Shoot;
+
+            _hp.OnHPChanged += HandleDamage;
         }
 
         private void OnDisable()
         {
             _input.OnJupmed -= _movement.Jump;
             _input.OnShoot -= Shoot;
+
+            _hp.OnHPChanged -= HandleDamage;
         }
 
         private void Update()
@@ -81,9 +69,55 @@ namespace Gameplay
             _movement.MoveFixedUpd(_input.Move);
         }
 
+        public void Construct(ProjectileSpawnService projectileService)
+        {
+            _movement = GetComponent<MoveRBComponent>();
+            _movement.Construct(_movementConfig);
+
+            _hp = GetComponent<HPComponent>();
+            _shot = GetComponent<ShotComponent>();
+
+            _startPosition = transform.position;
+
+
+
+            _projectileService = projectileService;
+
+            _shot.Construct(_projectileService);
+        }
+
+        public void Init()
+        {
+            _hp.Init(_dataConfig.StartHP);
+
+            transform.position = _startPosition;
+
+            _movement.Init();
+        }
+
+        public void Pause()
+        {
+            _movement.Pause();
+        }
+
+        public void Resume()
+        {
+            _movement.Resume();
+        }
+
         private void Shoot()
         {
             _shot.Shoot(_lookDirection);
+        }
+
+        private void HandleDamage(int newHP)
+        {
+            if (newHP == 0)
+            {
+                OnPlayerKilled?.Invoke();
+
+                Pause();
+            }
         }
     }
 }

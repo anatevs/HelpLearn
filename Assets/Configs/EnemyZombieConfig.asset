@@ -15,6 +15,6 @@ MonoBehaviour:
   _name: EnemyZombie
   _hp: 3
   _rotationSpeed: 1
-  _followSpeed: 1
-  _sqrNearDistance: 1
+  _followSpeed: 3.5
+  _stopDistance: 1
   _killReward: 2

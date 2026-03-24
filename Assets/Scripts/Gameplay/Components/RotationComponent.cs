@@ -6,8 +6,11 @@ namespace Gameplay
     {
         public void Rotate(Vector3 direction, float rotationSpeed, float deltaTime)
         {
-            transform.rotation = Quaternion.FromToRotation(Vector3.forward, direction);
-            //transform.Rotate(Vector3.up, _input.LookAngle.x * rotationSpeed * deltaTime);
+            var targetRotation = Quaternion.FromToRotation(Vector3.forward, direction);
+
+            targetRotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * deltaTime);
+
+            transform.rotation = targetRotation;
         }
     }
 }

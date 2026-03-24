@@ -9,7 +9,7 @@ namespace Gameplay
         public string Name => _name;
         public int HP => _hp;
         public float RotationSpeed => _rotationSpeed;
-        public float SqrNearDistance => _sqrNearDistance;
+        public float StopDistance => _stopDistance;
         public float FollowSpeed => _followSpeed;
         public int KillReward => _killReward;
 
@@ -28,7 +28,7 @@ namespace Gameplay
         private float _followSpeed;
 
         [SerializeField]
-        private float _sqrNearDistance = 1;
+        private float _stopDistance = 1;
 
         [Header("Killing")]
         [SerializeField]

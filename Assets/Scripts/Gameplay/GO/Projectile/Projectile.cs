@@ -4,7 +4,6 @@ using UnityEngine;
 namespace Gameplay
 {
     [RequireComponent(typeof(MovementComponent))]
-    [RequireComponent(typeof(Collider))]
     public sealed class Projectile : MonoBehaviour
     {
         public Action<Projectile> OnCollided;
