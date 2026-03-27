@@ -14,9 +14,9 @@ namespace Gameplay
             _spawnService = spawnService;
         }
 
-        public void Shoot(Vector3 direction)
+        public void Shoot(WeaponConfig weaponConfig)
         {
-            _spawnService.Spawn(_shotPoint.position, direction);
+            _spawnService.Spawn(_shotPoint.position, _shotPoint.forward, weaponConfig.Projectile);
         }
     }
 }

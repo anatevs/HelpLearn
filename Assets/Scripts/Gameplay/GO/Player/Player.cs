@@ -6,12 +6,14 @@ namespace Gameplay
 {
     [RequireComponent(typeof(MoveRBComponent))]
     [RequireComponent(typeof(HPComponent))]
-    [RequireComponent(typeof(ShotComponent))]
+    [RequireComponent(typeof(WeaponComponent))]
     public sealed class Player : MonoBehaviour
     {
         public event Action OnPlayerKilled;
 
         public HPComponent HP => _hp;
+
+        public WeaponComponent Weapon => _weapon;
 
         public CharacterDataConfig DataConfig => _dataConfig;
 
@@ -29,15 +31,22 @@ namespace Gameplay
 
         private HPComponent _hp;
 
-        private ShotComponent _shot;
+        private WeaponComponent _weapon;
 
         private MoveRBComponent _movement;
 
         private Vector3 _lookDirection;
 
-        private ProjectileSpawnService _projectileService;
+        private WeaponStorage _weaponStorage;
 
         private Vector3 _startPosition;
+
+
+        [SerializeField]
+        private WeaponConfig _weaponConfig;
+
+
+
 
         private void OnEnable()
         {
@@ -45,6 +54,7 @@ namespace Gameplay
             _input.OnShoot += Shoot;
 
             _hp.OnHPChanged += HandleDamage;
+            _weaponStorage.OnWeaponChanged += ChangeWeapon;
         }
 
         private void OnDisable()
@@ -53,6 +63,7 @@ namespace Gameplay
             _input.OnShoot -= Shoot;
 
             _hp.OnHPChanged -= HandleDamage;
+            _weaponStorage.OnWeaponChanged -= ChangeWeapon;
         }
 
         private void Update()
@@ -69,21 +80,17 @@ namespace Gameplay
             _movement.MoveFixedUpd(_input.Move);
         }
 
-        public void Construct(ProjectileSpawnService projectileService)
+        public void Construct(WeaponStorage weaponStorage)
         {
             _movement = GetComponent<MoveRBComponent>();
             _movement.Construct(_movementConfig);
 
             _hp = GetComponent<HPComponent>();
-            _shot = GetComponent<ShotComponent>();
+            _weapon = GetComponent<WeaponComponent>();
 
             _startPosition = transform.position;
 
-
-
-            _projectileService = projectileService;
-
-            _shot.Construct(_projectileService);
+            _weaponStorage = weaponStorage;
         }
 
         public void Init()
@@ -105,9 +112,14 @@ namespace Gameplay
             _movement.Resume();
         }
 
+        public void ChangeWeapon(Weapon newWeapon)
+        {
+            _weapon.SetWeapon(newWeapon);
+        }
+
         private void Shoot()
         {
-            _shot.Shoot(_lookDirection);
+            _weapon.Shoot();
         }
 
         private void HandleDamage(int newHP)

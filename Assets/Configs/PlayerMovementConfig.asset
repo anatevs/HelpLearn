@@ -15,8 +15,9 @@ MonoBehaviour:
   _groundedLayers:
     serializedVersion: 2
     m_Bits: 0
-  _walkSpeed: 1.5
-  _runSpeed: 2
+  _gravityMultiplier: 5
+  _walkSpeed: 2
+  _runSpeed: 2.5
   _jumpForce: 40
   _jumpFallMultiplier: 30
   _rotSpeed: 20

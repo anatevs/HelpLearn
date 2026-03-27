@@ -4,7 +4,7 @@
     {
         private void LateUpdate()
         {
-            var pos = GetFollowingPosition(_target);
+            var pos = GetFollowingPosition();
             pos.y = transform.position.y;
 
             transform.position = pos;

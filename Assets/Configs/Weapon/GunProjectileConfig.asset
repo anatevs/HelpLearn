@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 335cfbf2f00df394799e69a271762b53, type: 3}
-  m_Name: ProjectileSpawnConfig
+  m_Name: GunProjectileConfig
   m_EditorClassIdentifier: 
   _prefab: {fileID: 2758822855618126416, guid: d1dd6afbce5284846a61989f88c76c4d, type: 3}
   _speed: 30

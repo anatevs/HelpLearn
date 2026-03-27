@@ -7,6 +7,7 @@ namespace Gameplay
     public class PlayerMovementConfig : ScriptableObject
     {
         public LayerMask GroundedLayers => _groundedLayers;
+        public float GravityMultiplier => _gravityMultiplier;
         public float WalkSpeed => _walkSpeed;
         public float RunSpeed => _runSpeed;
         public float RotationSpeed => _rotSpeed;
@@ -17,6 +18,9 @@ namespace Gameplay
 
         [SerializeField]
         private LayerMask _groundedLayers;
+
+        [SerializeField]
+        private float _gravityMultiplier = 5f;
 
         [SerializeField]
         private float _walkSpeed = 1f;

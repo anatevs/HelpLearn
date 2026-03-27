@@ -19,6 +19,9 @@ namespace GameManagement
         private EnemySpawnService _enemySpawnService;
 
         [SerializeField]
+        private WeaponStorage _weaponStorage;
+
+        [SerializeField]
         private EndGameView _endGameView;
 
         [SerializeField]
@@ -60,6 +63,7 @@ namespace GameManagement
         public void Init()
         {
             _player.Init();
+            _weaponStorage.Init();
             _projectileSpawnService.Init();
             _enemySpawnService.Init();
             _scoreStorage.Init(_player.DataConfig.StartScore);
@@ -70,7 +74,9 @@ namespace GameManagement
 
         private void Constuct()
         {
-            _player.Construct(_projectileSpawnService);
+            _player.Construct(_weaponStorage);
+
+            _weaponStorage.Construct(_projectileSpawnService);
 
             _enemySpawnService.Construct(_player);
 

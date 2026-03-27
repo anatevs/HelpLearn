@@ -6,7 +6,7 @@ namespace Gameplay
     public sealed class ProjectileSpawnService : MonoBehaviour
     {
         [SerializeField]
-        private ProjectileSpawnConfig _config;
+        private ProjectileConfig _config;
 
         [SerializeField]
         private Transform _poolTransform;
@@ -36,13 +36,13 @@ namespace Gameplay
             }
         }
 
-        public void Spawn(Vector3 position, Vector3 direction)
+        public void Spawn(Vector3 position, Vector3 direction, ProjectileConfig config)
         {
             var projectile = _pool.Spawn(_projectilesTransform);
 
             projectile.transform.position = position;
 
-            projectile.SetParams(_config.Damage, _config.Speed, direction, _config.CastDistance);
+            projectile.SetParams(config, direction);
 
             projectile.OnCollided += Unspawn;
 
@@ -55,7 +55,7 @@ namespace Gameplay
         {
             projectile.gameObject.SetActive(false);
 
-            projectile.SetParams(_config.Damage, 0, Vector3.forward, _config.CastDistance);
+            projectile.SetParams(0, 0, Vector3.forward, 1);
 
             projectile.transform.position = Vector3.zero;
 

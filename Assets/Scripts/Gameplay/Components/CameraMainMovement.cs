@@ -6,15 +6,15 @@ namespace Gameplay
     {
         private void LateUpdate()
         {
-            MoveAndRotate(_target);
+            MoveAndRotate();
         }
 
-        private void MoveAndRotate(Transform followPoint)
+        private void MoveAndRotate()
         {
-            var targetPoint = GetFollowingPosition(followPoint);
+            var targetPoint = GetFollowingPosition();
 
             transform.SetPositionAndRotation
-                (targetPoint, followPoint.rotation);
+                (targetPoint, _target.rotation);
         }
     }
 }

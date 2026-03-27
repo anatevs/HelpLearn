@@ -18,6 +18,8 @@ namespace Gameplay
 
         private Vector3 _currentVelocity = Vector3.zero;
 
+        private Vector3 _addGravity = Physics.gravity;
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
@@ -41,6 +43,8 @@ namespace Gameplay
                     _isJumping = false;
                 }
             }
+
+            _rb.AddForce(_addGravity, ForceMode.Acceleration);
         }
 
         public void Jump()
@@ -59,6 +63,8 @@ namespace Gameplay
 
             _rb.isKinematic = false;
             _rb.linearVelocity = _currentVelocity;
+
+            _addGravity *= _config.GravityMultiplier - 1;
         }
 
         public void Pause()

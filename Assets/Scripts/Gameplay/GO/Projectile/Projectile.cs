@@ -50,5 +50,11 @@ namespace Gameplay
             _direction = direction;
             _castDistance = castDistance;
         }
+
+        public void SetParams(ProjectileConfig config, Vector3 direction)
+        {
+            SetParams(config.Damage, config.Speed,
+                direction, config.CastDistance);
+        }
     }
 }
