@@ -5,9 +5,6 @@ namespace Gameplay
     [RequireComponent(typeof(Rigidbody))]
     public class MoveRBComponent : MonoBehaviour
     {
-        [SerializeField]
-        private LayerMask _groundLayer;
-
         private Rigidbody _rb;
 
         private PlayerMovementConfig _config;
@@ -38,7 +35,7 @@ namespace Gameplay
             {
                 _rb.AddRelativeForce(Vector3.up * Physics.gravity.y * _config.JumpFallMultiplier, ForceMode.Acceleration);
 
-                if (Physics.Raycast(transform.position, Vector3.down, _groundCastLength, _groundLayer))
+                if (Physics.Raycast(transform.position, Vector3.down, _groundCastLength, _config.GroundedLayers))
                 {
                     _isJumping = false;
                 }

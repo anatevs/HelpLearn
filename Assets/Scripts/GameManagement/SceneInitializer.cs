@@ -27,9 +27,13 @@ namespace GameManagement
         [SerializeField]
         private RestartGameController _restartGameController;
 
+        [SerializeField]
+        private WeaponsMenu _weaponMenu;
+
         private ScoreStorage _scoreStorage;
         private PlayerStatsController _playerStatsController;
         private EndGameController _endGameController;
+        private WeaponsPresenterManager _weaponsPresenterManager; 
 
         private void Awake()
         {
@@ -37,10 +41,7 @@ namespace GameManagement
 
             _scoreStorage = new(_enemySpawnService);
 
-            _playerStatsController = 
-                new PlayerStatsController(_player.HP, _scoreStorage, _playerStatsView);
-
-            _endGameController = new EndGameController(_endGameView);
+            ConstructControllers();
         }
 
         private void Start()
@@ -64,6 +65,7 @@ namespace GameManagement
         {
             _player.Init();
             _weaponStorage.Init();
+            _weaponsPresenterManager.Init();
             _projectileSpawnService.Init();
             _enemySpawnService.Init();
             _scoreStorage.Init(_player.DataConfig.StartScore);
@@ -81,6 +83,16 @@ namespace GameManagement
             _enemySpawnService.Construct(_player);
 
             _projectileSpawnService.Construct();
+        }
+
+        private void ConstructControllers()
+        {
+            _playerStatsController =
+                new PlayerStatsController(_player.HP, _scoreStorage, _playerStatsView);
+
+            _endGameController = new EndGameController(_endGameView);
+
+            _weaponsPresenterManager = new WeaponsPresenterManager(_weaponMenu, _weaponStorage);
         }
 
         private void HandleLoseGame()

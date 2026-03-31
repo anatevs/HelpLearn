@@ -2,8 +2,8 @@
 
 namespace Gameplay
 {
-    [CreateAssetMenu(fileName = "ProjectileSpawnConfig",
-        menuName = "Configs/ProjectileSpawn")]
+    [CreateAssetMenu(fileName = "ProjectileConfig",
+        menuName = "Configs/Projectile")]
     public sealed class ProjectileConfig : ScriptableObject
     {
         public Projectile Prefab => _prefab;

@@ -1,12 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Gameplay
 {
     public class Weapon : MonoBehaviour
     {
+        public event Action<float> OnCooldownChanged;
+        public event Action<int> OnCapacityChanged;
+        public event Action OnEmptied;
+
+        public string Name => _config.Name;
+
         [SerializeField]
-        private WeaponLook _view;
+        private WeaponAppearance _appearance;
 
         private WeaponConfig _config;
 
@@ -42,9 +49,18 @@ namespace Gameplay
         {
             if (_canShoot)
             {
-                _projectileSpawn.Spawn(_view.ShotPoint.position, _view.ShotPoint.forward, _projectileConfig);
+                _projectileSpawn.Spawn(_appearance.ShotPoint.position, _appearance.ShotPoint.forward, _projectileConfig);
 
                 _remainCapacity--;
+                _remainCapacity = Mathf.Max(0, _remainCapacity);
+
+                OnCapacityChanged?.Invoke(_remainCapacity);
+
+                if (_remainCapacity == 0)
+                {
+                    OnEmptied?.Invoke();
+                }
+
                 _canShoot = _remainCapacity > 0;
 
                 if (_canShoot)
@@ -57,7 +73,7 @@ namespace Gameplay
         public void ChangeActive(bool active)
         {
             _isActive = active;
-            _view.gameObject.SetActive(active);
+            _appearance.gameObject.SetActive(active);
             _canShoot = _isActive || (_remainCapacity > 0);
 
             if (!active && _remainCooldown >= _config.ShotPeriod)
@@ -73,6 +89,8 @@ namespace Gameplay
             while(_remainCooldown < shotPeriod)
             {
                 _remainCooldown += Time.deltaTime;
+
+                OnCooldownChanged?.Invoke(_remainCooldown / shotPeriod);
 
                 yield return null;
             }

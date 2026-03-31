@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundedLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   _gravityMultiplier: 5
   _walkSpeed: 2
   _runSpeed: 2.5
-  _jumpForce: 40
+  _jumpForce: 35
   _jumpFallMultiplier: 30
   _rotSpeed: 20
   _xRotRange:

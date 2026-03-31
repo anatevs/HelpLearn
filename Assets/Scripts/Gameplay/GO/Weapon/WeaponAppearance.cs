@@ -2,7 +2,7 @@
 
 namespace Gameplay
 {
-    public class WeaponLook : MonoBehaviour
+    public class WeaponAppearance : MonoBehaviour
     {
         public Transform ShotPoint => _shotPoint;
 

@@ -11,7 +11,6 @@ namespace Gameplay
         public ProjectileConfig Projectile => _projectileConfig;
         public float ShotPeriod => _shotPeriod;
         public int Capacity => _capacity;
-        public Image Icon => _icon;
 
         [SerializeField]
         private string _name;
@@ -27,9 +26,6 @@ namespace Gameplay
 
         [SerializeField]
         private Weapon _prefab;
-
-        [SerializeField]
-        private Image _icon;
 
         public Weapon CreateNewWeapon()
         {

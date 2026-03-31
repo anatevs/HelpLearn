@@ -7,9 +7,15 @@ namespace Gameplay
     public class WeaponStorage : MonoBehaviour
     {
         public event Action<Weapon> OnWeaponChanged;
+        public event Action<Weapon, int> OnWeaponAdded;
+
+        public int FirstActiveIndex => _firstActiveIndex;
 
         [SerializeField]
         private WeaponConfig[] _configs;
+
+        [SerializeField]
+        private int _firstActiveIndex = 0;
 
         private ProjectileSpawnService _projectileSpawn;
 
@@ -29,7 +35,7 @@ namespace Gameplay
                 Add(config);
             }
 
-            ChangeWeapon(_configs[0].Name);
+            ChangeWeapon(_configs[_firstActiveIndex].Name);
         }
 
         public void Add(WeaponConfig config)
@@ -41,6 +47,8 @@ namespace Gameplay
             SetToInactive(weapon);
 
             weapon.Construct(_projectileSpawn);
+
+            OnWeaponAdded?.Invoke(weapon, config.Capacity);
         }
 
         public void ChangeWeapon(string name)
