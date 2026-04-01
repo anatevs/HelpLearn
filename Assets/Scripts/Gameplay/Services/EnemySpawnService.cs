@@ -16,14 +16,9 @@ namespace Gameplay
         private EnemySpawner _spawner;
 
         [SerializeField]
-        private Transform _poolTransform;
-
-        [SerializeField]
         private Transform _enemiesTransform;
 
         private Player _player;
-
-        private readonly Dictionary<string, Pool<Enemy>> _pools = new();
 
         private WaitForSeconds _waveWait;
         private WaitForSeconds _spawnWait;
@@ -35,7 +30,7 @@ namespace Gameplay
         {
             _player = player;
 
-            _spawner.Init(_pools, _config.PoolInitCount, _poolTransform);
+            _spawner.Init();
 
             _waveWait = new WaitForSeconds(_config.WavePeriod);
 
@@ -75,7 +70,12 @@ namespace Gameplay
 
             enemy.transform.position = Vector3.zero;
 
-            _pools[enemy.Config.Name].Unspawn(enemy);
+            UnspawnEnemy(enemy);
+        }
+
+        private void UnspawnEnemy(Enemy enemy)
+        {
+            Destroy(enemy.gameObject);
         }
 
         private IEnumerator WavesSpawnCoroutine()
@@ -102,7 +102,8 @@ namespace Gameplay
 
         private void SpawnRandom()
         {
-            var enemy = _spawner.GetRandomEnemy(_pools, _enemiesTransform);
+            var enemy = _spawner.GetRandomEnemy(_enemiesTransform);
+
             enemy.Init(_player);
 
             var pos = _config.GetSpawnPos();

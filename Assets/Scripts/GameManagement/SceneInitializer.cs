@@ -81,8 +81,6 @@ namespace GameManagement
             _weaponStorage.Construct(_projectileSpawnService);
 
             _enemySpawnService.Construct(_player);
-
-            _projectileSpawnService.Construct();
         }
 
         private void ConstructControllers()

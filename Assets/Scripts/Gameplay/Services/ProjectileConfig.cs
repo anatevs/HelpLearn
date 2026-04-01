@@ -11,7 +11,6 @@ namespace Gameplay
         public float Speed => _speed;
         public float CastDistance => _castDistance;
         public float DamageRadius => _damageRadius;
-        public int PoolInitCount => _poolInitCount;
 
         [SerializeField]
         private Projectile _prefab;
@@ -27,8 +26,5 @@ namespace Gameplay
 
         [SerializeField]
         private float _damageRadius;
-
-        [SerializeField]
-        private int _poolInitCount = 10;
     }
 }

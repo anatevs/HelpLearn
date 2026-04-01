@@ -14,8 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _wavePeriod: 500
   _spawnPeriod: 0.2
-  _waveSize: 1
-  _poolInitCount: 10
+  _waveSize: 5
   _spawnLocations:
   - {fileID: 8126481885099350151, guid: 48da464a608b7d4458eeda9537cbc7b5, type: 3}
   - {fileID: 3034141336499688719, guid: 8144688bb0933174ea35d5df1ab7314e, type: 3}

@@ -10,7 +10,9 @@ namespace Gameplay
 
         private string[] _enemyNames;
 
-        public void Init(Dictionary<string, Pool<Enemy>> pools, int poolInitCount, Transform poolTransform)
+        private readonly Dictionary<string, Enemy> _prefabs = new();
+
+        public void Init()
         {
             _enemyNames = new string[_prefabsConfig.Prefabs.Length];
 
@@ -18,17 +20,24 @@ namespace Gameplay
             {
                 var enemy = _prefabsConfig.Prefabs[i];
 
-                pools.Add(enemy.Config.Name, new Pool<Enemy>(enemy, poolInitCount, poolTransform));
+                _prefabs.Add(enemy.Config.Name, enemy);
 
                 _enemyNames[i] = enemy.Config.Name;
             }
         }
 
-        public Enemy GetRandomEnemy(Dictionary<string, Pool<Enemy>> pools, Transform spawnedTransform)
+        public Enemy GetRandomEnemy(Transform spawnedTransform)
         {
             var name = _enemyNames[Random.Range(0, _enemyNames.Length)];
 
-            return pools[name].Spawn(spawnedTransform);
+            return Spawn(_prefabs[name], spawnedTransform);
+        }
+
+        private Enemy Spawn(Enemy prefab, Transform spawnedTransform)
+        {
+            var enemy = Instantiate(prefab, spawnedTransform);
+            enemy.gameObject.SetActive(false);
+            return enemy;
         }
     }
 }

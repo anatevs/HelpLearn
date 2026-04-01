@@ -4791,8 +4791,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1536581859}
+  m_Children: []
   m_Father: {fileID: 2128162459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &845186279
@@ -4807,8 +4806,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b561b1c658934ea4bb5d0cceff40f000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _config: {fileID: 11400000, guid: fd99c7b5d3d3a4c4c8d0a8be572a4bac, type: 2}
-  _poolTransform: {fileID: 1536581859}
   _projectilesTransform: {fileID: 845186278}
 --- !u!1 &860820396
 GameObject:
@@ -6688,37 +6685,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!1 &1174347440
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1174347441}
-  m_Layer: 0
-  m_Name: EnemiesPool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1174347441
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1174347440}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1932124240}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1181948318
 GameObject:
   m_ObjectHideFlags: 0
@@ -9139,37 +9105,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 391f1b30d59ee6e4987c0dc9582425c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1536581858
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1536581859}
-  m_Layer: 0
-  m_Name: ProjectilesPool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1536581859
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1536581858}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 845186278}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1565468688
 GameObject:
   m_ObjectHideFlags: 0
@@ -10772,8 +10707,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1174347441}
+  m_Children: []
   m_Father: {fileID: 2128162459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1932124241
@@ -10790,7 +10724,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _config: {fileID: 11400000, guid: cd769bb3ca3041b45b81dba38ee12e67, type: 2}
   _spawner: {fileID: 1932124242}
-  _poolTransform: {fileID: 1174347441}
   _enemiesTransform: {fileID: 1932124240}
 --- !u!114 &1932124242
 MonoBehaviour:

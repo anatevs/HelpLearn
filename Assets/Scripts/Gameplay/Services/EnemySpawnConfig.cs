@@ -6,8 +6,6 @@ namespace Gameplay
         menuName = "Configs/EnemySpawn")]
     public sealed class EnemySpawnConfig : ScriptableObject
     {
-        public int PoolInitCount => _poolInitCount;
-
         public float WavePeriod => _wavePeriod;
 
         public float SpawnPeriod => _spawnPeriod;
@@ -22,9 +20,6 @@ namespace Gameplay
 
         [SerializeField]
         private int _waveSize = 10;
-
-        [SerializeField]
-        private int _poolInitCount = 10;
 
         [SerializeField]
         private Transform[] _spawnLocations;

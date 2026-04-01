@@ -6,22 +6,9 @@ namespace Gameplay
     public sealed class ProjectileSpawnService : MonoBehaviour
     {
         [SerializeField]
-        private ProjectileConfig _config;
-
-        [SerializeField]
-        private Transform _poolTransform;
-
-        [SerializeField]
         private Transform _projectilesTransform;
 
-        private Pool<Projectile> _pool;
-
         private readonly HashSet<Projectile> _activeProjectiles = new();
-
-        public void Construct()
-        {
-            _pool = new Pool<Projectile>(_config.Prefab, _config.PoolInitCount, _poolTransform);
-        }
 
         public void Init()
         {
@@ -38,7 +25,7 @@ namespace Gameplay
 
         public void Spawn(Vector3 position, Vector3 direction, ProjectileConfig config)
         {
-            var projectile = _pool.Spawn(_projectilesTransform);
+            var projectile = SpawnProjectile(config, _projectilesTransform);
 
             projectile.transform.position = position;
 
@@ -59,7 +46,7 @@ namespace Gameplay
 
             projectile.transform.position = Vector3.zero;
 
-            _pool.Unspawn(projectile);
+            UnspawnProjectile(projectile);
 
             projectile.OnCollided -= Unspawn;
 
@@ -72,6 +59,19 @@ namespace Gameplay
             {
                 projectile.OnCollided -= Unspawn;
             }
+        }
+
+        private Projectile SpawnProjectile(ProjectileConfig config, Transform spawnTransform)
+        {
+            var projectile = Instantiate(config.Prefab, spawnTransform);
+            projectile.gameObject.SetActive(false);
+
+            return projectile;
+        }
+
+        private void UnspawnProjectile(Projectile projectile)
+        {
+            Destroy(projectile.gameObject);
         }
     }
 }
