@@ -15,6 +15,5 @@ MonoBehaviour:
   _prefab: {fileID: 2758822855618126416, guid: f9416cb1db6da84448e76b61a18e5f40, type: 3}
   _damage: 5
   _speed: 20
-  _castDistance: 1
-  _damageRadius: 2
-  _poolInitCount: 10
+  _castDistanceMultiplier: 1.5
+  _damageRadius: 0.5

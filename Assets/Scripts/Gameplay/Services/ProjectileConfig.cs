@@ -9,7 +9,7 @@ namespace Gameplay
         public Projectile Prefab => _prefab;
         public int Damage => _damage;
         public float Speed => _speed;
-        public float CastDistance => _castDistance;
+        public float CastDistanceMultiplier => _castDistanceMultiplier;
         public float DamageRadius => _damageRadius;
 
         [SerializeField]
@@ -22,7 +22,7 @@ namespace Gameplay
         private float _speed;
 
         [SerializeField]
-        private float _castDistance = 1f;
+        private float _castDistanceMultiplier = 1.5f;
 
         [SerializeField]
         private float _damageRadius;

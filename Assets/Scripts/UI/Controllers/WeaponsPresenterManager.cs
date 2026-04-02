@@ -22,7 +22,7 @@ namespace UI
             _weaponStorage.OnWeaponAdded += CreateView;
         }
 
-        public void Init()
+        public void ResetLevel()
         {
             _weaponPreseters[_weaponStorage.FirstActiveIndex]
                 .SetSelected();

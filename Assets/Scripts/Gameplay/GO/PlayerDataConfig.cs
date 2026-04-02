@@ -4,7 +4,7 @@ namespace Gameplay
 {
     [CreateAssetMenu(fileName = "CharacterDataConfig",
         menuName = "Configs/CharacterData")]
-    public sealed class CharacterDataConfig : ScriptableObject
+    public sealed class PlayerDataConfig : ScriptableObject
     {
         public int StartHP => _startHP;
 

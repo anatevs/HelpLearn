@@ -11,9 +11,18 @@ namespace Assets.Input
 
         public event Action OnShoot;
 
+        public event Action OnSelectableClicked;
+
+        public event Action<GameObject> OnSelectableHovered;
+
+        public event Action OnSelectableOut;
+
         public Vector3 Move => _move;
 
         public Vector3 LookPoint => _lookPoint;
+
+        [SerializeField]
+        private LayerMask _selectablesLayer;
 
         private Vector3 _move;
 
@@ -26,6 +35,8 @@ namespace Assets.Input
         private Camera _camera;
 
         private bool _isOverUI = false;
+
+        private bool _isOverSelectable = false;
 
         private void Awake()
         {
@@ -68,6 +79,25 @@ namespace Assets.Input
                 if (Physics.Raycast(_camera.ScreenPointToRay(lookPointScreen), out var hitInfo))
                 {
                     _lookPoint = hitInfo.point;
+
+                    if (((1<< hitInfo.collider.gameObject.layer) & _selectablesLayer) != 0)
+                    {
+                        if (!_isOverSelectable)
+                        {
+                            OnSelectableHovered?.Invoke(hitInfo.collider.gameObject);
+                        }
+
+                        _isOverSelectable = true;
+                    }
+                    else
+                    {
+                        if (_isOverSelectable)
+                        {
+                            OnSelectableOut?.Invoke();
+                        }
+
+                        _isOverSelectable = false;
+                    }
                 }
             }
         }
@@ -82,9 +112,14 @@ namespace Assets.Input
 
         private void HandleShoot(InputAction.CallbackContext context)
         {
-            if (!_isOverUI)
+            if (!_isOverUI && !_isOverSelectable)
             {
                 OnShoot?.Invoke();
+            }
+
+            if (_isOverSelectable && !_isOverUI)
+            {
+                OnSelectableClicked?.Invoke();
             }
         }
     }

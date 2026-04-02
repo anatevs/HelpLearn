@@ -37,7 +37,7 @@ namespace Gameplay
             _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
         }
 
-        public void Init()
+        public void ResetLevel()
         {
             if (_wavesCoroutine != null)
             {

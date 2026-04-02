@@ -25,6 +25,8 @@ namespace Gameplay
         public void Construct(PlayerMovementConfig config)
         {
             _config = config;
+
+            _addGravity = Physics.gravity * (_config.GravityMultiplier - 1);
         }
 
         public void MoveFixedUpd(Vector3 walkDirection)
@@ -54,14 +56,12 @@ namespace Gameplay
             }
         }
 
-        public void Init()
+        public void ResetLevel()
         {
             _currentVelocity = Vector3.zero;
 
             _rb.isKinematic = false;
             _rb.linearVelocity = _currentVelocity;
-
-            _addGravity *= _config.GravityMultiplier - 1;
         }
 
         public void Pause()

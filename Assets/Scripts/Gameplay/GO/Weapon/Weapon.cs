@@ -40,9 +40,21 @@ namespace Gameplay
         {
             _config = config;
 
-            _remainCapacity = config.Capacity;
-
             _projectileConfig = config.Projectile;
+
+            ResetLevel();
+        }
+
+        public void ResetLevel()
+        {
+            if (_shotCooldown != null)
+            {
+                StopCoroutine(_shotCooldown);
+
+                _shotCooldown = null;
+            }
+
+            SetCapacity(_config.Capacity);
         }
 
         public void Shoot()
@@ -52,9 +64,8 @@ namespace Gameplay
                 _projectileSpawn.Spawn(_appearance.ShotPoint.position, _appearance.ShotPoint.forward, _projectileConfig);
 
                 _remainCapacity--;
-                _remainCapacity = Mathf.Max(0, _remainCapacity);
 
-                OnCapacityChanged?.Invoke(_remainCapacity);
+                SetCapacity(Mathf.Max(0, _remainCapacity));
 
                 if (_remainCapacity == 0)
                 {
@@ -80,6 +91,13 @@ namespace Gameplay
             {
                 gameObject.SetActive(false);
             }
+        }
+
+        private void SetCapacity(int newCapacity)
+        {
+            _remainCapacity = newCapacity;
+
+            OnCapacityChanged?.Invoke(_remainCapacity);
         }
 
         private IEnumerator CooldownCoroutine(float shotPeriod)

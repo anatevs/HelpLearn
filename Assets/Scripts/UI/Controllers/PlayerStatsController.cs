@@ -6,10 +6,10 @@ namespace UI
     public class PlayerStatsController :
         IDisposable
     {
-        private HPComponent _hp;
-        private ScoreStorage _scoreStorage;
+        private readonly HPComponent _hp;
+        private readonly ScoreStorage _scoreStorage;
 
-        private PlayerStatsView _view;
+        private readonly PlayerStatsView _view;
 
         public PlayerStatsController(HPComponent hp,
             ScoreStorage scoreStorage,

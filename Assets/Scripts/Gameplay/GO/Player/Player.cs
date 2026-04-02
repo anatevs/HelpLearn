@@ -15,7 +15,7 @@ namespace Gameplay
 
         public WeaponComponent Weapon => _weapon;
 
-        public CharacterDataConfig DataConfig => _dataConfig;
+        public PlayerDataConfig DataConfig => _dataConfig;
 
         [SerializeField]
         private InputHandler _input;
@@ -24,7 +24,7 @@ namespace Gameplay
         private PlayerMovementConfig _movementConfig;
 
         [SerializeField]
-        private CharacterDataConfig _dataConfig;
+        private PlayerDataConfig _dataConfig;
 
         [SerializeField]
         private RotationComponent _viewRotation;
@@ -91,15 +91,15 @@ namespace Gameplay
             _startPosition = transform.position;
 
             _weaponStorage = weaponStorage;
+
+            InitPlayer();
         }
 
-        public void Init()
+        public void ResetLevel()
         {
-            _hp.Init(_dataConfig.StartHP);
+            InitPlayer();
 
-            transform.position = _startPosition;
-
-            _movement.Init();
+            _movement.ResetLevel();
         }
 
         public void Pause()
@@ -115,6 +115,13 @@ namespace Gameplay
         public void ChangeWeapon(Weapon newWeapon)
         {
             _weapon.SetWeapon(newWeapon);
+        }
+
+        private void InitPlayer()
+        {
+            _hp.Init(_dataConfig.StartHP);
+
+            transform.position = _startPosition;
         }
 
         private void Shoot()

@@ -38,6 +38,16 @@ namespace Gameplay
             ChangeWeapon(_configs[_firstActiveIndex].Name);
         }
 
+        public void ResetLevel()
+        {
+            foreach (var weapon in _weapons.Values)
+            {
+                weapon.ResetLevel();
+            }
+
+            ChangeWeapon(_configs[_firstActiveIndex].Name);
+        }
+
         public void Add(WeaponConfig config)
         {
             var weapon = config.CreateNewWeapon();

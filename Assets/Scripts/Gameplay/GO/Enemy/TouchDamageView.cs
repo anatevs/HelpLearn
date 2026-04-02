@@ -25,6 +25,10 @@ namespace Gameplay
         {
             SetColor(_inactiveColor);
         }
+        public void SetRadius(float radius)
+        {
+            transform.localScale = new Vector3(radius, 1, radius);
+        }
 
         private void SetColor(Color color)
         {

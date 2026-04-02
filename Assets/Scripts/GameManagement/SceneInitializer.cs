@@ -22,6 +22,12 @@ namespace GameManagement
         private WeaponStorage _weaponStorage;
 
         [SerializeField]
+        private BarrelsSevice _barrelsSevice;
+
+        [SerializeField]
+        private DoorsManager _doorsManager;
+
+        [SerializeField]
         private EndGameView _endGameView;
 
         [SerializeField]
@@ -35,52 +41,70 @@ namespace GameManagement
         private EndGameController _endGameController;
         private WeaponsPresenterManager _weaponsPresenterManager; 
 
+        private GameStatesManager _gameStatesManager;
+
         private void Awake()
         {
-            Constuct();
+            ConstuctServices();
 
-            _scoreStorage = new(_enemySpawnService);
+            ConstructPlainClasses();
 
             ConstructControllers();
+
+            Init();
         }
 
         private void Start()
         {
-            Init();
+            ResetLevel();
         }
 
         private void OnEnable()
         {
             _player.OnPlayerKilled += HandleLoseGame;
-            _restartGameController.OnRestartClicked += Init;
+            _restartGameController.OnRestartClicked += ResetLevel;
         }
 
         private void OnDisable()
         {
             _player.OnPlayerKilled -= HandleLoseGame;
-            _restartGameController.OnRestartClicked -= Init;
+            _restartGameController.OnRestartClicked -= ResetLevel;
         }
 
         public void Init()
         {
-            _player.Init();
             _weaponStorage.Init();
-            _weaponsPresenterManager.Init();
-            _projectileSpawnService.Init();
-            _enemySpawnService.Init();
-            _scoreStorage.Init(_player.DataConfig.StartScore);
-
-            _endGameController.Hide();
-            Time.timeScale = 1;
         }
 
-        private void Constuct()
+        private void ResetLevel()
+        {
+            _player.ResetLevel();
+            _weaponStorage.ResetLevel();
+            _weaponsPresenterManager.ResetLevel();
+            _projectileSpawnService.ResetLevel();
+            _enemySpawnService.ResetLevel();
+            _barrelsSevice.ResetLevel();
+            _doorsManager.ResetLevel();
+            _scoreStorage.Init(_player.DataConfig.StartScore);
+
+            var playState = new PlayingGameState();
+            _gameStatesManager.SetState(playState);
+        }
+
+        private void ConstuctServices()
         {
             _player.Construct(_weaponStorage);
 
             _weaponStorage.Construct(_projectileSpawnService);
 
             _enemySpawnService.Construct(_player);
+        }
+
+        private void ConstructPlainClasses()
+        {
+            _scoreStorage = new(_enemySpawnService);
+
+            _gameStatesManager = new GameStatesManager();
         }
 
         private void ConstructControllers()
@@ -95,9 +119,8 @@ namespace GameManagement
 
         private void HandleLoseGame()
         {
-            _endGameController.ShowLose();
-
-            Time.timeScale = 0;
+            var endState = new LoseGameState(_endGameController);
+            _gameStatesManager.SetState(endState);
         }
     }
 }

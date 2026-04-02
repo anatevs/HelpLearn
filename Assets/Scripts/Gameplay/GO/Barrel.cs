@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Gameplay
 {
@@ -14,6 +13,35 @@ namespace Gameplay
         [SerializeField]
         private float _destroyDelay = 4f;
 
+        [SerializeField]
+        private TouchDamageView _damageView;
+
+        [SerializeField]
+        private Color _activeRadiusColor;
+
+        [SerializeField]
+        private Color _inactiveRadiusColor;
+
+        [SerializeField]
+        private float _damageRadius = 4f;
+
+        [SerializeField]
+        private int _damage = 20;
+
+        private bool _isExploded = false;
+
+        private void Awake()
+        {
+            Init();
+        }
+
+        private void Init()
+        {
+            _damageView.SetRadius(_damageRadius);
+            _damageView.Init(_activeRadiusColor, _inactiveRadiusColor);
+            _damageView.SetActive();
+        }
+
         private void OnEnable()
         {
             foreach (var part in _parts)
@@ -24,9 +52,12 @@ namespace Gameplay
 
         private void OnDisable()
         {
-            foreach (var part in _parts)
+            if (!_isExploded)
             {
-                part.OnHPChanged -= HandleCollision;
+                foreach (var part in _parts)
+                {
+                    part.OnHPChanged -= HandleCollision;
+                }
             }
         }
 
@@ -37,9 +68,41 @@ namespace Gameplay
 
         private void MakeExplosion()
         {
-            _bottomLidRB.isKinematic = false;
+            if (!_isExploded)
+            {
+                Debug.Log("explosion");
 
-            Destroy(gameObject, _destroyDelay);
+                foreach (var part in _parts)
+                {
+                    part.OnHPChanged -= HandleCollision;
+                }
+
+                _bottomLidRB.isKinematic = false;
+
+                Destroy(gameObject, _destroyDelay);
+
+                DamageInRadius();
+
+                _isExploded = true;
+
+                _damageView.SetInactive();
+            }
+        }
+
+        private void DamageInRadius()
+        {
+            var colliders = Physics.OverlapSphere(transform.position, _damageRadius);
+
+            if (colliders.Length > 0)
+            {
+                foreach (var collider in colliders)
+                {
+                    if (collider.TryGetComponent<HPComponent>(out var hp))
+                    {
+                        hp.TakeDamage(_damage);
+                    }
+                }
+            }
         }
     }
 }
