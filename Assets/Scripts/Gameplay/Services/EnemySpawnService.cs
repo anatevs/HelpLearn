@@ -90,10 +90,6 @@ namespace Gameplay
 
             enemy.Init(_player);
 
-            var pos = _config.GetSpawnPos();
-
-            enemy.transform.position = pos;
-
             enemy.gameObject.SetActive(true);
 
             enemy.OnKilled += HandleEnemyKill;

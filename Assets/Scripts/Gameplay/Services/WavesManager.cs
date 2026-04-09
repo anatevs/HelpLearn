@@ -31,6 +31,11 @@ namespace Gameplay
 
             _waveConfigs = _enemySpawnService.Config.WaveConfigs;
 
+            foreach (var waveConfig in _waveConfigs)
+            {
+                waveConfig.Init();
+            }
+
             _enemySpawnService.OnEnemyKilled += AddKilledEnemy;
         }
 

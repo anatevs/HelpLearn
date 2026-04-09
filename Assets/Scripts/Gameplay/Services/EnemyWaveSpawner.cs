@@ -5,16 +5,18 @@ namespace Gameplay
 {
     public class EnemyWaveSpawner
     {
-        private readonly WaveConfigInfo[] _waveInfo;
+        private readonly WaveConfigInfo[] _waveEnemyInfo;
+        private EnemyWaveConfig _waveConfig;
         private readonly List<string> _names = new();
         private readonly Dictionary<string, int> _counters = new();
         private readonly Dictionary<string, Enemy> _prefabs = new();
 
         public EnemyWaveSpawner(EnemyWaveConfig enemyWaveConfig)
         {
-            _waveInfo = enemyWaveConfig.WaveInfo;
+            _waveConfig = enemyWaveConfig;
+            _waveEnemyInfo = enemyWaveConfig.WaveInfo;
 
-            foreach (var info in _waveInfo)
+            foreach (var info in _waveEnemyInfo)
             {
                 _names.Add(info.Prefab.Config.Name);
                 _counters.Add(info.Prefab.Config.Name, info.Count);
@@ -34,6 +36,8 @@ namespace Gameplay
             var prefab = _prefabs[name];
 
             enemy = Spawn(prefab, spawnedTransform);
+
+            enemy.transform.position = _waveConfig.GetRandomLocation().position;
 
             return true;
         }

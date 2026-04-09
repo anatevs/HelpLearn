@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c85936f6b4da46e42a1767a3ab51fba9, type: 3}
+  m_Name: SpawnRoomConfig
+  m_EditorClassIdentifier: 
+  _spawnPoints:
+  - {fileID: 3034141336499688719, guid: 8144688bb0933174ea35d5df1ab7314e, type: 3}
+  - {fileID: 8655091178981948877, guid: 4b50cdc0bf56f5e4db2d1c7ab9edacfe, type: 3}
+  _addLocation: {fileID: 8655091178981948877, guid: 4b50cdc0bf56f5e4db2d1c7ab9edacfe, type: 3}
+  _removeLocation: {fileID: 8126481885099350151, guid: 48da464a608b7d4458eeda9537cbc7b5, type: 3}

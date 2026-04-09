@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: WaveConfig 0
   m_EditorClassIdentifier: 
   _enemiesInfo:
-  - Count: 1
+  - Count: 2
     Prefab: {fileID: 3363891105955286784, guid: 3f5aeca71972cde43b360f3697a4d329, type: 3}
   - Count: 1
     Prefab: {fileID: 7751279600743416028, guid: 8f45e283174f5e1468bca97fbc8527c5, type: 3}
   _nextWaveDelay: 15
+  _spawnRooms:
+  - {fileID: 11400000, guid: 1ce93856269614a42b2e09d36dd59797, type: 2}
+  - {fileID: 11400000, guid: a48a24485138d324fba50edc1211df38, type: 2}

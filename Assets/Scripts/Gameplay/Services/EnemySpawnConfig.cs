@@ -22,23 +22,9 @@ namespace Gameplay
         private EnemyWaveConfig[] _waveConfigs;
 
         [SerializeField]
-        private Transform[] _spawnLocations;
-
-        [SerializeField]
         private float _xSpawnRange;
 
         [SerializeField]
         private float _zSpawnRange;
-
-        public Vector3 GetSpawnPos()
-        {
-            var shift = new Vector3(
-            Random.Range(-_xSpawnRange, _xSpawnRange),
-            0,
-            Random.Range(-_zSpawnRange, _zSpawnRange));
-
-            return _spawnLocations[Random.Range(0, _spawnLocations.Length)].position
-                + shift;
-        }
     }
 }
