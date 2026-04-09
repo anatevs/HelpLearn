@@ -74,7 +74,7 @@ namespace Gameplay
 
         private void SetToInactive(Weapon weapon)
         {
-            weapon.gameObject.SetActive(false);
+            weapon.ChangeActive(false);
             weapon.transform.parent = transform;
         }
     }

@@ -16,10 +16,6 @@ namespace Gameplay
 
         private Vector3 _direction = Vector3.forward;
 
-        private float _castDistance = 1f;
-
-        private float _castDistanceMultiplier = 1.5f;
-
         private float _damageRadius = 0.5f;
 
         private void Awake()
@@ -33,7 +29,7 @@ namespace Gameplay
             _movement.MoveUpdate(_direction, _speed);
 
 
-            if (Physics.SphereCast(transform.position, _damageRadius, _direction, out var hit, _castDistance))
+            if (Physics.SphereCast(transform.position, _damageRadius, _direction, out var hit, _speed * Time.deltaTime))
             {
                 HandleCollision(hit.collider);
             }
@@ -49,21 +45,18 @@ namespace Gameplay
             OnCollided?.Invoke(this);
         }
 
-        public void SetParams(int damage, float speed, Vector3 direction, float damageRadius, float castDistanceMultiplier)
+        public void SetParams(int damage, float speed, Vector3 direction, float damageRadius)
         {
             _damage = damage;
             _speed = speed;
             _direction = direction;
             _damageRadius = damageRadius;
-            _castDistanceMultiplier = castDistanceMultiplier;
-
-            _castDistance = transform.localScale.z * _castDistanceMultiplier;
         }
 
         public void SetParams(ProjectileConfig config, Vector3 direction)
         {
             SetParams(config.Damage, config.Speed,
-                direction, config.DamageRadius, config.CastDistanceMultiplier);
+                direction, config.DamageRadius);
         }
     }
 }

@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f53bd8284b17bd74c9965231552fb0ec, type: 3}
   m_Name: BigGunConfig
   m_EditorClassIdentifier: 
-  _name: BigGun
-  _projectileConfig: {fileID: 11400000, guid: df03e5d8964b8e347828d3d23e68c132, type: 2}
-  _shotPeriod: 10
-  _capacity: 20
+  _weaponParams:
+    _name: BigGun
+    _projectileConfig: {fileID: 11400000, guid: df03e5d8964b8e347828d3d23e68c132, type: 2}
+    _shotPeriod: 10
+    _capacity: 20
   _prefab: {fileID: 5886378732863660903, guid: d68d0fbc201c6c24cb81d6f008bd1c49, type: 3}

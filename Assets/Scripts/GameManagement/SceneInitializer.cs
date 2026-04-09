@@ -36,10 +36,20 @@ namespace GameManagement
         [SerializeField]
         private WeaponsMenu _weaponMenu;
 
+        [SerializeField]
+        private WavesManager _wavesManager;
+
+        [SerializeField]
+        private WavesPanelView _wavesPanelView;
+
+        [SerializeField]
+        private TurretManager _turretManager;
+
         private ScoreStorage _scoreStorage;
         private PlayerStatsController _playerStatsController;
         private EndGameController _endGameController;
-        private WeaponsPresenterManager _weaponsPresenterManager; 
+        private WeaponsPanelPresenter _weaponsPanelManager; 
+        private WavesPanelController _wavesPanelController;
 
         private GameStatesManager _gameStatesManager;
 
@@ -63,12 +73,14 @@ namespace GameManagement
         {
             _player.OnPlayerKilled += HandleLoseGame;
             _restartGameController.OnRestartClicked += ResetLevel;
+            _wavesManager.OnAllWavesCompleted += HandleWinGame;
         }
 
         private void OnDisable()
         {
             _player.OnPlayerKilled -= HandleLoseGame;
             _restartGameController.OnRestartClicked -= ResetLevel;
+            _wavesManager.OnAllWavesCompleted -= HandleWinGame;
         }
 
         public void Init()
@@ -80,12 +92,16 @@ namespace GameManagement
         {
             _player.ResetLevel();
             _weaponStorage.ResetLevel();
-            _weaponsPresenterManager.ResetLevel();
+            _weaponsPanelManager.ResetLevel();
             _projectileSpawnService.ResetLevel();
             _enemySpawnService.ResetLevel();
             _barrelsSevice.ResetLevel();
             _doorsManager.ResetLevel();
             _scoreStorage.Init(_player.DataConfig.StartScore);
+            _turretManager.ResetLevel();
+
+            _wavesManager.ResetLevel();
+            _wavesPanelView.ResetLevel();
 
             var playState = new PlayingGameState();
             _gameStatesManager.SetState(playState);
@@ -98,6 +114,10 @@ namespace GameManagement
             _weaponStorage.Construct(_projectileSpawnService);
 
             _enemySpawnService.Construct(_player);
+
+            _wavesManager.Constuct(_enemySpawnService);
+
+            _turretManager.Construct(_player, _projectileSpawnService);
         }
 
         private void ConstructPlainClasses()
@@ -114,13 +134,21 @@ namespace GameManagement
 
             _endGameController = new EndGameController(_endGameView);
 
-            _weaponsPresenterManager = new WeaponsPresenterManager(_weaponMenu, _weaponStorage);
+            _weaponsPanelManager = new WeaponsPanelPresenter(_weaponMenu, _weaponStorage);
+
+            _wavesPanelController = new WavesPanelController(_wavesManager, _wavesPanelView);
         }
 
         private void HandleLoseGame()
         {
             var endState = new LoseGameState(_endGameController);
             _gameStatesManager.SetState(endState);
+        }
+
+        private void HandleWinGame()
+        {
+            var endGame = new WinGameState(_endGameController);
+            _gameStatesManager.SetState(endGame);
         }
     }
 }

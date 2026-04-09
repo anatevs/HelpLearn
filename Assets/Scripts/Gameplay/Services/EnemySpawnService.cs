@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
@@ -9,42 +8,31 @@ namespace Gameplay
     {
         public event Action<int> OnEnemyKilled;
 
-        [SerializeField]
-        private EnemySpawnConfig _config;
+        public EnemySpawnConfig Config => _config;
 
         [SerializeField]
-        private EnemySpawner _spawner;
+        private EnemySpawnConfig _config;
 
         [SerializeField]
         private Transform _enemiesTransform;
 
         private Player _player;
 
-        private WaitForSeconds _waveWait;
+        private EnemyWaveSpawner _waveSpawner;
+
         private WaitForSeconds _spawnWait;
 
-        private Coroutine _wavesCoroutine;
         private Coroutine _spawnCoroutine;
 
         public void Construct(Player player)
         {
             _player = player;
 
-            _spawner.Init();
-
-            _waveWait = new WaitForSeconds(_config.WavePeriod);
-
             _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
         }
 
         public void ResetLevel()
         {
-            if (_wavesCoroutine != null)
-            {
-                StopCoroutine(_wavesCoroutine);
-                _wavesCoroutine = null;
-            }
-
             if (_spawnCoroutine != null)
             {
                 StopCoroutine(_spawnCoroutine);
@@ -60,8 +48,6 @@ namespace Gameplay
                     Unspawn(enemy);
                 }
             }
-
-            _wavesCoroutine = StartCoroutine(WavesSpawnCoroutine());
         }
 
         private void Unspawn(Enemy enemy)
@@ -78,31 +64,29 @@ namespace Gameplay
             Destroy(enemy.gameObject);
         }
 
-        private IEnumerator WavesSpawnCoroutine()
+        public void SpawnEnemies(EnemyWaveConfig waveConfig)
         {
-            while (gameObject.activeSelf)
-            {
-                yield return _spawnCoroutine = StartCoroutine(SpawnCoroutine());
-
-                yield return _waveWait;
-            }
+            _spawnCoroutine = StartCoroutine(SpawnCoroutine(waveConfig));
         }
 
-        private IEnumerator SpawnCoroutine()
+        private IEnumerator SpawnCoroutine(EnemyWaveConfig waveConfig)
         {
-            for (int i = 0; i < _config.WaveSize; i++)
-            {
-                SpawnRandom();
+            _waveSpawner = new(waveConfig);
 
+            while (TrySpawnRandom())
+            {
                 yield return _spawnWait;
             }
 
             yield return null;
         }
 
-        private void SpawnRandom()
+        private bool TrySpawnRandom()
         {
-            var enemy = _spawner.GetRandomEnemy(_enemiesTransform);
+            if (!_waveSpawner.TryGetRandomEnemy(_enemiesTransform, out var enemy))
+            {
+                return false;
+            }
 
             enemy.Init(_player);
 
@@ -113,6 +97,8 @@ namespace Gameplay
             enemy.gameObject.SetActive(true);
 
             enemy.OnKilled += HandleEnemyKill;
+
+            return true;
         }
 
         private void HandleEnemyKill(Enemy enemy)

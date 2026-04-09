@@ -10,7 +10,7 @@ namespace Gameplay
 
         public float SpawnPeriod => _spawnPeriod;
 
-        public int WaveSize => _waveSize;
+        public EnemyWaveConfig[] WaveConfigs => _waveConfigs;
 
         [SerializeField]
         private float _wavePeriod = 5.0f;
@@ -19,7 +19,7 @@ namespace Gameplay
         private float _spawnPeriod = 0.2f;
 
         [SerializeField]
-        private int _waveSize = 10;
+        private EnemyWaveConfig[] _waveConfigs;
 
         [SerializeField]
         private Transform[] _spawnLocations;

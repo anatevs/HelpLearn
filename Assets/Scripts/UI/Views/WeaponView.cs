@@ -27,7 +27,7 @@ namespace UI
         {
             _sliderRange = _slider.maxValue - _slider.minValue;
 
-            _slider.value = _slider.maxValue;
+            SetSliderMax();
         }
 
         private void OnEnable()
@@ -53,6 +53,7 @@ namespace UI
         public void SetCapacity(string charge)
         {
             _capacity.text = charge;
+            SetSliderMax();
         }
 
         public void SetReadiness(float portion)
@@ -62,7 +63,7 @@ namespace UI
 
         public void SetInactive()
         {
-            _slider.value = _slider.maxValue;
+            SetSliderMax();
             _toggle.isOn = false;
             _toggle.interactable = false;
         }
@@ -70,6 +71,11 @@ namespace UI
         public void SetSelected()
         {
             _toggle.isOn = true;
+        }
+
+        private void SetSliderMax()
+        {
+            _slider.value = _slider.maxValue;
         }
 
         private void HandleClick(bool isOn)

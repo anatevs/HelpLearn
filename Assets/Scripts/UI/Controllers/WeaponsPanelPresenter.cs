@@ -1,11 +1,10 @@
 ﻿using Gameplay;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace UI
 {
-    public sealed class WeaponsPresenterManager : IDisposable
+    public sealed class WeaponsPanelPresenter : IDisposable
     {
         private readonly WeaponsMenu _weaponsMenu;
 
@@ -13,7 +12,7 @@ namespace UI
 
         private readonly List<WeaponPreseter> _weaponPreseters = new();
 
-        public WeaponsPresenterManager(WeaponsMenu weaponsMenu,
+        public WeaponsPanelPresenter(WeaponsMenu weaponsMenu,
             WeaponStorage weaponStorage)
         {
             _weaponsMenu = weaponsMenu;

@@ -70,8 +70,6 @@ namespace Gameplay
         {
             if (!_isExploded)
             {
-                Debug.Log("explosion");
-
                 foreach (var part in _parts)
                 {
                     part.OnHPChanged -= HandleCollision;

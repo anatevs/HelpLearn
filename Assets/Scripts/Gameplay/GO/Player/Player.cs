@@ -41,13 +41,6 @@ namespace Gameplay
 
         private Vector3 _startPosition;
 
-
-        [SerializeField]
-        private WeaponConfig _weaponConfig;
-
-
-
-
         private void OnEnable()
         {
             _input.OnJupmed += _movement.Jump;

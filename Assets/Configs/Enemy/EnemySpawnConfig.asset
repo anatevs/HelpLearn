@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e2f459ded197242bc248c21ad6194b, type: 3}
   m_Name: EnemySpawnConfig
   m_EditorClassIdentifier: 
-  _wavePeriod: 500
+  _wavePeriod: 60
   _spawnPeriod: 0.2
-  _waveSize: 5
+  _waveConfigs:
+  - {fileID: 11400000, guid: 1b831daa74f62eb4d8ebb97210397e68, type: 2}
+  - {fileID: 11400000, guid: 5996e1112d1daa84ba0840c9bc7bb45b, type: 2}
   _spawnLocations:
   - {fileID: 8126481885099350151, guid: 48da464a608b7d4458eeda9537cbc7b5, type: 3}
   - {fileID: 3034141336499688719, guid: 8144688bb0933174ea35d5df1ab7314e, type: 3}

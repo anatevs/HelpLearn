@@ -42,7 +42,7 @@ namespace Gameplay
         {
             projectile.gameObject.SetActive(false);
 
-            projectile.SetParams(0, 0, Vector3.forward, 1, 1);
+            projectile.SetParams(0, 0, Vector3.forward, 1);
 
             projectile.transform.position = Vector3.zero;
 

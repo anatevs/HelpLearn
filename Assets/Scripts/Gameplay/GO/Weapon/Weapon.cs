@@ -10,20 +10,20 @@ namespace Gameplay
         public event Action<int> OnCapacityChanged;
         public event Action OnEmptied;
 
-        public string Name => _config.Name;
+        public string Name => _weaponParams.Name;
 
         [SerializeField]
-        private WeaponAppearance _appearance;
+        protected WeaponAppearance _appearance;
 
-        private WeaponConfig _config;
+        protected WeaponParams _weaponParams;
 
         private ProjectileConfig _projectileConfig;
 
-        private ProjectileSpawnService _projectileSpawn;
+        protected ProjectileSpawnService _projectileSpawn;
 
         private bool _isActive = false;
 
-        private Coroutine _shotCooldown;
+        private Coroutine _cooldownCoroutine;
 
         private bool _canShoot = true;
 
@@ -36,25 +36,25 @@ namespace Gameplay
             _projectileSpawn = spawnService;
         }
 
-        public void Init(WeaponConfig config)
+        public void Init(WeaponParams weaponParams)
         {
-            _config = config;
+            _weaponParams = weaponParams;
 
-            _projectileConfig = config.Projectile;
+            _projectileConfig = _weaponParams.Projectile;
 
             ResetLevel();
         }
 
-        public void ResetLevel()
+        public virtual void ResetLevel()
         {
-            if (_shotCooldown != null)
+            if (_cooldownCoroutine != null)
             {
-                StopCoroutine(_shotCooldown);
+                StopCoroutine(_cooldownCoroutine);
 
-                _shotCooldown = null;
+                _cooldownCoroutine = null;
             }
 
-            SetCapacity(_config.Capacity);
+            SetRemain(_weaponParams.Capacity);
         }
 
         public void Shoot()
@@ -65,7 +65,7 @@ namespace Gameplay
 
                 _remainCapacity--;
 
-                SetCapacity(Mathf.Max(0, _remainCapacity));
+                SetRemain(Mathf.Max(0, _remainCapacity));
 
                 if (_remainCapacity == 0)
                 {
@@ -76,7 +76,7 @@ namespace Gameplay
 
                 if (_canShoot)
                 {
-                    _shotCooldown = StartCoroutine(CooldownCoroutine(_config.ShotPeriod));
+                    _cooldownCoroutine = StartCoroutine(CooldownCoroutine(_weaponParams.ShotPeriod));
                 }
             }
         }
@@ -85,15 +85,18 @@ namespace Gameplay
         {
             _isActive = active;
             _appearance.gameObject.SetActive(active);
-            _canShoot = _isActive || (_remainCapacity > 0);
 
-            if (!active && _remainCooldown >= _config.ShotPeriod)
-            {
+            var isCooldowned = _cooldownCoroutine == null;
+
+            _canShoot = _isActive && (_remainCapacity > 0) && isCooldowned;
+
+            if (!active && isCooldowned)
+            {   
                 gameObject.SetActive(false);
             }
         }
 
-        private void SetCapacity(int newCapacity)
+        protected virtual void SetRemain(int newCapacity)
         {
             _remainCapacity = newCapacity;
 
@@ -104,7 +107,7 @@ namespace Gameplay
         {
             _canShoot = false;
 
-            while(_remainCooldown < shotPeriod)
+            while (_remainCooldown < shotPeriod)
             {
                 _remainCooldown += Time.deltaTime;
 
@@ -114,6 +117,7 @@ namespace Gameplay
             }
 
             _remainCooldown = 0;
+            OnCooldownChanged?.Invoke(1);
 
             _canShoot = _isActive;
 
@@ -121,6 +125,8 @@ namespace Gameplay
             {
                 gameObject.SetActive(false);
             }
+
+            _cooldownCoroutine = null;
         }
     }
 }
