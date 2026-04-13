@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpawnRoomConfig
   m_EditorClassIdentifier: 
   _spawnPoints:
-  - {fileID: 3034141336499688719, guid: 8144688bb0933174ea35d5df1ab7314e, type: 3}
-  - {fileID: 8655091178981948877, guid: 4b50cdc0bf56f5e4db2d1c7ab9edacfe, type: 3}
-  _addLocation: {fileID: 8655091178981948877, guid: 4b50cdc0bf56f5e4db2d1c7ab9edacfe, type: 3}
-  _removeLocation: {fileID: 8126481885099350151, guid: 48da464a608b7d4458eeda9537cbc7b5, type: 3}
+  - {fileID: 8126481885099350151, guid: 48da464a608b7d4458eeda9537cbc7b5, type: 3}
+  - {fileID: 3500390142547632604, guid: 73f3ff3a5d2b34f4aacdacc324b8dd1b, type: 3}
+  _addLocation: {fileID: 3500390142547632604, guid: 73f3ff3a5d2b34f4aacdacc324b8dd1b, type: 3}
+  _removeLocation: {fileID: 0}

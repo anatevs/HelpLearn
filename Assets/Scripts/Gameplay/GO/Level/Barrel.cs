@@ -11,6 +11,9 @@ namespace Gameplay
         private Rigidbody _bottomLidRB;
 
         [SerializeField]
+        private GameObject _ring;
+
+        [SerializeField]
         private float _destroyDelay = 4f;
 
         [SerializeField]
@@ -74,6 +77,8 @@ namespace Gameplay
                 {
                     part.OnHPChanged -= HandleCollision;
                 }
+
+                _ring.SetActive(false);
 
                 _bottomLidRB.isKinematic = false;
 

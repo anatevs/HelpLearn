@@ -8,9 +8,7 @@ namespace Gameplay
         {
             var targetRotation = Quaternion.FromToRotation(Vector3.forward, direction);
 
-            targetRotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * deltaTime);
-
-            transform.rotation = targetRotation;
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * deltaTime);
         }
     }
 }

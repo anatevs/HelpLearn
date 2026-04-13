@@ -45,7 +45,6 @@ namespace EditorExtensions
 
             EditorGUILayout.Space();
 
-
             SerializedProperty listProp = serializedObject.FindProperty(_locationsField);
 
             serializedObject.Update();
@@ -63,6 +62,13 @@ namespace EditorExtensions
             GUI.enabled = true;
 
             serializedObject.ApplyModifiedProperties();
+
+
+            EditorGUILayout.Space();
+            if (GUILayout.Button("Clear empty"))
+            {
+                spawnRoom.ClearEmpty();
+            }
         }
     }
 }

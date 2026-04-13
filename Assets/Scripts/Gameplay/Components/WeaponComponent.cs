@@ -25,7 +25,6 @@ namespace Gameplay
             weapon.transform.SetParent(_handPoint);
 
             weapon.gameObject.SetActive(true);
-            weapon.ChangeActive(true);
 
             _currentWeapon = weapon;
         }

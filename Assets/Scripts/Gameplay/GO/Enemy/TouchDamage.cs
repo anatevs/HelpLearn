@@ -18,6 +18,8 @@ namespace Gameplay
 
         private Collider _collider;
 
+        private float _maxYDifference = 0.2f;
+
         private void Awake()
         {
             _collider = GetComponent<Collider>();
@@ -37,7 +39,11 @@ namespace Gameplay
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!_isCooldown && other.gameObject == _targetHP.gameObject)
+            var yDifference = Mathf.Abs(other.transform.position.y - transform.position.y);
+
+            if (!_isCooldown 
+                && other.gameObject == _targetHP.gameObject
+                && yDifference < _maxYDifference)
             {
                 _targetHP.TakeDamage(_config.Damage);
                 _isCooldown = true;

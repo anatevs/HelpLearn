@@ -20,6 +20,8 @@ namespace Gameplay
 
         public void AddLocation()
         {
+            ClearEmpty();
+
             if (_addLocation == null)
             {
                 return;
@@ -30,12 +32,19 @@ namespace Gameplay
 
         public void RemoveLocation()
         {
+            ClearEmpty();
+
             if (_addLocation == null)
             {
                 return;
             }
 
             _spawnPoints.Remove(_removeLocation);
+        }
+
+        public void ClearEmpty()
+        {
+            _spawnPoints.RemoveAll(x => x == null);
         }
     }
 }

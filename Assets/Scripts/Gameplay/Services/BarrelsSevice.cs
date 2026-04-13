@@ -29,7 +29,7 @@ namespace Gameplay
             {
                 if (_barrels[i] != null)
                 {
-                    Unspwn(_barrels[i]);
+                    Unspawn(_barrels[i]);
                 }
             }
 
@@ -50,7 +50,7 @@ namespace Gameplay
             }
         }
 
-        private void Unspwn(Barrel barrel)
+        private void Unspawn(Barrel barrel)
         {
             Destroy(barrel.gameObject);
         }

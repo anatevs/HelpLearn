@@ -70,6 +70,7 @@ namespace Gameplay
 
             _currentActive = _weapons[name];
             OnWeaponChanged?.Invoke(_currentActive);
+            _currentActive.ChangeActive(true);
         }
 
         private void SetToInactive(Weapon weapon)

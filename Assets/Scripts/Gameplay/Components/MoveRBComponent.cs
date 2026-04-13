@@ -59,9 +59,6 @@ namespace Gameplay
         public void ResetLevel()
         {
             _currentVelocity = Vector3.zero;
-
-            _rb.isKinematic = false;
-            _rb.linearVelocity = _currentVelocity;
         }
 
         public void Pause()

@@ -9,6 +9,9 @@ namespace Gameplay
         private SphereTriggerComponent _sphereTrigger;
 
         [SerializeField]
+        private TouchDamageView _damageView;
+
+        [SerializeField]
         private TurretConfig _turretConfig;
 
         private RotationComponent _rotation;
@@ -48,9 +51,14 @@ namespace Gameplay
         {
             _turretParams = turretParams;
             _sphereTrigger.SetRadius(_turretParams.DetectionRadius);
-            ChangeActive(true);
+
+            _damageView.SetRadius(_turretParams.DetectionRadius);
+            _damageView.Init(_turretConfig.RadiusColor, Color.white);
+            _damageView.SetActive();
 
             base.Init(weaponParams);
+
+            ChangeActive(true);
         }
 
         public override void ResetLevel()

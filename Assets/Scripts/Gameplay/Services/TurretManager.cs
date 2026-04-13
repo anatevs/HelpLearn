@@ -4,7 +4,6 @@ namespace Gameplay
 {
     public sealed class TurretManager : MonoBehaviour
     {
-        [SerializeField]
         private Turret[] _turrets;
 
         private Player _player;
@@ -14,6 +13,8 @@ namespace Gameplay
         {
             _player = player;
             _projectileSpawn = projectileSpawn;
+
+            _turrets = GetComponentsInChildren<Turret>();
 
             foreach (var turret in _turrets)
             {

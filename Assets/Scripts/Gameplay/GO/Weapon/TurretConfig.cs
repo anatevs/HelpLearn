@@ -9,8 +9,13 @@ namespace Gameplay
     {
         public TurretParams TurretParams => _turretParams;
 
+        public Color RadiusColor => _radiusColor;
+
         [SerializeField]
         private TurretParams _turretParams;
+
+        [SerializeField]
+        private Color _radiusColor;
 
 
         public override Turret CreateNewWeapon()

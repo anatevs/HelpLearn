@@ -16,5 +16,5 @@ MonoBehaviour:
     _name: Gun
     _projectileConfig: {fileID: 11400000, guid: fd99c7b5d3d3a4c4c8d0a8be572a4bac, type: 2}
     _shotPeriod: 0.5
-    _capacity: 50
+    _capacity: 100
   _prefab: {fileID: 5886378732863660903, guid: 86f82327261bd6648897acd56aa1d9e0, type: 3}

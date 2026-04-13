@@ -7,6 +7,7 @@ namespace Gameplay
     [RequireComponent(typeof(MoveRBComponent))]
     [RequireComponent(typeof(HPComponent))]
     [RequireComponent(typeof(WeaponComponent))]
+    [RequireComponent(typeof(FallComponent))]
     public sealed class Player : MonoBehaviour
     {
         public event Action OnPlayerKilled;
@@ -29,11 +30,16 @@ namespace Gameplay
         [SerializeField]
         private RotationComponent _viewRotation;
 
+        [SerializeField]
+        private Collider _undergroundPlane;
+
         private HPComponent _hp;
 
         private WeaponComponent _weapon;
 
         private MoveRBComponent _movement;
+
+        private FallComponent _fall;
 
         private Vector3 _lookDirection;
 
@@ -41,14 +47,6 @@ namespace Gameplay
 
         private Vector3 _startPosition;
 
-        private void OnEnable()
-        {
-            _input.OnJupmed += _movement.Jump;
-            _input.OnShoot += Shoot;
-
-            _hp.OnHPChanged += HandleDamage;
-            _weaponStorage.OnWeaponChanged += ChangeWeapon;
-        }
 
         private void OnDisable()
         {
@@ -57,6 +55,8 @@ namespace Gameplay
 
             _hp.OnHPChanged -= HandleDamage;
             _weaponStorage.OnWeaponChanged -= ChangeWeapon;
+
+            _fall.OnFell -= MakeKill;
         }
 
         private void Update()
@@ -66,6 +66,8 @@ namespace Gameplay
             _lookDirection.y = 0;
 
             _viewRotation.Rotate(_lookDirection, _movementConfig.RotationSpeed, Time.deltaTime);
+
+            _fall.CheckFallUpd();
         }
 
         private void FixedUpdate()
@@ -80,10 +82,20 @@ namespace Gameplay
 
             _hp = GetComponent<HPComponent>();
             _weapon = GetComponent<WeaponComponent>();
+            _fall = GetComponent<FallComponent>();
 
             _startPosition = transform.position;
 
             _weaponStorage = weaponStorage;
+
+
+            _input.OnJupmed += _movement.Jump;
+            _input.OnShoot += Shoot;
+
+            _hp.OnHPChanged += HandleDamage;
+            _weaponStorage.OnWeaponChanged += ChangeWeapon;
+
+            _fall.OnFell += MakeKill;
 
             InitPlayer();
         }
@@ -91,6 +103,8 @@ namespace Gameplay
         public void ResetLevel()
         {
             InitPlayer();
+
+            Resume();
 
             _movement.ResetLevel();
         }
@@ -126,10 +140,15 @@ namespace Gameplay
         {
             if (newHP == 0)
             {
-                OnPlayerKilled?.Invoke();
-
-                Pause();
+                MakeKill();
             }
+        }
+
+        private void MakeKill()
+        {
+            OnPlayerKilled?.Invoke();
+
+            Pause();
         }
     }
 }
