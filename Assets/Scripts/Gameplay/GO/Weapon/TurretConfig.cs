@@ -18,9 +18,9 @@ namespace Gameplay
         private Color _radiusColor;
 
 
-        public override Turret CreateNewWeapon()
+        public override Turret CreateNewWeapon(ProjectileSpawnService projectileSpawn)
         {
-            Turret turret = base.CreateNewWeapon();
+            Turret turret = base.CreateNewWeapon(projectileSpawn);
 
             turret.Init(_weaponParams, _turretParams);
 

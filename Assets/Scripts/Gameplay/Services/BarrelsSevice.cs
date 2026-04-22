@@ -29,25 +29,27 @@ namespace Gameplay
             {
                 if (_barrels[i] != null)
                 {
-                    Unspawn(_barrels[i]);
+                    if (!_barrels[i].IsExploded)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        Unspawn(_barrels[i]);
+                    }
                 }
-            }
 
-            SpawnAll();
+                SpawnAtIndex(i);
+            }
         }
 
-        private void SpawnAll()
+        private void SpawnAtIndex(int index)
         {
-            _barrels = new Barrel[_positions.Length];
+            var barrel = Instantiate(_prefab, transform);
 
-            for (int i = 0; i < _positions.Length; i++)
-            {
-                var barrel = Instantiate(_prefab, transform);
+            barrel.transform.position = _positions[index];
 
-                barrel.transform.position = _positions[i];
-
-                _barrels[i] = barrel;
-            }
+            _barrels[index] = barrel;
         }
 
         private void Unspawn(Barrel barrel)

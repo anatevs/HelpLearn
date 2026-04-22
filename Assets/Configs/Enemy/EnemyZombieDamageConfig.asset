@@ -15,5 +15,5 @@ MonoBehaviour:
   _damageRadius: 2
   _damage: 2
   _damageCooldown: 2
-  _damageActiveColor: {r: 1, g: 0, b: 0, a: 0.78431374}
+  _damageActiveColor: {r: 1, g: 0.2924527, b: 0.2924527, a: 1}
   _damageInactiveColor: {r: 1, g: 1, b: 1, a: 0.78431374}

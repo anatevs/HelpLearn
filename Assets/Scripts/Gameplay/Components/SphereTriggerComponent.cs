@@ -11,7 +11,7 @@ namespace Gameplay
 
         private SphereCollider _sphereCollider;
 
-        private void Awake()
+        public void Init()
         {
             _sphereCollider = GetComponent<SphereCollider>();
 

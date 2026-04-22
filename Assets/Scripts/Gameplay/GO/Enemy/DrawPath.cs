@@ -9,6 +9,7 @@ namespace Gameplay
     {
         private LineRenderer _line;
         private NavMeshAgent _agent;
+        private Vector3[] _corners = new Vector3[50];
 
         private void Awake()
         {
@@ -32,10 +33,10 @@ namespace Gameplay
 
         void DrawAgentPath()
         {
-            Vector3[] corners = _agent.path.corners;
-            _line.positionCount = corners.Length;
+            _line.positionCount = _agent.path.corners.Length;
+            _corners = _agent.path.corners;
 
-            _line.SetPositions(corners);
+            _line.SetPositions(_corners);
         }
     }
 }

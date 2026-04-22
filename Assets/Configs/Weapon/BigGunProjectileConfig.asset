@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 335cfbf2f00df394799e69a271762b53, type: 3}
   m_Name: BigGunProjectileConfig
   m_EditorClassIdentifier: 
+  _name: BigGunProjectile
   _prefab: {fileID: 2758822855618126416, guid: f9416cb1db6da84448e76b61a18e5f40, type: 3}
+  _poolInitCount: 10
   _damage: 5
   _speed: 20
-  _castDistanceMultiplier: 1.5
   _damageRadius: 0.5

@@ -45,6 +45,9 @@ namespace GameManagement
         [SerializeField]
         private TurretManager _turretManager;
 
+        [SerializeField]
+        private MinimapController _minimapController;
+
         private ScoreStorage _scoreStorage;
         private PlayerStatsController _playerStatsController;
         private EndGameController _endGameController;
@@ -94,6 +97,7 @@ namespace GameManagement
             _weaponStorage.ResetLevel();
             _weaponsPanelManager.ResetLevel();
             _projectileSpawnService.ResetLevel();
+            _minimapController.ResetLevel();
             _enemySpawnService.ResetLevel();
             _barrelsSevice.ResetLevel();
             _doorsManager.ResetLevel();
@@ -118,6 +122,8 @@ namespace GameManagement
             _wavesManager.Constuct(_enemySpawnService);
 
             _turretManager.Construct(_player, _projectileSpawnService);
+
+            _minimapController.Construct(_enemySpawnService);
         }
 
         private void ConstructPlainClasses()

@@ -4,6 +4,8 @@ namespace Gameplay
 {
     public class Barrel : MonoBehaviour
     {
+        public bool IsExploded => _isExploded;
+
         [SerializeField]
         private HPComponent[] _parts;
 

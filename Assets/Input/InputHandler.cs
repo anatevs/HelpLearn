@@ -38,6 +38,8 @@ namespace Assets.Input
 
         private bool _isOverSelectable = false;
 
+        private float _castDistance = 300f;
+
         private void Awake()
         {
             _inputActions = new PlayerActions();
@@ -50,13 +52,13 @@ namespace Assets.Input
             _inputActions.Enable();
 
             _inputActions.Game.Jump.performed += HandleJump;
-            _inputActions.Game.Attack.performed += HandleShoot;
+            _inputActions.Game.Attack.performed += HandleClick;
         }
 
         private void OnDisable()
         {
             _inputActions.Game.Jump.performed -= HandleJump;
-            _inputActions.Game.Attack.performed -= HandleShoot;
+            _inputActions.Game.Attack.performed -= HandleClick;
 
             _inputActions.Disable();
         }
@@ -76,7 +78,7 @@ namespace Assets.Input
 
                 var lookPointScreen = _inputActions.Game.Look.ReadValue<Vector2>();
 
-                if (Physics.Raycast(_camera.ScreenPointToRay(lookPointScreen), out var hitInfo))
+                if (Physics.Raycast(_camera.ScreenPointToRay(lookPointScreen), out var hitInfo, _castDistance))
                 {
                     _lookPoint = hitInfo.point;
 
@@ -110,7 +112,7 @@ namespace Assets.Input
             }
         }
 
-        private void HandleShoot(InputAction.CallbackContext context)
+        private void HandleClick(InputAction.CallbackContext context)
         {
             if (!_isOverUI && !_isOverSelectable)
             {

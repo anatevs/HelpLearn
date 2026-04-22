@@ -12,6 +12,8 @@ namespace Gameplay
         public float StopDistance => _stopDistance;
         public float FollowSpeed => _followSpeed;
         public int KillReward => _killReward;
+        public Color MapIconColor => _mapIconColor;
+
 
         [Header("Common")]
         [SerializeField]
@@ -33,5 +35,9 @@ namespace Gameplay
         [Header("Killing")]
         [SerializeField]
         private int _killReward = 1;
+
+        [Header("UI")]
+        [SerializeField]
+        private Color _mapIconColor;
     }
 }

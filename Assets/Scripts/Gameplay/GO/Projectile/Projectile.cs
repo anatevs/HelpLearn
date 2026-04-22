@@ -8,6 +8,10 @@ namespace Gameplay
     {
         public Action<Projectile> OnCollided;
 
+        public string Type => _type;
+
+        private string _type;
+
         private float _speed = 6f;
 
         private int _damage = 1;
@@ -45,8 +49,9 @@ namespace Gameplay
             OnCollided?.Invoke(this);
         }
 
-        public void SetParams(int damage, float speed, Vector3 direction, float damageRadius)
+        public void SetParams(string type, int damage, float speed, Vector3 direction, float damageRadius)
         {
+            _type = type;
             _damage = damage;
             _speed = speed;
             _direction = direction;
@@ -55,7 +60,7 @@ namespace Gameplay
 
         public void SetParams(ProjectileConfig config, Vector3 direction)
         {
-            SetParams(config.Damage, config.Speed,
+            SetParams(config.Type, config.Damage, config.Speed,
                 direction, config.DamageRadius);
         }
     }

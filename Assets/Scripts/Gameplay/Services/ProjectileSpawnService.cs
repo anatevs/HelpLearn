@@ -6,7 +6,12 @@ namespace Gameplay
     public sealed class ProjectileSpawnService : MonoBehaviour
     {
         [SerializeField]
+        private Transform _poolTransform;
+
+        [SerializeField]
         private Transform _projectilesTransform;
+
+        private readonly Dictionary<string, Pool<Projectile>> _pools = new();
 
         private readonly HashSet<Projectile> _activeProjectiles = new();
 
@@ -23,9 +28,18 @@ namespace Gameplay
             }
         }
 
+        public void InitProjectileType(ProjectileConfig projectileConfig)
+        {
+            if (!_pools.ContainsKey(projectileConfig.Type))
+            {
+                _pools.Add(projectileConfig.Type,
+                    new Pool<Projectile>(projectileConfig.Prefab, projectileConfig.PoolInitCount, _poolTransform));
+            }
+        }
+
         public void Spawn(Vector3 position, Vector3 direction, ProjectileConfig config)
         {
-            var projectile = SpawnProjectile(config, _projectilesTransform);
+            var projectile = _pools[config.Type].Spawn(_projectilesTransform);
 
             projectile.transform.position = position;
 
@@ -42,11 +56,11 @@ namespace Gameplay
         {
             projectile.gameObject.SetActive(false);
 
-            projectile.SetParams(0, 0, Vector3.forward, 1);
+            projectile.SetParams(projectile.Type, 0, 0, Vector3.forward, 1);
 
             projectile.transform.position = Vector3.zero;
 
-            UnspawnProjectile(projectile);
+            _pools[projectile.Type].Unspawn(projectile);
 
             projectile.OnCollided -= Unspawn;
 
@@ -59,19 +73,6 @@ namespace Gameplay
             {
                 projectile.OnCollided -= Unspawn;
             }
-        }
-
-        private Projectile SpawnProjectile(ProjectileConfig config, Transform spawnTransform)
-        {
-            var projectile = Instantiate(config.Prefab, spawnTransform);
-            projectile.gameObject.SetActive(false);
-
-            return projectile;
-        }
-
-        private void UnspawnProjectile(Projectile projectile)
-        {
-            Destroy(projectile.gameObject);
         }
     }
 }

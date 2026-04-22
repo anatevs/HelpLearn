@@ -18,3 +18,4 @@ MonoBehaviour:
   _followSpeed: 3.5
   _stopDistance: 1
   _killReward: 2
+  _mapIconColor: {r: 0.6679245, g: 0.29582486, b: 0.28607333, a: 1}

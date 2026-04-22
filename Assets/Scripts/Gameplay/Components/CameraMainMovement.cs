@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Gameplay
+﻿namespace Gameplay
 {
     public class CameraMainMovement : CameraFollowMovement
     {

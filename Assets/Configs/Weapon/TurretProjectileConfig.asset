@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 335cfbf2f00df394799e69a271762b53, type: 3}
   m_Name: TurretProjectileConfig
   m_EditorClassIdentifier: 
+  _name: TurretProjectile
   _prefab: {fileID: 3295563733797846128, guid: fa012191776344e42afe7d7253c3eac0, type: 3}
+  _poolInitCount: 10
   _damage: 1
   _speed: 30
-  _castDistanceMultiplier: 1.5
   _damageRadius: 0.3

@@ -11,12 +11,17 @@ namespace Gameplay
         {
             _enemySpawnService = enemySpawnService;
 
-            _enemySpawnService.OnEnemyKilled += ChangeValue;
+            _enemySpawnService.OnEnemyKilled += HandleEnemyKill;
         }
 
         void IDisposable.Dispose()
         {
-            _enemySpawnService.OnEnemyKilled -= ChangeValue;
+            _enemySpawnService.OnEnemyKilled -= HandleEnemyKill;
+        }
+
+        private void HandleEnemyKill(Enemy enemy)
+        {
+            ChangeValue(enemy.Config.KillReward);
         }
     }
 }

@@ -21,4 +21,4 @@ MonoBehaviour:
   _turretParams:
     _detectionRadius: 8
     _rotationSpeed: 5
-  _radiusColor: {r: 1, g: 0, b: 0, a: 0.2901961}
+  _radiusColor: {r: 1, g: 0.7664696, b: 0.65471697, a: 1}

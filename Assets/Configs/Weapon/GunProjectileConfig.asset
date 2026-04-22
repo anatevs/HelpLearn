@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 335cfbf2f00df394799e69a271762b53, type: 3}
   m_Name: GunProjectileConfig
   m_EditorClassIdentifier: 
+  _name: GunProjectile
   _prefab: {fileID: 2758822855618126416, guid: d1dd6afbce5284846a61989f88c76c4d, type: 3}
+  _poolInitCount: 10
   _damage: 1
   _speed: 30
-  _castDistanceMultiplier: 1.5
   _damageRadius: 0.2

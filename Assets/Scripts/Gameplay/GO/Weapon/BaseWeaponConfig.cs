@@ -13,9 +13,11 @@ namespace Gameplay
         [SerializeField]
         private weaponT _prefab;
 
-        public virtual weaponT CreateNewWeapon()
+        public virtual weaponT CreateNewWeapon(ProjectileSpawnService projectileSpawn)
         {
             weaponT weapon = Instantiate(_prefab);
+
+            weapon.Construct(projectileSpawn);
 
             weapon.Init(_weaponParams);
 

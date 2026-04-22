@@ -83,9 +83,9 @@ namespace Gameplay
             _nextIndex++;
         }
 
-        public void AddKilledEnemy(int reward)
+        public void AddKilledEnemy(Enemy enemy)
         {
-            _currentWave.AddKilledEnemy(reward);
+            _currentWave.AddKilledEnemy(enemy.Config.KillReward);
         }
 
         private void HandleWaveEnd(WaveCompletedInfo waveInfo)

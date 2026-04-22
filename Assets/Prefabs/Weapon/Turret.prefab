@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 6577231771621679180}
   - component: {fileID: 6333465526959859576}
   - component: {fileID: 9018094566249145739}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ViewZoneSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -525,6 +525,10 @@ PrefabInstance:
     - target: {fileID: 7770658713677171776, guid: 896db63db561308479773cc91e626d4a, type: 3}
       propertyPath: m_Name
       value: 2d ring
+      objectReference: {fileID: 0}
+    - target: {fileID: 7770658713677171776, guid: 896db63db561308479773cc91e626d4a, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9222339636012723892, guid: 896db63db561308479773cc91e626d4a, type: 3}
       propertyPath: m_LocalPosition.x

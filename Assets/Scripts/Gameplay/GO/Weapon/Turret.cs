@@ -33,6 +33,9 @@ namespace Gameplay
         public void Construct(ProjectileSpawnService spawnService, Transform target)
         {
             base.Construct(spawnService);
+
+            spawnService.InitProjectileType(_turretConfig.WeaponParams.Projectile);
+
             _target = target;
 
             _sphereTrigger.OnEntered += HandleEntered;
@@ -50,6 +53,8 @@ namespace Gameplay
         public void Init(WeaponParams weaponParams, TurretParams turretParams)
         {
             _turretParams = turretParams;
+
+            _sphereTrigger.Init();
             _sphereTrigger.SetRadius(_turretParams.DetectionRadius);
 
             _damageView.SetRadius(_turretParams.DetectionRadius);

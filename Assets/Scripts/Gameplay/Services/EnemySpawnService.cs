@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
 {
     public sealed class EnemySpawnService : MonoBehaviour
     {
-        public event Action<int> OnEnemyKilled;
+        public event Action<Enemy> OnEnemySpawned;
+
+        public event Action<Enemy> OnEnemyKilled;
 
         public EnemySpawnConfig Config => _config;
 
         [SerializeField]
         private EnemySpawnConfig _config;
+
+        [SerializeField]
+        private Transform _poolTransform;
 
         [SerializeField]
         private Transform _enemiesTransform;
@@ -23,6 +29,8 @@ namespace Gameplay
         private WaitForSeconds _spawnWait;
 
         private Coroutine _spawnCoroutine;
+
+        private readonly Dictionary<string, Pool<Enemy>> _pools = new();
 
         public void Construct(Player player)
         {
@@ -50,18 +58,26 @@ namespace Gameplay
             }
         }
 
+        private void OnDisable()
+        {
+            if (_enemiesTransform.childCount > 0)
+            {
+                var activeEnemies = _enemiesTransform.GetComponentsInChildren<Enemy>();
+
+                foreach (var enemy in activeEnemies)
+                {
+                    enemy.OnKilled -= HandleEnemyKill;
+                }
+            }
+        }
+
         private void Unspawn(Enemy enemy)
         {
             enemy.OnKilled -= HandleEnemyKill;
 
             enemy.transform.position = Vector3.zero;
 
-            UnspawnEnemy(enemy);
-        }
-
-        private void UnspawnEnemy(Enemy enemy)
-        {
-            Destroy(enemy.gameObject);
+            _pools[enemy.Config.Name].Unspawn(enemy);
         }
 
         public void SpawnEnemies(EnemyWaveConfig waveConfig)
@@ -73,6 +89,12 @@ namespace Gameplay
         {
             _waveSpawner = new(waveConfig);
 
+            foreach (var info in waveConfig.WaveInfo)
+            {
+                _pools.TryAdd(info.Prefab.Config.Name,
+                    new Pool<Enemy>(info.Prefab, _config.PoolInitCount, _poolTransform));
+            }
+
             while (TrySpawnRandom())
             {
                 yield return _spawnWait;
@@ -83,7 +105,7 @@ namespace Gameplay
 
         private bool TrySpawnRandom()
         {
-            if (!_waveSpawner.TryGetRandomEnemy(_enemiesTransform, out var enemy))
+            if (!_waveSpawner.TryGetRandomEnemy(_pools, _enemiesTransform, out var enemy))
             {
                 return false;
             }
@@ -94,14 +116,16 @@ namespace Gameplay
 
             enemy.OnKilled += HandleEnemyKill;
 
+            OnEnemySpawned?.Invoke(enemy);
+
             return true;
         }
 
         private void HandleEnemyKill(Enemy enemy)
         {
-            OnEnemyKilled?.Invoke(enemy.Config.KillReward);
-
             Unspawn(enemy);
+
+            OnEnemyKilled?.Invoke(enemy);
         }
     }
 }

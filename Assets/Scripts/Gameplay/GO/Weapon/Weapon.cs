@@ -42,6 +42,8 @@ namespace Gameplay
 
             _projectileConfig = _weaponParams.Projectile;
 
+            _projectileSpawn.InitProjectileType(_projectileConfig);
+
             ResetLevel();
         }
 

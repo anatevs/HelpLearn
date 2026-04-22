@@ -50,7 +50,7 @@ namespace Gameplay
 
         public void Add(WeaponConfig config)
         {
-            var weapon = config.CreateNewWeapon();
+            var weapon = config.CreateNewWeapon(_projectileSpawn);
 
             _weapons.Add(config.Name, weapon);
 
