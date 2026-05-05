@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33f04ba41608e6345bec71f0d4cc99bb, type: 3}
+  m_Name: LogMessagesConfig
+  m_EditorClassIdentifier: 
+  _hpChanged: Player HP changed to {0}
+  _itemPicked: Picked item {0}. Now player has {1} of items {0}
+  _playerKilled: Player killed
+  _inputSwitched: Input swithed to {0}
