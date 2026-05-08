@@ -1,12 +1,12 @@
-﻿using Assets.Input;
+﻿using Input;
 using Gameplay;
 using UnityEngine;
 
-namespace Scripts.Input
+namespace Input
 {
     public sealed class TestInputService : IInputService
     {
-        public PlayerMoveInputConfig Config => _config;
+        public string TypeName => _config.TypeName;
         public float Speed => _config.Speed;
         public float RotationSpeed => _config.RotationSpeed;
         public Vector3 Move => Vector3.forward;

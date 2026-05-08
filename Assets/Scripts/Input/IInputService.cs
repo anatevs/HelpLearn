@@ -3,14 +3,13 @@ using Gameplay;
 using System;
 using UnityEngine;
 
-namespace Assets.Input
+namespace Input
 {
     public interface IInputService :
         IResetable,
         IDisposable
     {
-        public PlayerMoveInputConfig Config { get; }
-
+        public string TypeName { get; }
         public float Speed { get; }
         public float RotationSpeed { get; }
 

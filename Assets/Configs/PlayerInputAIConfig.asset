@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 203870b75639f1242b4faa3e83779205, type: 3}
   m_Name: PlayerInputAIConfig
   m_EditorClassIdentifier: 
-  _speed: 15
+  _typeName: AI
+  _speed: 20
   _rotationSpeed: 5

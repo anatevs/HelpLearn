@@ -2,8 +2,10 @@
 
 namespace UI
 {
-    public interface ISwitchInputController
+    public interface ISwitchInputView
     {
         public event Action OnInputSwitched;
+
+        public void SetType(string type);
     }
 }

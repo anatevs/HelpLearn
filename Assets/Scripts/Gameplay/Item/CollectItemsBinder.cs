@@ -2,14 +2,14 @@
 
 namespace Gameplay
 {
-    public sealed class CollectController : 
+    public sealed class CollectItemsBinder : 
         IDisposable
     {
         private readonly IItemsSceneService _itemsService;
 
         private readonly ICollectService _collectService;
 
-        public CollectController(IItemsSceneService itemsService,
+        public CollectItemsBinder(IItemsSceneService itemsService,
             ICollectService collectService)
         {
             _itemsService = itemsService;

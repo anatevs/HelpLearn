@@ -8,17 +8,35 @@ namespace Gameplay
     {
         public event Action<string, int> OnChanged;
 
-        public event Action<string, int> OnNewAdded;
+        public event Action<ItemConfig, int> OnNewAdded;
 
         public event Action<string> OnRemoved;
 
+        public IReadOnlyList<string> Names => _names;
+
         private readonly Dictionary<string, int> _collectedItems = new();
+
+        private readonly Dictionary<string, ItemConfig> _configs = new();
+
+        private readonly List<string> _names = new();
 
         private ItemConfig[] _initItemConfigs;
 
-        public void Init(ItemConfig[] initItemsConfigs)
+        public CollectService(ItemConfig[] initItemsConfigs)
         {
             _initItemConfigs = initItemsConfigs;
+
+            InitItems();
+        }
+
+        public ItemConfig GetItemConfig(string name)
+        {
+            return _configs[name];
+        }
+
+        public int GeAmount(string name)
+        {
+            return _collectedItems[name];
         }
 
         public void AddItem(ItemConfig itemConfig)
@@ -41,7 +59,10 @@ namespace Gameplay
         {
             var name = config.Name;
             _collectedItems.Add(name, amount);
-            OnNewAdded?.Invoke(name, _collectedItems[name]);
+            OnNewAdded?.Invoke(config, _collectedItems[name]);
+
+            _configs.Add(name, config);
+            _names.Add(name);
         }
 
         public bool TryTakeItem(string name, int amount)
@@ -68,6 +89,11 @@ namespace Gameplay
                 }
             }
 
+            InitItems();
+        }
+
+        private void InitItems()
+        {
             _collectedItems.Clear();
 
             for (int i = 0; i < _initItemConfigs.Length; i++)

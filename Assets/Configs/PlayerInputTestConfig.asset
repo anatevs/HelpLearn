@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 203870b75639f1242b4faa3e83779205, type: 3}
-  m_Name: PlayerInputWASDConfig
+  m_Name: PlayerInputTestConfig
   m_EditorClassIdentifier: 
-  _typeName: WASD
+  _typeName: Test
   _speed: 15
-  _rotationSpeed: 0.7
+  _rotationSpeed: 0.5

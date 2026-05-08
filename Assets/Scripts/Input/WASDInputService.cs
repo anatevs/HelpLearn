@@ -1,11 +1,11 @@
 ﻿using Gameplay;
 using UnityEngine;
 
-namespace Assets.Input
+namespace Input
 {
-    public sealed class InputHandler : IInputService
+    public sealed class WASDInputService : IInputService
     {
-        public PlayerMoveInputConfig Config => _config;
+        public string TypeName => _config.TypeName;
         public float Speed => _config.Speed;
         public float RotationSpeed => _config.RotationSpeed;
         public Vector3 Move => _move;
@@ -23,7 +23,7 @@ namespace Assets.Input
 
         private Vector2 _inputMove;
 
-        public InputHandler(PlayerMoveInputConfig config)
+        public WASDInputService(PlayerMoveInputConfig config)
         {
             _config = config;
 

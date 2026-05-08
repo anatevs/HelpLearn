@@ -1,6 +1,5 @@
-using Assets.Input;
 using Gameplay;
-using Scripts.Input;
+using Input;
 using System;
 using System.Collections.Generic;
 using UI;
@@ -23,20 +22,19 @@ namespace GameManagement
         private LogMessagesConfig _logMessagesConfig;
 
         [SerializeField]
-        private SwitchInputController _inputSwitchController;
-
-        [SerializeField]
         private PlayerMoveInputConfig _wasdMoveConfig;
 
         [SerializeField]
         private PlayerMoveInputConfig _aiMoveConfig;
 
-        private IInputService _input;
+        [SerializeField]
+        private GameplayHud _gameplayHud;
 
-        private IInputService[] _inputServices;
+        private IInputSwitchService _inputSwitchService;
+
+        private InputSwitchBinder _inputSwitchBinder;
 
         private readonly int _initInputIndex = 0;
-        private int _currentInputIndex = 0;
 
         private IHealth _playerHealth;
 
@@ -44,9 +42,11 @@ namespace GameManagement
 
         private ICollectService _collectService;
 
-        private CollectController _collectController;
+        private CollectItemsBinder _collectBinder;
 
         private ILoggerService _loggerService;
+
+        private GameplayHudController _hudController;
 
         private readonly List<IResetable> _resetables = new();
 
@@ -69,27 +69,33 @@ namespace GameManagement
 
             _disposables.Add(_loggerService);
 
-            _inputSwitchController.OnInputSwitched += SwitchInput;
+            _hudController = new GameplayHudController(_gameplayHud, _collectService,
+                _playerHealth, _inputSwitchService);
+
+            _disposables.Add(_hudController);
+
+            _inputSwitchBinder = new InputSwitchBinder(_inputSwitchService, _player, _loggerService);
+
+            _disposables.Add(_inputSwitchBinder);
 
             _itemsSpawner.ResetLevel();
-
-            //SetTestInput(Vector3.right);
         }
 
         private void InitInput()
         {
-            _inputServices = new IInputService[2];
-            _inputServices[0] = new InputHandler(_wasdMoveConfig);
-            _inputServices[1] = new AIInputService(_aiMoveConfig, _patrolPoints);
-            _currentInputIndex = _initInputIndex;
+            IInputService[] inputServices = new IInputService[2];
+            inputServices[0] = new WASDInputService(_wasdMoveConfig);
+            inputServices[1] = new AIInputService(_aiMoveConfig, _patrolPoints);
 
-            _input = _inputServices[_currentInputIndex];
+            _inputSwitchService = new InputSwitchService(inputServices, _initInputIndex);
+
+            _resetables.Add(_inputSwitchService);
         }
 
         private void SetTestInput(Vector3 testDirection)
         {
             var testInput = new TestInputService(_wasdMoveConfig, testDirection);
-            SetInput(testInput);
+            _inputSwitchService.SwitchInput(testInput);
         }
 
         private void InitPlayer()
@@ -99,7 +105,7 @@ namespace GameManagement
 
             _playerHealth = new SimpleHP(_player.Config.StartHP);
 
-            _player.Init(_input, movement, rotation, _playerHealth);
+            _player.Init(_inputSwitchService.CurrentInput, movement, rotation, _playerHealth);
         }
 
         private void InitItems()
@@ -108,22 +114,19 @@ namespace GameManagement
 
             _itemsService = new ItemsSceneService(_itemsSpawner);
 
-            _collectService = new CollectService();
-            _collectService.Init(_player.Config.InitShowedItems);
+            _collectService = new CollectService(_player.Config.InitShowedItems);
 
-            _collectController = new CollectController(_itemsService, _collectService);
+            _collectBinder = new CollectItemsBinder(_itemsService, _collectService);
 
             _resetables.Add(_itemsSpawner);
             _resetables.Add(_collectService);
 
             _disposables.Add(_itemsService);
-            _disposables.Add(_collectController);
+            _disposables.Add(_collectBinder);
         }
 
         private void ResetLevel()
         {
-            SwitchInput(_initInputIndex);
-
             foreach (var resetable in _resetables)
             {
                 resetable.ResetLevel();
@@ -132,41 +135,10 @@ namespace GameManagement
 
         private void OnDisable()
         {
-            _input.Dispose();
-
-            _inputSwitchController.OnInputSwitched -= SwitchInput;
-
             foreach (var disposable in _disposables)
             {
                 disposable.Dispose();
             }
-        }
-
-        public void SwitchInput()
-        {
-            _currentInputIndex = (_currentInputIndex + 1) % _inputServices.Length;
-
-            SwitchInput(_currentInputIndex);
-        }
-
-        private void SwitchInput(int index)
-        {
-            _currentInputIndex = index;
-
-            SetInput(_inputServices[_currentInputIndex]);
-        }
-
-        private void SetInput(IInputService input)
-        {
-            _input?.Disable();
-
-            _input = input;
-
-            _input.ResetLevel();
-
-            _player.SetInput(_input);
-
-            _loggerService.LogInputSwitched(_input.GetType().Name);
         }
     }
 }

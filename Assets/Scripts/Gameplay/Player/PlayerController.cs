@@ -1,4 +1,4 @@
-using Assets.Input;
+using Input;
 using Gameplay;
 using UnityEngine;
 
