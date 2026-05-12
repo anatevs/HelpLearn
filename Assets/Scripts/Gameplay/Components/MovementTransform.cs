@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Gameplay
 {
-    public class MovementTransform : IMovementService
+    public sealed class MovementTransform : IMovementService
     {
         public GameObject Movable => _movable;
 
@@ -20,5 +19,7 @@ namespace Gameplay
         {
             _movable.transform.Translate(Time.deltaTime * speed * moveDirection, Space.Self);
         }
+
+        public void ResetLevel() {}
     }
 }

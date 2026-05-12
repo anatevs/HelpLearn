@@ -11,10 +11,17 @@ namespace Gameplay
         public event Action OnKilled;
 
         private int _hp;
+        private int _startHP;
 
         public SimpleHP(int startHP)
         {
             _hp = startHP;
+            _startHP = startHP;
+        }
+
+        public void ResetLevel()
+        {
+            ChangeHP(_startHP);
         }
 
         public void Heal(int addHP)

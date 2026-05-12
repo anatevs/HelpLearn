@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 
 namespace Gameplay
 {
-    public class MovementRB : IMovementService
+    public sealed class MovementRB : IMovementService
     {
-        public GameObject Movable => throw new System.NotImplementedException();
+        public GameObject Movable => _movable;
 
         private readonly GameObject _movable;
         private readonly Rigidbody _rb;
@@ -14,6 +13,7 @@ namespace Gameplay
         public MovementRB(GameObject movable)
         {
             _movable = movable;
+
             if (!_movable.TryGetComponent<Rigidbody>(out _rb))
             {
                 throw new Exception($"No Rigidbody component on {_movable} game object. Cannot move it by {this.GetType()}");
@@ -26,5 +26,11 @@ namespace Gameplay
         }
 
         public void MoveUpdate(Vector3 moveDirection, float speed) {}
+
+        public void ResetLevel()
+        {
+            _rb.isKinematic = true;
+            _rb.isKinematic = false;
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using GameManagement;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 namespace Gameplay
 {
@@ -15,7 +14,7 @@ namespace Gameplay
         public IReadOnlyList<string> Names { get; }
 
         public ItemConfig GetItemConfig(string name);
-        public int GeAmount(string name);
+        public int GetAmount(string name);
 
         public void AddItem(ItemConfig config);
 

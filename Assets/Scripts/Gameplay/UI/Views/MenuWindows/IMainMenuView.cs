@@ -1,12 +1,12 @@
 ﻿using System;
-using UnityEngine;
 
 namespace UI
 {
     public interface IMainMenuView
     {
-        public event Action OnStartClicked;
         public event Action OnExitClicked;
+
+        public IRestartGameView RestartView { get; }
 
         public void Show();
         public void Hide();

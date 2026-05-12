@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using GameManagement;
+using UnityEngine;
 
 namespace Gameplay
 {
-    public interface IMovementService
+    public interface IMovementService : IResetable
     {
         public GameObject Movable { get; }
         public void MoveUpdate(Vector3 moveDirection, float speed);

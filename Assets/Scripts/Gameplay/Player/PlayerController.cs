@@ -1,12 +1,17 @@
 using Input;
 using Gameplay;
 using UnityEngine;
+using GameManagement;
 
 public sealed class PlayerController : MonoBehaviour,
-    IDamagable
+    IDamagable,
+    IResetable
 {
     public PlayerConfig Config => _config;
     public IHealth Health => _health;
+
+    private Vector3 _startPosition;
+    private Quaternion _startRotation;
 
     [SerializeField]
     private PlayerConfig _config;
@@ -33,6 +38,20 @@ public sealed class PlayerController : MonoBehaviour,
     public void SetInput(IInputService newInput)
     {
         _input = newInput;
+    }
+
+    public void ResetLevel()
+    {
+        _movement.ResetLevel();
+        transform.SetPositionAndRotation(_startPosition, _startRotation);
+
+        _health.ResetLevel();
+    }
+
+    private void Awake()
+    {
+        _startPosition = transform.position;
+        _startRotation = transform.rotation;
     }
 
     private void Update()

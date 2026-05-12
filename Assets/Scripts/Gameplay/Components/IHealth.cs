@@ -1,8 +1,9 @@
-﻿using System;
+﻿using GameManagement;
+using System;
 
 namespace Gameplay
 {
-    public interface IHealth
+    public interface IHealth : IResetable
     {
         public event Action<int> OnHPChanged;
         public event Action OnKilled;

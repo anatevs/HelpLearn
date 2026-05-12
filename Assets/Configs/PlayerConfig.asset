@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05377132a8d919a4eaf80ace39f0533d, type: 3}
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
-  _speed: 10
-  _rotationSpeed: 0.5
-  _startHP: 10
+  _startHP: 2
   _initShowedItems:
   - {fileID: 11400000, guid: 284af900cbaf66147af973cd277a34d9, type: 2}

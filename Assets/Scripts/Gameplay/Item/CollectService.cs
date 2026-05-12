@@ -20,11 +20,24 @@ namespace Gameplay
 
         private readonly List<string> _names = new();
 
-        private ItemConfig[] _initItemConfigs;
+        private readonly ItemConfig[] _initItemConfigs;
 
         public CollectService(ItemConfig[] initItemsConfigs)
         {
             _initItemConfigs = initItemsConfigs;
+
+            InitItems();
+        }
+
+        public void ResetLevel()
+        {
+            if (_collectedItems.Count > 0)
+            {
+                foreach (var name in _collectedItems.Keys)
+                {
+                    OnRemoved?.Invoke(name);
+                }
+            }
 
             InitItems();
         }
@@ -34,7 +47,7 @@ namespace Gameplay
             return _configs[name];
         }
 
-        public int GeAmount(string name)
+        public int GetAmount(string name)
         {
             return _collectedItems[name];
         }
@@ -61,7 +74,7 @@ namespace Gameplay
             _collectedItems.Add(name, amount);
             OnNewAdded?.Invoke(config, _collectedItems[name]);
 
-            _configs.Add(name, config);
+            _configs.TryAdd(name, config);
             _names.Add(name);
         }
 
@@ -77,19 +90,6 @@ namespace Gameplay
             }
 
             return false;
-        }
-
-        public void ResetLevel()
-        {
-            if (_collectedItems.Count > 0)
-            {
-                foreach (var name in _collectedItems.Keys)
-                {
-                    OnRemoved?.Invoke(name);
-                }
-            }
-
-            InitItems();
         }
 
         private void InitItems()

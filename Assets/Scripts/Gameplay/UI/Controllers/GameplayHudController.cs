@@ -11,7 +11,7 @@ namespace UI
 
         private readonly CollectBarController _collectBarController;
 
-        private InputSwitchPresenter _inputSwitchPresenter;
+        private readonly InputSwitchPresenter _inputSwitchPresenter;
 
         private readonly IHealth _health;
 

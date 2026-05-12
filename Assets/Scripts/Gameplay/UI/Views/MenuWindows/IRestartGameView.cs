@@ -2,9 +2,8 @@
 
 namespace UI
 {
-    public interface IGameOverView
+    public interface IRestartGameView
     {
         public event Action OnRestartClicked;
-        public event Action OnToMenuClicked;
     }
 }

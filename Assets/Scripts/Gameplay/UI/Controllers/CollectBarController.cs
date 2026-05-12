@@ -16,7 +16,7 @@ namespace UI
 
             foreach (var name in _collectService.Names)
             {
-                _view.AddView(_collectService.GetItemConfig(name), _collectService.GeAmount(name));
+                _view.AddView(_collectService.GetItemConfig(name), _collectService.GetAmount(name));
             }
 
             _collectService.OnNewAdded += _view.AddView;
