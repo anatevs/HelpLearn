@@ -23,11 +23,10 @@ namespace Input
 
         private readonly float _precision = 1f;
 
-        public AIInputService(PlayerMoveInputConfig config,
-            Transform[] patrolPoints)
+        public AIInputService(PlayerMoveInputConfig config)
         {
             _config = config;
-            _patrolPoints = patrolPoints;
+            _patrolPoints = config.Points;
             _lookPoint = _patrolPoints[_index].position;
         }
 

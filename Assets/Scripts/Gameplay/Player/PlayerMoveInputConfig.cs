@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Input;
+using UnityEngine;
 
 namespace Gameplay
 {
@@ -9,6 +10,7 @@ namespace Gameplay
         public string TypeName => _typeName;
         public float Speed => _speed;
         public float RotationSpeed => _rotationSpeed;
+        public Transform[] Points => _pointsPrefab.PatrolPoints;
 
         [SerializeField]
         private string _typeName;
@@ -18,5 +20,8 @@ namespace Gameplay
 
         [SerializeField]
         private float _rotationSpeed;
+
+        [SerializeField]
+        private AIPatrolPointsPrefab _pointsPrefab;
     }
 }

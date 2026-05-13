@@ -1,17 +1,14 @@
-using Gameplay;
+﻿using Gameplay;
 using Input;
 using UI;
 using UnityEngine;
 
 namespace GameManagement
 {
-    public sealed class GameInitializer : MonoBehaviour
+    public class GameInitializer : MonoBehaviour
     {
         [SerializeField]
         private PlayerController _player;
-
-        [SerializeField]
-        private Transform[] _patrolPoints;
 
         [SerializeField]
         private ItemsSpawner _itemsSpawner;
@@ -77,11 +74,11 @@ namespace GameManagement
 
         private void Init()
         {
-            _gameStateMachine = new GameStateMachine(new InitState());
+            _gameStateMachine = BootstrapInitializer.Instance.StateMachine;
 
-            _gameExit = new GameExit();
+            _gameExit = BootstrapInitializer.Instance.GameExit;
 
-            _resetService = new();
+            _resetService = BootstrapInitializer.Instance.ResetService;
 
             InitInput();
 
@@ -100,7 +97,7 @@ namespace GameManagement
         {
             IInputService[] inputServices = new IInputService[2];
             inputServices[0] = new WASDInputService(_wasdMoveConfig);
-            inputServices[1] = new AIInputService(_aiMoveConfig, _patrolPoints);
+            inputServices[1] = new AIInputService(_aiMoveConfig);
 
             _inputSwitchService = new InputSwitchService(inputServices, _initInputIndex);
 
@@ -185,11 +182,6 @@ namespace GameManagement
         private void OnDisable()
         {
             _playerHealth.OnKilled -= HandlePlayerKill;
-        }
-
-        private void OnApplicationQuit()
-        {
-            _gameExit.QuitGame();
         }
     }
 }

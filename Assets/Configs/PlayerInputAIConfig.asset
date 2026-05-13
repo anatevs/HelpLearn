@@ -15,3 +15,4 @@ MonoBehaviour:
   _typeName: AI
   _speed: 20
   _rotationSpeed: 5
+  _pointsPrefab: {fileID: 881449518124924299, guid: 96d3456b62b112643b1e905d7675dd5c, type: 3}
