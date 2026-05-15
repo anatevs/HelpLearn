@@ -3,29 +3,17 @@ using UnityEngine;
 
 namespace Input
 {
-    public sealed class WASDInputService : IInputService
+    public sealed class WASDInputService : InputService
     {
-        public string TypeName => _config.TypeName;
-        public float Speed => _config.Speed;
-        public float RotationSpeed => _config.RotationSpeed;
-        public Vector3 Move => _move;
-        public Vector3 LookDirection => _lookDirection;
-
         private readonly PlayerActions _inputActions;
 
         private readonly Camera _camera;
 
-        private readonly PlayerMoveInputConfig _config;
-
-        private Vector3 _move;
-
-        private Vector3 _lookDirection = Vector3.forward;
-
         private Vector2 _inputMove;
 
-        public WASDInputService(PlayerMoveInputConfig config)
+        public WASDInputService(PlayerMoveInputConfig config) : base(config)
         {
-            _config = config;
+            _speed = _config.Speed;
 
             _inputActions = new PlayerActions();
 
@@ -34,22 +22,24 @@ namespace Input
             _inputActions.Enable();
         }
 
-        public void Dispose()
-        {
-            _inputActions.Dispose();
-        }
-
-        public void ResetLevel()
-        {
-            _inputActions.Enable();
-        }
-
-        public void Disable()
+        public override void Disable()
         {
             _inputActions.Disable();
         }
 
-        public void Update(Transform movable)
+        public override void ResetLevel()
+        {
+            _inputActions.Enable();
+
+            base.ResetLevel();
+        }
+
+        public override void Dispose()
+        {
+            _inputActions.Dispose();
+        }
+
+        public override void Update(Transform movable)
         {
             _inputMove = _inputActions.Game.Move.ReadValue<Vector2>();
 

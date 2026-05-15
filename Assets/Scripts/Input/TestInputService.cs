@@ -1,37 +1,21 @@
-﻿using Input;
-using Gameplay;
+﻿using Gameplay;
 using UnityEngine;
 
 namespace Input
 {
-    public sealed class TestInputService : IInputService
+    public sealed class TestInputService : InputService
     {
-        public string TypeName => _config.TypeName;
-        public float Speed => _config.Speed;
-        public float RotationSpeed => _config.RotationSpeed;
-        public Vector3 Move => Vector3.forward;
-
-        public Vector3 LookDirection => _lookDirection;
-
-        private readonly PlayerMoveInputConfig _config;
-
-        private Vector3 _lookDirection = Vector3.forward;
-
         public TestInputService(PlayerMoveInputConfig config,
-            Vector3 direction)
+            Vector3 direction) : base(config)
         {
-            _config = config;
+            _move = Vector3.forward;
 
             _lookDirection = direction;
+
+            _speed = _config.Speed;
         }
 
-        public void Dispose() {}
-
-        public void ResetLevel() {}
-
-        public void Disable() {}
-
-        public void Update(Transform movable)
+        public override void Update(Transform movable)
         {
         }
     }

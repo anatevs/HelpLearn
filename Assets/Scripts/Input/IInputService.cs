@@ -10,7 +10,7 @@ namespace Input
         IDisposable
     {
         public string TypeName { get; }
-        public float Speed { get; }
+        public float Speed { get; set; }
         public float RotationSpeed { get; }
 
         public Vector3 Move { get; }

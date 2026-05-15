@@ -2,6 +2,7 @@
 using Input;
 using UI;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace GameManagement
 {
@@ -13,6 +14,9 @@ namespace GameManagement
         [SerializeField]
         private ItemsSpawner _itemsSpawner;
 
+        [SerializeField]
+        private GameplayController _gameplayController;
+
         [Header("Configs")]
         [SerializeField]
         private LogMessagesConfig _logMessagesConfig;
@@ -23,12 +27,21 @@ namespace GameManagement
         [SerializeField]
         private PlayerMoveInputConfig _aiMoveConfig;
 
+        [SerializeField]
+        private AIPatrolPointsPrefab _pointsPrefab;
+
+        [SerializeField]
+        private GameModifierConfig[] _modifierConfigs;
+
         [Header("HUD views")]
         [SerializeField]
         private GameplayHud _gameplayHud;
 
         [SerializeField]
         private PauseResumeView _pauseResumeView;
+
+        [SerializeField]
+        private ModifiersInfoView _modifiersInfoView;
 
         [Header("Menu views")]
         [SerializeField]
@@ -51,6 +64,8 @@ namespace GameManagement
 
         private CollectItemsBinder _collectBinder;
 
+        private ModifiersCreator _modifiersCreator;
+
         private ILoggerService _loggerService;
 
         private GameplayHudController _hudController;
@@ -66,6 +81,8 @@ namespace GameManagement
         private MainMenuPresenter _mainMenuPresenter;
 
         private GameOverPresenter _gameOverPresenter;
+
+        private ModifiersPresenter _modifiersPresenter;
 
         private void Awake()
         {
@@ -86,6 +103,8 @@ namespace GameManagement
 
             InitItems();
 
+            InitModifiers();
+
             InitGameplayUI();
 
             InitMenuUI();
@@ -97,7 +116,7 @@ namespace GameManagement
         {
             IInputService[] inputServices = new IInputService[2];
             inputServices[0] = new WASDInputService(_wasdMoveConfig);
-            inputServices[1] = new AIInputService(_aiMoveConfig);
+            inputServices[1] = new AIInputService(_aiMoveConfig, _pointsPrefab);
 
             _inputSwitchService = new InputSwitchService(inputServices, _initInputIndex);
 
@@ -143,6 +162,23 @@ namespace GameManagement
             _gameExit.AddDisposable(_collectBinder);
         }
 
+        private void InitModifiers()
+        {
+            List<IModifierFactory> factories = new();
+
+            factories.Add(new SpeedModifierFactory(_inputSwitchService));
+
+
+            _modifiersCreator = new();
+
+            _modifiersCreator.AddFactory(factories);
+
+
+            var modifiers = _modifiersCreator.CreateModifiers(_modifierConfigs);
+
+            _gameplayController.Init(modifiers);
+        }
+
         private void InitGameplayUI()
         {
             _loggerService = new LoggerService(_logMessagesConfig, _playerHealth, _collectService);
@@ -161,6 +197,10 @@ namespace GameManagement
             _pauseResumePresenter = new PauseResumePresenter(_pauseResumeView, _gameStateMachine);
 
             _gameExit.AddDisposable(_pauseResumePresenter);
+
+            _modifiersPresenter = new ModifiersPresenter(_modifiersInfoView, _gameplayController);
+
+            _gameExit.AddDisposable(_modifiersPresenter);
         }
 
         private void InitMenuUI()

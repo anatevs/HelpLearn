@@ -1,9 +1,9 @@
-﻿using Gameplay;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace GameManagement
 {
+    [DefaultExecutionOrder(-50)]
     public class BootstrapInitializer : MonoBehaviour
     {
         public static BootstrapInitializer Instance => _instance;
@@ -15,12 +15,6 @@ namespace GameManagement
         public GameResetService ResetService => _resetService;
 
         public IGameExit GameExit => _gameExit;
-
-        [SerializeField]
-        private PlayerMoveInputConfig _wasdMoveConfig;
-
-        [SerializeField]
-        private PlayerMoveInputConfig _aiMoveConfig;
 
         private int _gameSceneIndex = 1;
 
@@ -45,7 +39,10 @@ namespace GameManagement
 
             Init();
 
-            SceneManager.LoadSceneAsync(_gameSceneIndex);
+            if (SceneManager.GetActiveScene().buildIndex != _gameSceneIndex)
+            {
+                SceneManager.LoadSceneAsync(_gameSceneIndex);
+            }
         }
 
         private void Init()
