@@ -45,6 +45,11 @@ namespace UI
             Log(message);
         }
 
+        public void LogSpawnItem(string name)
+        {
+            LogOneParamMessage(name, _messageConfig.ItemSpawed);
+        }
+
         public void LogItemPicked(string name, int newValue)
         {
             var message = string.Format(_messageConfig.ItemPicked, name, newValue);
@@ -59,7 +64,22 @@ namespace UI
 
         public void LogInputSwitched(string name)
         {
-            var message = string.Format(_messageConfig.InputSwitched, name);
+            LogOneParamMessage(name, _messageConfig.InputSwitched);
+        }
+
+        public void LogModifierApply(string name)
+        {
+            LogOneParamMessage(name, _messageConfig.ModifierApply);
+        }
+
+        public void LogModifierCancel(string name)
+        {
+            LogOneParamMessage(name, _messageConfig.ModifierCancel);
+        }
+
+        private void LogOneParamMessage(string param, string formatString)
+        {
+            var message = string.Format(formatString, param);
             Log(message);
         }
     }

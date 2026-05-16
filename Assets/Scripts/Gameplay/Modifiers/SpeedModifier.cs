@@ -1,4 +1,5 @@
 ﻿using Input;
+using System;
 
 namespace Gameplay
 {
@@ -6,36 +7,39 @@ namespace Gameplay
     {
         public string Name => _config.Name;
 
+        public Type ConfigType => _config.GetType();
+
         private readonly IInputSwitchService _inputSwitchService;
 
-        private SpeedModifierConfig _config;
+        private readonly SpeedModifierConfig _config;
 
-        public SpeedModifier(IInputSwitchService inputSwitchService, SpeedModifierConfig config)
+        private readonly IInputService _currentInput;
+
+        public SpeedModifier(SpeedModifierConfig config, IInputSwitchService inputSwitchService)
         {
-            _inputSwitchService = inputSwitchService;
             _config = config;
-
-            _inputSwitchService.OnInputSwitched += HandleInputSwitch;
+            _inputSwitchService = inputSwitchService;
+            _currentInput = _inputSwitchService.CurrentInput;
         }
 
-        public void Dispose()
+        public void HandleInputSwitch(IInputService newInput)
         {
-            _inputSwitchService.OnInputSwitched -= HandleInputSwitch;
-        }
-
-        public void HandleInputSwitch(IInputService _)
-        {
-            OnEnterGameplay();
+            if (_currentInput != newInput)
+            {
+                OnEnterGameplay();
+            }
         }
 
         public void OnEnterGameplay()
         {
             _inputSwitchService.CurrentInput.Speed *= _config.Multiplier;
+            _inputSwitchService.OnInputSwitched += HandleInputSwitch;
         }
 
         public void OnExitGameplay()
         {
             _inputSwitchService.CurrentInput.Speed /= _config.Multiplier;
+            _inputSwitchService.OnInputSwitched -= HandleInputSwitch;
         }
 
         public void Tick(float deltaTime)

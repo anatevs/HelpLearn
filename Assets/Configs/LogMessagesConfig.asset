@@ -13,6 +13,9 @@ MonoBehaviour:
   m_Name: LogMessagesConfig
   m_EditorClassIdentifier: 
   _hpChanged: Player HP changed to {0}
+  _itemSpawned: Spawn {0}
   _itemPicked: Picked item {0}. Now player has {1} of items {0}
   _playerKilled: Player killed
   _inputSwitched: Input swithed to {0}
+  _modifierApply: Apply modifier {0}
+  _modifierCancel: Cancel modifier {0}

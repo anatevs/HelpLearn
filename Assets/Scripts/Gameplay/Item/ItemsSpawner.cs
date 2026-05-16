@@ -1,12 +1,11 @@
-﻿using GameManagement;
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 
 namespace Gameplay
 {
     public sealed class ItemsSpawner : MonoBehaviour,
-        IResetable
+        IItemsSpawner
     {
         public event Action<IItem> OnSpawned;
 
@@ -17,6 +16,10 @@ namespace Gameplay
         private Transform _spawnedParent;
 
         private Coroutine _spawnEnumerator;
+
+        private WaitForSeconds _spawnWait;
+
+        private float _spawnPeriod;
 
         public void Init()
         {
@@ -30,21 +33,30 @@ namespace Gameplay
                 StopCoroutine(_spawnEnumerator);
             }
 
+            _spawnWait = _config.SpawnWait;
+            _spawnPeriod = _config.SpawnPeriod;
+
             _spawnEnumerator = StartCoroutine(SpawnCoroutine());
+        }
+
+        public void MultiplySpawnPeriod(float multiplier)
+        {
+            _spawnPeriod *= multiplier;
+            _spawnWait = new WaitForSeconds(_spawnPeriod);
         }
 
         private IEnumerator SpawnCoroutine()
         {
             while (true)
             {
+                yield return _spawnWait;
+
                 var prefab = _config.GetPrefab(GetNextName());
                 var position = _config.GetRandomPosition();
 
                 var item = Instantiate(prefab, position, Quaternion.identity, _spawnedParent);
 
                 OnSpawned?.Invoke(item);
-
-                yield return _config.SpawnWait;
             }
         }
 

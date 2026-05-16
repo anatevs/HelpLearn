@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
@@ -9,6 +8,8 @@ namespace Gameplay
     public sealed class ItemsSpawnConfig : ScriptableObject
     {
         public WaitForSeconds SpawnWait => _spawnWait;
+
+        public float SpawnPeriod => _spawnPeriod;
 
         public string[] ItemNames => _names;
 

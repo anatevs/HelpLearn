@@ -16,15 +16,16 @@ namespace UI
         {
             var modifier = Instantiate(_textViewPrefab, transform);
             modifier.text = modifierName;
+            _currentModifiers.Add(modifier);
         }
 
         public void RemoveModifierName(string modifierName)
         {
-            for (int i = _currentModifiers.Count; i >= 0; i--)
+            for (int i = _currentModifiers.Count - 1; i >= 0; i--)
             {
                 if (_currentModifiers[i].text == modifierName)
                 {
-                    Destroy(_currentModifiers[i]);
+                    Destroy(_currentModifiers[i].gameObject);
                     _currentModifiers.RemoveAt(i);
                     break;
                 }

@@ -2,10 +2,11 @@ using System;
 
 namespace Gameplay
 {
-    public interface IGameModifier :
-        IDisposable
+    public interface IGameModifier
     {
         public string Name { get; }
+
+        public Type ConfigType { get; }
 
         public void OnEnterGameplay();
 

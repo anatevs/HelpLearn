@@ -17,7 +17,7 @@ namespace Gameplay
 
         public IGameModifier Create(GameModifierConfig config)
         {
-            return new SpeedModifier(_inputSwitchService, (SpeedModifierConfig)config);
+            return new SpeedModifier((SpeedModifierConfig)config, _inputSwitchService);
         }
     }
 }

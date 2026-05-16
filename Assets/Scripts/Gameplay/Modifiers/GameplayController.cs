@@ -1,32 +1,60 @@
-﻿using System;
+﻿using GameManagement;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Gameplay
 {
-    public class GameplayController : MonoBehaviour
+    public sealed class GameplayController : MonoBehaviour,
+        IResetable
     {
-        public event Action<string> OnModifierAdded;
-        public event Action<string> OnModifierRemoved;
+        public event Action<IGameModifier> OnModifierAdded;
+        public event Action<IGameModifier> OnModifierRemoved;
+        public event Action<IGameModifier> OnModifierCanceled;
 
-        public string[] Names => _gameModifiers.Select(x => x.Name).ToArray();
+        public IReadOnlyList<IGameModifier> Modifiers => _gameModifiers;
+
+        [SerializeField]
+        private GameModifiersConfig _gameModifiersConfig;
+
+        private GameModifierConfig[] _initConfigs;
+
+        private ModifiersSpawner _spawner;
 
         private readonly List<IGameModifier> _gameModifiers = new();
 
-        public void Init(IGameModifier[] gameModifiers)
+        public void Init(ModifiersSpawner spawner)
         {
-            foreach (var modifier in gameModifiers)
+            _spawner = spawner;
+
+            _initConfigs = _gameModifiersConfig.Configs;
+
+            InitLevelModifiers();
+        }
+
+        public void ResetLevel()
+        {
+            for (int i = _gameModifiers.Count - 1; i >= 0; i--)
             {
-                AddModifier(modifier);
+                RemoveModifier(_gameModifiers[i]);
+            }
+
+            InitLevelModifiers();
+        }
+
+        private void InitLevelModifiers()
+        {
+            for (int i = 0; i < _initConfigs.Length; i++)
+            {
+                AddModifier(_initConfigs[i]);
             }
         }
 
-        private void Start()
+        private void OnDisable()
         {
             for (int i = 0; i < _gameModifiers.Count; i++)
             {
-                _gameModifiers[i].OnEnterGameplay();
+                _gameModifiers[i].OnExitGameplay();
             }
         }
 
@@ -41,16 +69,28 @@ namespace Gameplay
         public void AddModifier(IGameModifier modifier)
         {
             _gameModifiers.Add(modifier);
-            OnModifierAdded?.Invoke(modifier.Name);
+            modifier.OnEnterGameplay();
+            OnModifierAdded?.Invoke(modifier);
+        }
+
+        public void AddModifier(GameModifierConfig config)
+        {
+            var modifier = _spawner.Create(config);
+
+            AddModifier(modifier);
         }
 
         public void RemoveModifier(IGameModifier modifier)
         {
-            if (_gameModifiers.Remove(modifier))
-            {
-                modifier.OnExitGameplay();
-                OnModifierRemoved?.Invoke(modifier.Name);
-            }
+            _gameModifiers.Remove(modifier);
+            OnModifierRemoved?.Invoke(modifier);
+        }
+
+        public void CancelModifier(IGameModifier modifier)
+        {
+            modifier.OnExitGameplay();
+            RemoveModifier(modifier);
+            OnModifierCanceled?.Invoke(modifier);
         }
     }
 }

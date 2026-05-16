@@ -6,7 +6,7 @@ namespace Gameplay
         menuName = "Configs/Modifiers/SpeedModifier")]
     public class SpeedModifierConfig : GameModifierConfig
     {
-        public override string Name => $"{_name} {_multiplier}";
+        public override string Name => $"{_name} by {_multiplier}";
 
         public float Multiplier => _multiplier;
 

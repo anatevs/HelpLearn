@@ -31,7 +31,7 @@ namespace GameManagement
         private AIPatrolPointsPrefab _pointsPrefab;
 
         [SerializeField]
-        private GameModifierConfig[] _modifierConfigs;
+        private GameModifiersConfig _gameplayModifiers;
 
         [Header("HUD views")]
         [SerializeField]
@@ -42,6 +42,9 @@ namespace GameManagement
 
         [SerializeField]
         private ModifiersInfoView _modifiersInfoView;
+
+        [SerializeField]
+        private SetModifiersView _setModifiersView;
 
         [Header("Menu views")]
         [SerializeField]
@@ -66,11 +69,15 @@ namespace GameManagement
 
         private ModifiersCreator _modifiersCreator;
 
+        private ModifiersSpawner _modifiersSpawner;
+
         private ILoggerService _loggerService;
 
         private GameplayHudController _hudController;
 
         private PauseResumePresenter _pauseResumePresenter;
+
+        private SceneItemsPresenter _sceneItemsPresenter;
 
         private GameResetService _resetService;
 
@@ -82,7 +89,9 @@ namespace GameManagement
 
         private GameOverPresenter _gameOverPresenter;
 
-        private ModifiersPresenter _modifiersPresenter;
+        private ModifiersInfoPresenter _modifiersPresenter;
+
+        private SetModifiersPresenter _setModifiersPresenter;
 
         private void Awake()
         {
@@ -164,19 +173,22 @@ namespace GameManagement
 
         private void InitModifiers()
         {
+            _modifiersCreator = new();
+
             List<IModifierFactory> factories = new();
 
             factories.Add(new SpeedModifierFactory(_inputSwitchService));
-
-
-            _modifiersCreator = new();
+            factories.Add(new RegenHPModifierFactory(_playerHealth));
+            factories.Add(new FastSpawnModifierFactory(_itemsSpawner));
 
             _modifiersCreator.AddFactory(factories);
 
 
-            var modifiers = _modifiersCreator.CreateModifiers(_modifierConfigs);
+            _modifiersSpawner = new ModifiersSpawner(_modifiersCreator);
 
-            _gameplayController.Init(modifiers);
+            _gameplayController.Init(_modifiersSpawner);
+
+            _resetService.AddResetable(_gameplayController);
         }
 
         private void InitGameplayUI()
@@ -198,9 +210,17 @@ namespace GameManagement
 
             _gameExit.AddDisposable(_pauseResumePresenter);
 
-            _modifiersPresenter = new ModifiersPresenter(_modifiersInfoView, _gameplayController);
+            _modifiersPresenter = new ModifiersInfoPresenter(_modifiersInfoView, _gameplayController, _loggerService);
 
             _gameExit.AddDisposable(_modifiersPresenter);
+
+            _sceneItemsPresenter = new SceneItemsPresenter(_loggerService, _itemsSpawner);
+
+            _gameExit.AddDisposable(_sceneItemsPresenter);
+
+            _setModifiersPresenter = new SetModifiersPresenter(_setModifiersView, _gameplayController, _gameplayModifiers);
+
+            _gameExit.AddDisposable(_setModifiersPresenter);
         }
 
         private void InitMenuUI()

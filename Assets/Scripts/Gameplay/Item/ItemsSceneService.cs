@@ -10,9 +10,9 @@ namespace Gameplay
 
         private readonly List<IItem> _items = new();
 
-        private readonly ItemsSpawner _spawner;
+        private readonly IItemsSpawner _spawner;
 
-        public ItemsSceneService(ItemsSpawner spawner)
+        public ItemsSceneService(IItemsSpawner spawner)
         {
             _spawner = spawner;
 
