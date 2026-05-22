@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: 
   _startHP: 6
+  _maxHP: 50
   _initShowedItems:
   - {fileID: 11400000, guid: 284af900cbaf66147af973cd277a34d9, type: 2}

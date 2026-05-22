@@ -8,7 +8,7 @@ namespace Gameplay
     {
         public event Action<IItem> OnSpawned;
 
-        public void Init();
+        public void Init(IItemFactory itemFactory);
 
         public void MultiplySpawnPeriod(float multiplier);
     }

@@ -8,29 +8,25 @@ namespace UI
     {
         private readonly IGameOverView _view;
 
-        private readonly RestartGamePresenter _restartGamePresenter;
-
         private readonly MainMenuPresenter _mainMenuPresenter;
 
-        private readonly GameStateMachine _stateMachine;
+        private readonly GameStatesService _gameStateService;
 
         public GameOverPresenter(IGameOverView view,
             MainMenuPresenter mainMenuPresenter,
-            GameResetService gameResetService,
-            GameStateMachine stateMachine)
+            GameStatesService statesService)
         {
             _view = view;
             _mainMenuPresenter = mainMenuPresenter;
-            _restartGamePresenter = new RestartGamePresenter(_view.RestartView, gameResetService, stateMachine);
-            _stateMachine = stateMachine;
+            _gameStateService = statesService;
 
             _view.OnToMainMenu += TransitToMainMenu;
+            _gameStateService = statesService;
         }
 
         public void Dispose()
         {
             _view.OnToMainMenu -= TransitToMainMenu;
-            _restartGamePresenter.Dispose();
         }
 
         public void Show(bool isWin)
@@ -45,7 +41,7 @@ namespace UI
 
         private void TransitToMainMenu()
         {
-            _stateMachine.ChangeState(new MainMenuState(_mainMenuPresenter));
+            _gameStateService.SetMainMenu(_mainMenuPresenter);
         }
     }
 }

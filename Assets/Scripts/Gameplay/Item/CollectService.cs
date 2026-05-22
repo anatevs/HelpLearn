@@ -80,11 +80,11 @@ namespace Gameplay
 
         public bool TryTakeItem(string name, int amount)
         {
-            if (_collectedItems[name] >= amount)
+            if (_collectedItems.TryGetValue(name, out var value) && value >= amount)
             {
-                _collectedItems[name] -= amount;
+                value -= amount;
 
-                OnChanged?.Invoke(name, _collectedItems[name]);
+                OnChanged?.Invoke(name, value);
 
                 return true;
             }

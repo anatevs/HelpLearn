@@ -10,15 +10,18 @@ namespace UI
 
         private readonly GameResetService _gameResetService;
 
-        private readonly GameStateMachine _gameStateMachine;
+        //private readonly GameStateMachine _gameStateMachine;
+        private readonly GameStatesService _gameStatesService;
 
         public RestartGamePresenter(IRestartGameView view,
             GameResetService gameResetService,
-            GameStateMachine gameStateMachine)
+            GameStatesService statesService)
+            //GameStateMachine gameStateMachine)
         {
             _view = view;
             _gameResetService = gameResetService;
-            _gameStateMachine = gameStateMachine;
+            _gameStatesService = statesService;
+            //_gameStateMachine = gameStateMachine;
 
             _view.OnRestartClicked += Reset;
         }
@@ -32,7 +35,8 @@ namespace UI
         {
             _gameResetService.ResetGame();
 
-            _gameStateMachine.ChangeState(new GameplayState());
+            _gameStatesService.SetGameplay();
+            //_gameStateMachine.ChangeState(new GameplayState());
         }
     }
 }

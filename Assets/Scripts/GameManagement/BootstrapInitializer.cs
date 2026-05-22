@@ -3,18 +3,9 @@ using UnityEngine.SceneManagement;
 
 namespace GameManagement
 {
-    [DefaultExecutionOrder(-50)]
     public class BootstrapInitializer : MonoBehaviour
     {
-        public static BootstrapInitializer Instance => _instance;
-
-        private static BootstrapInitializer _instance;
-
-        public GameStateMachine StateMachine => _gameStateMachine;
-
-        public GameResetService ResetService => _resetService;
-
-        public IGameExit GameExit => _gameExit;
+        private static bool _isInitialized = false;
 
         private int _gameSceneIndex = 1;
 
@@ -22,18 +13,20 @@ namespace GameManagement
 
         private GameStateMachine _gameStateMachine;
 
+        private GameStatesService _gameStatesService;
+
         private IGameExit _gameExit;
 
         private void Awake()
         {
-            if (BootstrapInitializer.Instance != null)
+            if (_isInitialized)
             {
                 Destroy(gameObject);
 
                 return;
             }
 
-            _instance = this;
+            _isInitialized = true;
 
             DontDestroyOnLoad(gameObject);
 
@@ -41,7 +34,12 @@ namespace GameManagement
 
             if (SceneManager.GetActiveScene().buildIndex != _gameSceneIndex)
             {
-                SceneManager.LoadSceneAsync(_gameSceneIndex);
+                SceneManager.sceneLoaded += HandleGameSceneLoad;
+                SceneManager.LoadScene(_gameSceneIndex);
+            }
+            else
+            {
+                InitGameScene();
             }
         }
 
@@ -49,9 +47,28 @@ namespace GameManagement
         {
             _gameStateMachine = new GameStateMachine(new InitState());
 
+            _gameStatesService = new GameStatesService(_gameStateMachine);
+
             _gameExit = new GameExit();
 
             _resetService = new();
+        }
+
+        private void HandleGameSceneLoad(Scene scene, LoadSceneMode mode)
+        {
+            if (SceneManager.GetActiveScene().buildIndex == _gameSceneIndex)
+            {
+                InitGameScene();
+
+                SceneManager.sceneLoaded -= HandleGameSceneLoad;
+            }
+        }
+
+        private void InitGameScene()
+        {
+            var gameInitializer = FindFirstObjectByType<GameInitializer>();
+
+            gameInitializer.Init(_gameStateMachine, _gameStatesService, _resetService, _gameExit);
         }
 
         private void OnApplicationQuit()

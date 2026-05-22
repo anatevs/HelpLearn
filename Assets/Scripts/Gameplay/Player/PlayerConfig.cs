@@ -8,10 +8,15 @@ namespace Gameplay
     {
         public int StartHP => _startHP;
 
+        public int MaxHP => _maxHP;
+
         public ItemConfig[] InitShowedItems => _initShowedItems;
 
         [SerializeField]
         private int _startHP;
+
+        [SerializeField]
+        private int _maxHP;
 
         [SerializeField]
         private ItemConfig[] _initShowedItems;

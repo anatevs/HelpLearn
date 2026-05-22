@@ -63,6 +63,8 @@ namespace GameManagement
 
         private IItemsSceneService _itemsSceneService;
 
+        private IItemFactory _itemFactory;
+
         private ICollectService _collectService;
 
         private CollectItemsBinder _collectBinder;
@@ -83,6 +85,8 @@ namespace GameManagement
 
         private GameStateMachine _gameStateMachine;
 
+        private GameStatesService _gameStatesService;
+
         private IGameExit _gameExit;
 
         private MainMenuPresenter _mainMenuPresenter;
@@ -93,18 +97,20 @@ namespace GameManagement
 
         private SetModifiersPresenter _setModifiersPresenter;
 
-        private void Awake()
+        private void OnDisable()
         {
-            Init();
+            _playerHealth.OnKilled -= HandlePlayerKill;
         }
 
-        private void Init()
+        public void Init(GameStateMachine gameStateMachine,
+            GameStatesService gameStatesService,
+            GameResetService resetService,
+            IGameExit gameExit)
         {
-            _gameStateMachine = BootstrapInitializer.Instance.StateMachine;
-
-            _gameExit = BootstrapInitializer.Instance.GameExit;
-
-            _resetService = BootstrapInitializer.Instance.ResetService;
+            _gameStateMachine = gameStateMachine;
+            _gameStatesService = gameStatesService;
+            _resetService = resetService;
+            _gameExit = gameExit;
 
             InitInput();
 
@@ -118,7 +124,7 @@ namespace GameManagement
 
             InitMenuUI();
 
-            _gameStateMachine.ChangeState(new MainMenuState(_mainMenuPresenter));
+            _gameStatesService.SetMainMenu(_mainMenuPresenter);
         }
 
         private void InitInput()
@@ -144,7 +150,7 @@ namespace GameManagement
             var movement = new MovementRB(_player.gameObject);
             var rotation = new RotationLerp(_player.transform);
 
-            _playerHealth = new SimpleHP(_player.Config.StartHP);
+            _playerHealth = new SimpleHP(_player.Config.StartHP, _player.Config.MaxHP);
 
             _playerHealth.OnKilled += HandlePlayerKill;
 
@@ -155,7 +161,9 @@ namespace GameManagement
 
         private void InitItems()
         {
-            _itemsSpawner.Init();
+            _itemFactory = new ItemFactory();
+
+            _itemsSpawner.Init(_itemFactory);
 
             _itemsSceneService = new ItemsSceneService(_itemsSpawner);
 
@@ -206,7 +214,7 @@ namespace GameManagement
 
             _gameExit.AddDisposable(_inputSwitchBinder);
 
-            _pauseResumePresenter = new PauseResumePresenter(_pauseResumeView, _gameStateMachine);
+            _pauseResumePresenter = new PauseResumePresenter(_pauseResumeView, _gameStatesService);
 
             _gameExit.AddDisposable(_pauseResumePresenter);
 
@@ -225,23 +233,24 @@ namespace GameManagement
 
         private void InitMenuUI()
         {
-            _mainMenuPresenter = new MainMenuPresenter(_mainMenuView, _resetService, _gameStateMachine, _gameExit);
+            var mainMenuRestartPresenter = new RestartGamePresenter(_mainMenuView.RestartView, _resetService, _gameStatesService);
+            _gameExit.AddDisposable(mainMenuRestartPresenter);
+
+            _mainMenuPresenter = new MainMenuPresenter(_mainMenuView, _gameExit);
 
             _gameExit.AddDisposable(_mainMenuPresenter);
 
-            _gameOverPresenter = new GameOverPresenter(_gameoverView, _mainMenuPresenter, _resetService, _gameStateMachine);
+            var gameOverRestartPresenter = new RestartGamePresenter(_gameoverView.RestartView, _resetService, _gameStatesService);
+            _gameExit.AddDisposable(gameOverRestartPresenter);
+
+            _gameOverPresenter = new GameOverPresenter(_gameoverView, _mainMenuPresenter, _gameStatesService);
 
             _gameExit.AddDisposable(_gameOverPresenter);
         }
 
         private void HandlePlayerKill()
         {
-            _gameStateMachine.ChangeState(new GameOverState(false, _gameOverPresenter));
-        }
-
-        private void OnDisable()
-        {
-            _playerHealth.OnKilled -= HandlePlayerKill;
+            _gameStatesService.SetLost(_gameOverPresenter);
         }
     }
 }

@@ -11,12 +11,14 @@ namespace Gameplay
         public event Action OnKilled;
 
         private int _hp;
-        private int _startHP;
+        private readonly int _startHP;
+        private readonly int _maxHP;
 
-        public SimpleHP(int startHP)
+        public SimpleHP(int startHP, int maxHP)
         {
             _hp = startHP;
             _startHP = startHP;
+            _maxHP = maxHP;
         }
 
         public void ResetLevel()
@@ -33,11 +35,9 @@ namespace Gameplay
         {
             var newHP = _hp - damage;
 
-            newHP = Mathf.Clamp(newHP, 0, newHP);
-
             ChangeHP(newHP);
 
-            if (newHP == 0)
+            if (_hp == 0)
             {
                 OnKilled?.Invoke();
             }
@@ -45,8 +45,14 @@ namespace Gameplay
 
         private void ChangeHP(int newHP)
         {
-            _hp = newHP;
-            OnHPChanged?.Invoke(newHP);
+            var oldHP = _hp;
+
+            _hp = Mathf.Clamp(newHP, 0, _maxHP);
+
+            if (oldHP != _hp)
+            {
+                OnHPChanged?.Invoke(_hp);
+            }
         }
     }
 }

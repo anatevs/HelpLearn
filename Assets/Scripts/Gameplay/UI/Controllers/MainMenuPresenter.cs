@@ -8,17 +8,13 @@ namespace UI
     {
         private readonly IMainMenuView _mainMenuView;
 
-        private readonly RestartGamePresenter _restartGamePresenter;
-
         private readonly IGameExit _gameExit;
 
         public MainMenuPresenter(IMainMenuView mainMenuView,
-            GameResetService gameResetService,
-            GameStateMachine gameStateMachine,
             IGameExit gameExit)
         {
             _mainMenuView = mainMenuView;
-            _restartGamePresenter = new RestartGamePresenter(_mainMenuView.RestartView, gameResetService, gameStateMachine);
+
             _gameExit = gameExit;
 
             _mainMenuView.OnExitClicked += Exit;
@@ -26,7 +22,6 @@ namespace UI
 
         public void Dispose()
         {
-            _restartGamePresenter.Dispose();
             _mainMenuView.OnExitClicked -= Exit;
         }
 

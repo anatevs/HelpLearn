@@ -7,12 +7,13 @@ namespace UI
     {
         private readonly IPauseResumeView _view;
 
-        private readonly GameStateMachine _gameStateMachine;
+        private readonly GameStatesService _gameStatesService;
 
-        public PauseResumePresenter(IPauseResumeView view, GameStateMachine gameStateMachine)
+        public PauseResumePresenter(IPauseResumeView view,
+            GameStatesService gameStatesService)
         {
             _view = view;
-            _gameStateMachine = gameStateMachine;
+            _gameStatesService = gameStatesService;
 
             _view.OnPaused += HandlePause;
             _view.OnResumed += HandleResume;
@@ -26,12 +27,12 @@ namespace UI
 
         private void HandlePause()
         {
-            _gameStateMachine.ChangeState(new PauseState());
+            _gameStatesService.SetPause();
         }
 
         private void HandleResume()
         {
-            _gameStateMachine.ChangeState(new GameplayState());
+            _gameStatesService.SetGameplay();
         }
     }
 }

@@ -21,9 +21,15 @@ namespace Gameplay
 
         private float _spawnPeriod;
 
-        public void Init()
+        private IItemFactory _factory;
+
+        public void Init(IItemFactory itemFactory)
         {
             _config.Init();
+
+            _factory = itemFactory;
+
+            _factory.Init(_spawnedParent, _config);
         }
 
         public void ResetLevel()
@@ -51,10 +57,7 @@ namespace Gameplay
             {
                 yield return _spawnWait;
 
-                var prefab = _config.GetPrefab(GetNextName());
-                var position = _config.GetRandomPosition();
-
-                var item = Instantiate(prefab, position, Quaternion.identity, _spawnedParent);
+                var item = _factory.CreateNext();
 
                 OnSpawned?.Invoke(item);
             }
