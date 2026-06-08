@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace Gameplay
 {
-    public class PlayerLooking : MonoBehaviour
+    public class PlayerVisual : MonoBehaviour
     {
         [SerializeField]
         private TMP_Text[] _nameText = new TMP_Text[2];

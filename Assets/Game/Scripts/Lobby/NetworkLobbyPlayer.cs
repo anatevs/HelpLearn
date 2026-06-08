@@ -6,6 +6,9 @@ namespace GameManagement
 {
     public class NetworkLobbyPlayer : NetworkRoomPlayer
     {
+        [SerializeField]
+        private LobbyPlayerSettingsView _uiPrefab;
+
         private LobbyPlayerSettingsView _settingsView;
 
         [SyncVar]
@@ -16,9 +19,19 @@ namespace GameManagement
 
         private bool _disabled = false;
 
-        public override void OnStartClient()
+        private NetworkLobbyManager _lobbyManager;
+
+
+        public override void Start()
         {
-            base.OnStartClient();
+            base.Start();
+
+            _lobbyManager = (NetworkLobbyManager)NetworkManager.singleton;
+
+            if (!isLocalPlayer)
+            {
+                return;
+            }
 
             if (string.IsNullOrEmpty(Name))
             {
@@ -27,25 +40,58 @@ namespace GameManagement
 
             name = Name;
 
-            if (!isLocalPlayer)
-            {
-                Debug.Log($"is local player {name}");
-                return;
-            }
+            var canvas = FindAnyObjectByType<Canvas>();
 
-            _settingsView = GetComponentInChildren<LobbyPlayerSettingsView>(true);
+            _settingsView = GameObject.Instantiate(_uiPrefab.gameObject, canvas.transform)
+                .GetComponent<LobbyPlayerSettingsView>();
 
             _settingsView.OnNameSet += CmdSetName;
 
             _settingsView.OnColorSet += CmdSetColor;
 
-            _settingsView.Show("", Color);
+            _settingsView.Show(Name, Color);
+
+            CmdSetName(Name);
+            CmdSetColor(Color);
+            CmdUpdateClients();
         }
+
+
+        //public override void OnStartClient()
+        //{
+        //    base.OnStartClient();
+
+        //    _lobbyManager = (NetworkLobbyManager)NetworkManager.singleton;
+
+        //    if (!isLocalPlayer)
+        //    {
+        //        return;
+        //    }
+
+        //    if (string.IsNullOrEmpty(Name))
+        //    {
+        //        Name = $"Player {index}";
+        //    }
+
+        //    name = Name;
+
+        //    var canvas = FindAnyObjectByType<Canvas>();
+
+        //    _settingsView = GameObject.Instantiate(_uiPrefab.gameObject, canvas.transform)
+        //        .GetComponent<LobbyPlayerSettingsView>();
+
+        //    _settingsView.OnNameSet += CmdSetName;
+
+        //    _settingsView.OnColorSet += CmdSetColor;
+
+        //    _settingsView.Show(Name, Color);
+
+        //    CmdSetName(Name);
+        //    CmdSetColor(Color);
+        //}
 
         public override void OnStopLocalPlayer()
         {
-            Debug.Log($"local disable {Name}");
-
             base.OnStopLocalPlayer();
 
             DisableLobbyPlayer();
@@ -60,35 +106,35 @@ namespace GameManagement
 
         public void DisableLobbyPlayer()
         {
-            if (!_disabled)
+            if (!_disabled && isLocalPlayer && _settingsView != null)
             {
                 _disabled = true;
-
-                if (_settingsView == null)
-                {
-                    return;
-                }
 
                 _settingsView.OnNameSet -= CmdSetName;
                 _settingsView.OnColorSet -= CmdSetColor;
 
                 _settingsView.Hide();
-
-                Debug.Log($"stop lobby player {Name}");
             }
         }
-
 
         [Command]
         private void CmdSetName(string name)
         {
             Name = name;
+            _lobbyManager.ChangeName(index, name);
         }
 
         [Command]
         private void CmdSetColor(Color color)
         {
             Color = color;
+            _lobbyManager.ChangeColor(index, color);
+        }
+
+        [Command]
+        private void CmdUpdateClients()
+        {
+            _lobbyManager.UpdateClients();
         }
 
         #region Optional UI

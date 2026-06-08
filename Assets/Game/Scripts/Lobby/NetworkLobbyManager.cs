@@ -1,18 +1,42 @@
 ﻿using Mirror;
 using Network.UI;
+using System;
 using UnityEngine;
 
 namespace GameManagement
 {
     public class NetworkLobbyManager : NetworkRoomManager
     {
+        public event Action<int, string> OnNameChanged;
+        public event Action<int, Color> OnColorChanged;
+        public event Action OnClientsUpdated;
+
+        public MultiplayerSettingsConfig MultiplayerSettingsConfig => _settingsConfig;
+
+        [Header("Configs")]
+        [SerializeField]
+        private MultiplayerSettingsConfig _settingsConfig;
+
         private bool _showStartButton;
+
+        public void ChangeName(int index, string name)
+        {
+            OnNameChanged?.Invoke(index, name);
+        }
+
+        public void ChangeColor(int index, Color color)
+        {
+            OnColorChanged?.Invoke(index, color);
+        }
+
+        public void UpdateClients()
+        {
+            OnClientsUpdated?.Invoke();
+        }
 
         public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
             base.OnServerAddPlayer(conn);
-
-
         }
 
         public override void OnRoomServerPlayersReady()
@@ -27,22 +51,6 @@ namespace GameManagement
             }
         }
 
-        //public override void OnRoomClientSceneChanged()
-        //{
-        //    base.OnRoomClientSceneChanged();
-
-        //    if (Utils.IsSceneActive(GameplayScene))
-        //    {
-        //        foreach (var roomPlayer in roomSlots)
-        //        {
-        //            if (roomPlayer is NetworkLobbyPlayer lobbyPlayer)
-        //            {
-        //                lobbyPlayer.DisableLobbyPlayer();
-        //            }
-        //        }
-        //    }
-        //}
-
         public override bool OnRoomServerSceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer, GameObject gamePlayer)
         {
             if (roomPlayer.TryGetComponent<NetworkLobbyPlayer>(out var lobbyPlayer))
@@ -55,9 +63,7 @@ namespace GameManagement
                     player.Color = lobbyPlayer.Color;
                 }
             }
-            
-            //PlayerScore playerScore = gamePlayer.GetComponent<PlayerScore>();
-            //playerScore.index = roomPlayer.GetComponent<NetworkRoomPlayer>().index;
+
             return true;
         }
 

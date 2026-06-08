@@ -13,18 +13,18 @@ namespace GameManagement
         public Color Color = Color.black;
 
         [SerializeField]
-        private PlayerLooking _playerLooking;
+        private PlayerVisual _playerVisual;
 
         private void Start()
         {
-            _playerLooking.SetName(Name);
+            _playerVisual.SetName(Name);
 
-            _playerLooking.SetColor(Color);
+            _playerVisual.SetColor(Color);
         }
 
         public override void OnStartLocalPlayer()
         {
-            //base.OnStartLocalPlayer();
+            base.OnStartLocalPlayer();
 
             Debug.Log($"start game player is local {Name}");
         }
@@ -43,12 +43,12 @@ namespace GameManagement
 
         private void SetName(string oldName, string newName)
         {
-            _playerLooking.SetName(newName);
+            _playerVisual.SetName(newName);
         }
 
         private void SetColor(Color oldColor, Color newColor)
         {
-            _playerLooking.SetColor(newColor);
+            _playerVisual.SetColor(newColor);
         }
     }
 }

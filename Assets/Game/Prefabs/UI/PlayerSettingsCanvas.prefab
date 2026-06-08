@@ -678,11 +678,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nameField: {fileID: 2225348514649602873}
+  _namePlaceholderText: {fileID: 0}
   _setColorButton: {fileID: 2955287911225076860}
   _rChannel: {fileID: 2952424561773447166}
   _gChannel: {fileID: 834236078356767639}
   _bChannel: {fileID: 9030430368879201430}
   _colorView: {fileID: 3401525569886147470}
+  _readyView: {fileID: 0}
 --- !u!1 &6713832113938295204
 GameObject:
   m_ObjectHideFlags: 0

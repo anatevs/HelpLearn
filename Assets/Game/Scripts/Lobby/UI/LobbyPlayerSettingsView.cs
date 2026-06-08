@@ -11,10 +11,15 @@ namespace Network.UI
         public event Action<string> OnNameSet;
         public event Action<Color> OnColorSet;
 
+        public event Action<bool> OnReadyChanged;
+
         private Color _color = Color.white;
 
         [SerializeField]
         private TMP_InputField _nameField;
+
+        [SerializeField]
+        private TMP_Text _namePlaceholderText;
 
         [SerializeField]
         private Button _setColorButton;
@@ -31,6 +36,9 @@ namespace Network.UI
         [SerializeField]
         private Image _colorView;
 
+        [SerializeField]
+        private LobbyReadyView _readyView;
+
         private void OnEnable()
         {
             _rChannel.OnValueChanged += SetColor;
@@ -39,6 +47,8 @@ namespace Network.UI
 
             _nameField.onSubmit.AddListener(HandleNameSet);
             _setColorButton.onClick.AddListener(HandleColorSet);
+
+            _readyView.OnReadyChanged += HandleReadyChange;
         }
 
         private void OnDisable()
@@ -49,6 +59,16 @@ namespace Network.UI
 
             _nameField.onSubmit.RemoveListener(HandleNameSet);
             _setColorButton.onClick.RemoveListener(HandleColorSet);
+
+            _readyView.OnReadyChanged -= HandleReadyChange;
+
+            UnsubscribeNameColor();
+        }
+
+        private void UnsubscribeNameColor()
+        {
+            OnNameSet = null;
+            OnColorSet = null;
         }
 
         public void Show(string currentName, Color currentColor)
@@ -76,7 +96,7 @@ namespace Network.UI
 
         private void SetupName(string name)
         {
-            _nameField.text = name;
+            _namePlaceholderText.text = name;
         }
 
         private void SetupColor(Color color)
@@ -96,6 +116,11 @@ namespace Network.UI
             _color.a = 1f;
 
             _colorView.color = _color;
+        }
+
+        private void HandleReadyChange(bool isReady)
+        {
+            OnReadyChanged?.Invoke(isReady);
         }
     }
 }
