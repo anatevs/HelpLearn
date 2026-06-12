@@ -46,6 +46,7 @@ namespace Network.UI
             SetName(_emptyName);
             SetColor(_emptyColor);
             SetStaus(_emptyStatus);
+            ShowRemoveButton(false);
         }
 
         public void SetColor(Color color)
@@ -66,6 +67,11 @@ namespace Network.UI
         public void ShowRemoveButton(bool isShow)
         {
             _removeButton.gameObject.SetActive(isShow);
+        }
+
+        public void UnsubscribeRemoveEvent()
+        {
+            OnRemoveClicked = null;
         }
 
         private void HandleRemoveClick()

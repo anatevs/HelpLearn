@@ -7,13 +7,14 @@ namespace GameManagement
     public class LobbyPlayer : NetworkBehaviour
     {
         public static event Action<LobbyPlayer> OnStarted;
-        public static event Action<LobbyPlayer> OnRemoved;
+        public static event Action<LobbyPlayer> OnStopped;
 
         public event Action<int, string> OnNameChanged;
         public event Action<int, Color> OnColorChanged;
         public event Action<int, bool> OnReadyChanged;
+        public event Action<int, string> OnNameChangeRequested;
 
-        [SyncVar(hook = nameof(SetObjectName))]
+        [SyncVar(hook = nameof(HookSetName))]
         public string Name;
 
         [SyncVar]
@@ -25,20 +26,24 @@ namespace GameManagement
         [SyncVar]
         public bool ReadyToBegin = false;
 
-        private bool _disabled = false;
-
         public void Init(string name)
         {
             Name = name;
             this.name = name;
+            OnNameChanged?.Invoke(PlayerID, name);
         }
 
-        public override void OnStartClient()
+        public virtual void Start()
         {
-            if (!isLocalPlayer)
-            {
-                return;
-            }
+            // LobbyPlayer object must be set to DontDestroyOnLoad along with LobbyManager
+            // in server and all clients, otherwise it will be respawned in the game scene which would
+            // have undesirable effects.
+            DontDestroyOnLoad(gameObject);
+        }
+
+        public override void OnStartLocalPlayer()
+        {
+            base.OnStartLocalPlayer();
 
             OnStarted?.Invoke(this);
 
@@ -46,22 +51,31 @@ namespace GameManagement
             CmdSetColor(Color);
         }
 
-        public override void OnStopClient()
+        public override void OnStopLocalPlayer()
         {
-            OnRemoved?.Invoke(this);
+            base.OnStopLocalPlayer();
+
+            OnStopped?.Invoke(this);
         }
 
         #region Hooks
 
-        public void SetObjectName(string oldName, string newName)
+        public void HookSetName(string oldName, string newName)
         {
             this.name = newName;
+            OnNameChanged?.Invoke(PlayerID, newName);
         }
 
         #endregion
 
 
         #region Commands
+
+        [Command]
+        public void CmdRequestNameChange(string newName)
+        {
+            OnNameChangeRequested?.Invoke(PlayerID, newName);
+        }
 
         [Command]
         public void CmdSetName(string name)
@@ -86,78 +100,7 @@ namespace GameManagement
             ReadyToBegin = readyState;
 
             OnReadyChanged?.Invoke(PlayerID, readyState);
-
-            //NetworkRoomManager room = NetworkManager.singleton as NetworkRoomManager;
-            //if (room != null)
-            //{
-            //    room.ReadyStatusChanged();
-            //}
         }
-
-        #endregion
-
-
-        #region Optional UI
-        //public void OnGUI()
-        //{
-        //    LobbyManager room = NetworkManager.singleton as LobbyManager;
-        //    if (room)
-        //    {
-        //        //if (!room.showRoomGUI)
-        //        //    return;
-
-        //        if (!Utils.IsSceneActive(room.RoomScene))
-        //            return;
-
-        //        DrawPlayerReadyState();
-        //        DrawPlayerReadyButton();
-        //    }
-        //}
-
-        //void DrawPlayerReadyState()
-        //{
-        //    GUILayout.BeginArea(new Rect(20f + (PlayerID * 100), 200f, 90f, 130f));
-
-        //    GUI.color = Color;
-        //    GUILayout.Label($"{Name}");
-        //    GUI.color = Color.white;
-
-        //    if (ReadyToBegin)
-        //        GUILayout.Label("Ready");
-        //    else
-        //        GUILayout.Label("Not Ready");
-
-        //    if (((isServer && PlayerID > 0) || isServerOnly) && GUILayout.Button("REMOVE"))
-        //    {
-        //        // This button only shows on the Host for all players other than the Host
-        //        // Host and Players can't remove themselves (stop the client instead)
-        //        // Host can kick a Player this way.
-        //        GetComponent<NetworkIdentity>().connectionToClient.Disconnect();
-        //    }
-
-        //    GUILayout.EndArea();
-        //}
-
-        //void DrawPlayerReadyButton()
-        //{
-        //    if (NetworkClient.active && isLocalPlayer)
-        //    {
-        //        GUILayout.BeginArea(new Rect(20f, 300f, 120f, 20f));
-
-        //        if (ReadyToBegin)
-        //        {
-        //            if (GUILayout.Button("Cancel"))
-        //                CmdChangeReadyState(false);
-        //        }
-        //        else
-        //        {
-        //            if (GUILayout.Button("Ready"))
-        //                CmdChangeReadyState(true);
-        //        }
-
-        //        GUILayout.EndArea();
-        //    }
-        //}
 
         #endregion
     }

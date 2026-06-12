@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace Network.UI
 {
-    public class LobbyErrorLogger : MonoBehaviour,
-        ILobbyErrorLogger
+    public class LobbyErrorLogger : MonoBehaviour
     {
         [SerializeField]
         private TMP_Text _errorText;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameManagement
 {
-    public class NetworkPlayer : NetworkBehaviour
+    public class GamePlayer : NetworkBehaviour
     {
         [SyncVar(hook = nameof(SetName))]
         public string Name = "nameDefault";

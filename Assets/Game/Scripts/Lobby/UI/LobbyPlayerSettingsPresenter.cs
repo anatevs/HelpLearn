@@ -8,11 +8,11 @@ namespace Network.UI
         private LobbyPlayer _player;
         private LobbyPlayerSettingsView _view;
 
-        private LobbyPlayerSettingsView _prefab;
+        private MultiplayerSettingsConfig _config;
 
         public void Init(MultiplayerSettingsConfig settingsConfig)
         {
-            _prefab = settingsConfig.PlayerViewPrefab;
+            _config = settingsConfig;
 
             Subscribe();
         }
@@ -20,7 +20,7 @@ namespace Network.UI
         private void OnDisable()
         {
             LobbyPlayer.OnStarted -= HandlePlayerStarted;
-            LobbyPlayer.OnRemoved -= HandlePlayerRemove;
+            LobbyPlayer.OnStopped -= HandlePlayerRemove;
 
             DisableView();
         }
@@ -28,12 +28,12 @@ namespace Network.UI
         private void Subscribe()
         {
             LobbyPlayer.OnStarted += HandlePlayerStarted;
-            LobbyPlayer.OnRemoved += HandlePlayerRemove;
+            LobbyPlayer.OnStopped += HandlePlayerRemove;
         }
 
         private LobbyPlayerSettingsView CreateView()
         {
-            var view = Instantiate(_prefab, transform);
+            var view = Instantiate(_config.PlayerViewPrefab, transform);
 
             return view;
         }
@@ -50,13 +50,15 @@ namespace Network.UI
             _player = lobbyPlayer;
             _view = view;
 
-            view.OnNameSet += _player.CmdSetName;
+            view.OnNameSetRequested += _player.CmdRequestNameChange;
 
             view.OnColorSet += _player.CmdSetColor;
 
             view.OnReadyChanged += _player.CmdChangeReadyState;
 
-            view.Show(lobbyPlayer.Name, lobbyPlayer.Color);
+            view.Show(lobbyPlayer.Name, lobbyPlayer.Color, _config.NameLengthRange);
+
+            _player.OnNameChanged += HandleChangeName;
         }
 
         private void HandlePlayerRemove(LobbyPlayer lobbyPlayer)
@@ -73,7 +75,7 @@ namespace Network.UI
         {
             if (_view != null)
             {
-                _view.OnNameSet -= _player.CmdSetName;
+                _view.OnNameSetRequested -= _player.CmdRequestNameChange;
 
                 _view.OnColorSet -= _player.CmdSetColor;
 
@@ -81,8 +83,15 @@ namespace Network.UI
 
                 _view.Hide();
 
+                _player.OnNameChanged -= HandleChangeName;
+
                 Destroy(_view.gameObject);
             }
+        }
+
+        private void HandleChangeName(int _, string name)
+        {
+            _view.SetNameTitle(name);
         }
     }
 }

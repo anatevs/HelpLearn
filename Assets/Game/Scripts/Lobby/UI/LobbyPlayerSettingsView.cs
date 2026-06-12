@@ -5,21 +5,25 @@ using UnityEngine.UI;
 
 namespace Network.UI
 {
-    public class LobbyPlayerSettingsView : MonoBehaviour,
-        ILobbyPlayerSettingsView
+    public class LobbyPlayerSettingsView : MonoBehaviour
     {
-        public event Action<string> OnNameSet;
+        public event Action<string> OnNameSetRequested;
         public event Action<Color> OnColorSet;
 
         public event Action<bool> OnReadyChanged;
 
         private Color _color = Color.white;
 
-        [SerializeField]
-        private TMP_InputField _nameField;
+        private int[] _nameLengthRange;
 
         [SerializeField]
-        private TMP_Text _namePlaceholderText;
+        private TMP_Text _currentName;
+
+        [SerializeField]
+        private TMP_Text _nameRangeInfo;
+
+        [SerializeField]
+        private TMP_InputField _nameField;
 
         [SerializeField]
         private Button _setColorButton;
@@ -45,7 +49,7 @@ namespace Network.UI
             _gChannel.OnValueChanged += SetColor;
             _bChannel.OnValueChanged += SetColor;
 
-            _nameField.onSubmit.AddListener(HandleNameSet);
+            _nameField.onSubmit.AddListener(HandleNameSetRequest);
             _setColorButton.onClick.AddListener(HandleColorSet);
 
             _readyView.OnReadyChanged += HandleReadyChange;
@@ -57,7 +61,7 @@ namespace Network.UI
             _gChannel.OnValueChanged -= SetColor;
             _bChannel.OnValueChanged -= SetColor;
 
-            _nameField.onSubmit.RemoveListener(HandleNameSet);
+            _nameField.onSubmit.RemoveListener(HandleNameSetRequest);
             _setColorButton.onClick.RemoveListener(HandleColorSet);
 
             _readyView.OnReadyChanged -= HandleReadyChange;
@@ -67,16 +71,19 @@ namespace Network.UI
 
         private void UnsubscribeNameColor()
         {
-            OnNameSet = null;
+            OnNameSetRequested = null;
             OnColorSet = null;
         }
 
-        public void Show(string currentName, Color currentColor)
+        public void Show(string currentName, Color currentColor, int[] nameLengthRange)
         {
-            SetupName(currentName);
+            SetNameTitle(currentName);
+
             SetupColor(currentColor);
 
             gameObject.SetActive(true);
+
+            SetNameRangeInfoText(nameLengthRange);
         }
 
         public void Hide()
@@ -84,19 +91,24 @@ namespace Network.UI
             gameObject.SetActive(false);
         }
 
-        private void HandleNameSet(string name)
+        public void SetNameTitle(string name)
         {
-            OnNameSet?.Invoke(name);
+            _currentName.text = name;
+        }
+
+        private void HandleNameSetRequest(string name)
+        {
+            if (name.Length < _nameLengthRange[0] || name.Length > _nameLengthRange[1])
+            {
+                return;
+            }
+
+            OnNameSetRequested?.Invoke(name);
         }
 
         private void HandleColorSet()
         {
             OnColorSet?.Invoke(_color);
-        }
-
-        private void SetupName(string name)
-        {
-            _namePlaceholderText.text = name;
         }
 
         private void SetupColor(Color color)
@@ -121,6 +133,12 @@ namespace Network.UI
         private void HandleReadyChange(bool isReady)
         {
             OnReadyChanged?.Invoke(isReady);
+        }
+
+        private void SetNameRangeInfoText(int[] range)
+        {
+            _nameLengthRange = range;
+            _nameRangeInfo.text = $"(from {range[0]} to {range[1]} symbols,\nnot a default (NameIndex) for others or existing)";
         }
     }
 }

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _minPlayers: 2
   _maxPlayers: 4
-  _defaultNamePrefix: Player
+  _defaultNamePrefix: Name
+  _nameLengthRange: 0200000006000000
   _defaultColor: {r: 1, g: 1, b: 1, a: 1}
   _playerViewPrefab: {fileID: 5923303925058499147, guid: 33a33d2d7db674f4baa9838b3c1b1a2d, type: 3}
