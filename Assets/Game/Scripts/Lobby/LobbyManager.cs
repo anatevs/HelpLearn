@@ -8,7 +8,6 @@ using System.Linq;
 
 namespace GameManagement
 {
-
     public class LobbyManager : NetworkManager
     {
         public event Action<int, string> OnNameChanged;
