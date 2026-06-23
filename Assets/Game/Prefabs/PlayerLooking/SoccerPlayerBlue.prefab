@@ -189,7 +189,6 @@ GameObject:
   - component: {fileID: 5937225040031625128}
   - component: {fileID: 2929301686160759038}
   - component: {fileID: 4713059066254693433}
-  - component: {fileID: 6089089604620547281}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -265,29 +264,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &6089089604620547281
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3582536358346184357}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3697362231504983504
 GameObject:
   m_ObjectHideFlags: 0
@@ -862,7 +838,6 @@ GameObject:
   - component: {fileID: 4796836780753714521}
   - component: {fileID: 4796836780753714516}
   - component: {fileID: 4796836780753714519}
-  - component: {fileID: 4796836780753714518}
   m_Layer: 0
   m_Name: LeftArm
   m_TagString: Untagged
@@ -939,29 +914,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &4796836780753714518
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4796836780753714520}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4796836780924671093
 GameObject:
   m_ObjectHideFlags: 0
@@ -973,7 +925,6 @@ GameObject:
   - component: {fileID: 4796836780924671090}
   - component: {fileID: 4796836780924671089}
   - component: {fileID: 4796836780924671088}
-  - component: {fileID: 4796836780924671091}
   m_Layer: 0
   m_Name: RightArm
   m_TagString: Untagged
@@ -1050,29 +1001,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &4796836780924671091
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4796836780924671093}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4796836780938115842
 GameObject:
   m_ObjectHideFlags: 0
@@ -1084,7 +1012,6 @@ GameObject:
   - component: {fileID: 4796836780938115843}
   - component: {fileID: 4796836780938115870}
   - component: {fileID: 4796836780938115841}
-  - component: {fileID: 4796836780938115840}
   m_Layer: 0
   m_Name: RightSleeve
   m_TagString: Untagged
@@ -1160,27 +1087,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4796836780938115840
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4796836780938115842}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4796836782045970842
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,7 +1098,6 @@ GameObject:
   - component: {fileID: 4796836782045970843}
   - component: {fileID: 4796836782045970838}
   - component: {fileID: 4796836782045970841}
-  - component: {fileID: 4796836782045970840}
   m_Layer: 0
   m_Name: LeftSleeve
   m_TagString: Untagged
@@ -1268,27 +1173,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4796836782045970840
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4796836782045970842}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5077781686810120239
 GameObject:
   m_ObjectHideFlags: 0
@@ -1300,7 +1184,6 @@ GameObject:
   - component: {fileID: 3619928609034082552}
   - component: {fileID: 4530279996606969057}
   - component: {fileID: 2168987021296048141}
-  - component: {fileID: 3800985687370945288}
   m_Layer: 0
   m_Name: ShortsSeam
   m_TagString: Untagged
@@ -1376,29 +1259,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &3800985687370945288
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5077781686810120239}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5542878398312744749
 GameObject:
   m_ObjectHideFlags: 0

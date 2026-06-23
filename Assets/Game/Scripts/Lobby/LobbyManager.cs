@@ -5,6 +5,7 @@ using UnityEngine;
 using Network.UI;
 using static Mirror.NetworkRoomManager;
 using System.Linq;
+using UI;
 
 namespace GameManagement
 {
@@ -34,6 +35,14 @@ namespace GameManagement
         [Tooltip("Prefab to use for the Room Player")]
         private LobbyPlayer _lobbyPlayerPrefab;
 
+        [SerializeField]
+        private GameInfoPanelPresenter _infoPanelPrefab;
+
+        [SerializeField]
+        GameInfoViewInitializer _gameInfoView;
+
+        private GameInfoPanelPresenter _gameInfoPanel;
+
         [Header("Scenes")]
         /// <summary>
         /// The scene to use for the room. This is similar to the offlineScene of the NetworkManager.
@@ -52,7 +61,9 @@ namespace GameManagement
         /// </summary>
         private readonly HashSet<PendingPlayer> _pendingPlayers = new HashSet<PendingPlayer>();
 
-        private readonly List<LobbyPlayer> _players = new();
+        private readonly List<LobbyPlayer> _lobbyPlayers = new();
+
+        private readonly List<GamePlayer> _gamePlayers = new();
 
         #region Unity methods
         public override void OnValidate()
@@ -76,6 +87,13 @@ namespace GameManagement
 
             _settingsPresenter.Init(_settingsConfig);
         }
+
+        public void RegisterInfoPanel(GameInfoPanelPresenter panel)
+        {
+            _gameInfoPanel = panel;
+            _gameInfoView.SetupInfoPanel(_gameInfoPanel);
+        }
+
         #endregion
 
 
@@ -93,7 +111,7 @@ namespace GameManagement
 
         public void ChangeName(int index, string newName)
         {
-            _players[index].Name = newName;
+            _lobbyPlayers[index].Name = newName;
             OnNameChanged?.Invoke(index, newName);
         }
 
@@ -111,7 +129,7 @@ namespace GameManagement
 
         public void DisconnectPlayer(int index)
         {
-            _players[index].GetComponent<NetworkIdentity>().connectionToClient.Disconnect();
+            _lobbyPlayers[index].GetComponent<NetworkIdentity>().connectionToClient.Disconnect();
         }
 
         private string GetDefaultName(int index)
@@ -129,7 +147,7 @@ namespace GameManagement
 
             if (newName.Length < _settingsConfig.NameLengthRange[0]
                 || newName.Length > _settingsConfig.NameLengthRange[1]
-                || (_players.Any(x => x.Name == newName))
+                || (_lobbyPlayers.Any(x => x.Name == newName))
                 || isOtherDefault)
             {
                 return false;
@@ -145,13 +163,13 @@ namespace GameManagement
 
         public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
-            if (Utils.IsSceneActive(RoomScene) && _players.Count < _settingsConfig.MaxPlayers)
+            if (Utils.IsSceneActive(RoomScene) && _lobbyPlayers.Count < _settingsConfig.MaxPlayers)
             {
                 ChangeEnoghReady(false);
 
                 var lobbyPlayer = Instantiate(_lobbyPlayerPrefab, Vector3.zero, Quaternion.identity);
 
-                lobbyPlayer.PlayerID = _players.Count;
+                lobbyPlayer.PlayerID = _lobbyPlayers.Count;
                 lobbyPlayer.Init(GetDefaultName(lobbyPlayer.PlayerID));
 
                 lobbyPlayer.OnNameChangeRequested += HandleChangeNameRequest;
@@ -162,12 +180,15 @@ namespace GameManagement
 
                 OnPlayerAdded?.Invoke(lobbyPlayer.PlayerID, lobbyPlayer.isOwned);
 
-                _players.Add(lobbyPlayer);
+                _lobbyPlayers.Add(lobbyPlayer);
 
-                foreach (var player in _players)
+                foreach (var player in _lobbyPlayers)
                 {
                     OnSlotUpdated?.Invoke(player.PlayerID, player.Name, player.Color, player.ReadyToBegin, player.isOwned);
                 }
+
+                _gameInfoPanel.AddLog($"Connected player: {lobbyPlayer.Name}");
+                _gameInfoPanel.SetPlayersCount(_lobbyPlayers.Count);
             }
             else
             {
@@ -194,36 +215,52 @@ namespace GameManagement
         {
             if (conn.identity != null)
             {
+                var playerName = "";
+                var remainPlayers = _lobbyPlayers.Count;
+
                 if (conn.identity.TryGetComponent<LobbyPlayer>(out var disconnectedPlayer))
                 {
                     ChangeReady(disconnectedPlayer.PlayerID, false);
 
-                    //disconnectedPlayer.OnNameChanged -= ChangeName;
                     disconnectedPlayer.OnNameChangeRequested -= HandleChangeNameRequest;
                     disconnectedPlayer.OnColorChanged -= ChangeColor;
                     disconnectedPlayer.OnReadyChanged -= ChangeReady;
 
-                    _players.Remove(disconnectedPlayer);
+                    _lobbyPlayers.Remove(disconnectedPlayer);
 
-                    for (int i = disconnectedPlayer.PlayerID; i < _players.Count; i++)
+                    for (int i = disconnectedPlayer.PlayerID; i < _lobbyPlayers.Count; i++)
                     {
-                        var newName = _players[i].Name;
+                        var newName = _lobbyPlayers[i].Name;
 
-                        if (_players[i].Name == GetDefaultName(i + 1))
+                        if (_lobbyPlayers[i].Name == GetDefaultName(i + 1))
                         {
                             newName = GetDefaultName(i);
-                            _players[i].Name = newName;
+                            _lobbyPlayers[i].Name = newName;
                         }
 
-                        _players[i].PlayerID = i;
+                        _lobbyPlayers[i].PlayerID = i;
 
-                        OnSlotUpdated?.Invoke(_players[i].PlayerID, _players[i].Name, _players[i].Color, _players[i].ReadyToBegin, _players[i].isOwned);
+                        OnSlotUpdated?.Invoke(_lobbyPlayers[i].PlayerID, _lobbyPlayers[i].Name, _lobbyPlayers[i].Color, _lobbyPlayers[i].ReadyToBegin, _lobbyPlayers[i].isOwned);
                     }
 
-                    var emptyIndex = _players.Count;
+                    var emptyIndex = _lobbyPlayers.Count;
 
                     OnSlotEmptied?.Invoke(emptyIndex);
+
+                    playerName = disconnectedPlayer.Name;
+                    remainPlayers = _lobbyPlayers.Count;
                 }
+
+                else if (conn.identity.TryGetComponent<GamePlayer>(out var gamePlayer))
+                {
+                    playerName = gamePlayer.Name;
+                    _gamePlayers.Remove(gamePlayer);
+
+                    remainPlayers = _gamePlayers.Count;
+                }
+
+                _gameInfoPanel.AddLog($"Disconnected player: {playerName}");
+                _gameInfoPanel.SetPlayersCount(remainPlayers);
             }
 
             base.OnServerDisconnect(conn);
@@ -256,7 +293,7 @@ namespace GameManagement
         {
             if (newSceneName == RoomScene)
             {
-                foreach (LobbyPlayer lobbyPlayer in _players)
+                foreach (LobbyPlayer lobbyPlayer in _lobbyPlayers)
                 {
                     if (lobbyPlayer == null)
                         continue;
@@ -289,6 +326,11 @@ namespace GameManagement
                 }
 
                 _pendingPlayers.Clear();
+
+                if (sceneName == GameplayScene)
+                {
+                    _gameInfoPanel.AddLog($"Match started!");
+                }
             }
             else //in case for return to the RoomScene
             {
@@ -315,11 +357,25 @@ namespace GameManagement
                 Debug.LogError("NetworkRoomManager PlayScene is empty. Set the PlayScene in the inspector for the NetworkRoomManager");
                 return;
             }
+
+            if (_infoPanelPrefab == null)
+            {
+                Debug.LogError("InfoPanel prefab is null");
+                return;
+            }
+            else
+            {
+                var infoPanel = Instantiate(_infoPanelPrefab);
+
+                NetworkServer.Spawn(infoPanel.gameObject);
+
+                RegisterInfoPanel(infoPanel);
+            }
         }
 
         public override void OnStopServer()
         {
-            _players.Clear();
+            _lobbyPlayers.Clear();
         }
 
         public override void OnStartClient()
@@ -331,6 +387,8 @@ namespace GameManagement
 
             if (playerPrefab == null)
                 Debug.LogError("NetworkRoomManager no GamePlayer prefab is registered. Please add a GamePlayer prefab.");
+
+            NetworkClient.RegisterPrefab(_infoPanelPrefab.gameObject);
         }
 
         #endregion
@@ -343,7 +401,7 @@ namespace GameManagement
             int currentPlayers = 0;
             int readyPlayers = 0;
 
-            foreach (LobbyPlayer player in _players)
+            foreach (LobbyPlayer player in _lobbyPlayers)
             {
                 if (player != null)
                 {
@@ -431,6 +489,8 @@ namespace GameManagement
             }
 
             NetworkServer.ReplacePlayerForConnection(conn, gamePlayer, ReplacePlayerOptions.KeepAuthority);
+
+            _gamePlayers.Add(gamePlayer.GetComponent<GamePlayer>());
         }
 
         public bool OnRoomServerSceneLoadedForPlayer(GameObject roomPlayer, GameObject gamePlayer)
@@ -444,6 +504,8 @@ namespace GameManagement
                     player.Name = lobbyPlayer.Name;
                     player.Color = lobbyPlayer.Color;
                 }
+
+                _gameInfoPanel.AddLog($"Spawned player: {player.Name}");
 
                 return true;
             }
