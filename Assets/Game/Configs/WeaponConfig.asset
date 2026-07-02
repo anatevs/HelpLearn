@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f714ae0f0159dea4b9533b4843fc4b11, type: 3}
+  m_Name: WeaponConfig
+  m_EditorClassIdentifier: 
+  _name: Weapon0
+  _damage: 1
+  _maxDistance: 100
+  _fireRate: 4
+  _charge: 15
+  _shootCost: 1
+  _rechargeTime: 5
+  _tracerPrefab: {fileID: 737474880819565166, guid: b1c4b8140fdc08946bc855858e3d0d83, type: 3}

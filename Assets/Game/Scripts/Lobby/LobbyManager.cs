@@ -6,6 +6,7 @@ using Network.UI;
 using static Mirror.NetworkRoomManager;
 using System.Linq;
 using UI;
+using Gameplay;
 
 namespace GameManagement
 {
@@ -42,6 +43,8 @@ namespace GameManagement
         GameInfoViewInitializer _gameInfoView;
 
         private GameInfoPanelPresenter _gameInfoPanel;
+
+        private PlayerSceneDependencies _playerSceneDependencies;
 
         [Header("Scenes")]
         /// <summary>
@@ -340,8 +343,24 @@ namespace GameManagement
                     _settingsPresenter.Init(_settingsConfig);
                 }
             }
+        }
 
-                OnRoomServerSceneChanged(sceneName);
+        public override void OnClientSceneChanged()
+        {
+            base.OnClientSceneChanged();
+
+            if (Utils.IsSceneActive(GameplayScene))
+            {
+                var sceneObjects = FindAnyObjectByType<PlayerSceneDependencies>(); //to Manager as public property with event of init and initing in OnServerSceneChanged or make in dpnds Awake() with injecting itself to mngr
+
+                if (sceneObjects == null)
+                {
+                    Debug.Log("no PlayerSceneDependencies object on a scene in OnClientSceneChanged()");
+                    return;
+                }
+
+                _playerSceneDependencies = sceneObjects;
+            }
         }
 
         public override void OnStartServer()
@@ -513,11 +532,13 @@ namespace GameManagement
             return false;
         }
 
-        /// <summary>
-        /// This is called on the server when a networked scene finishes loading.
-        /// </summary>
-        /// <param name="sceneName">Name of the new scene.</param>
-        private void OnRoomServerSceneChanged(string sceneName) { }
+        public void RegisterGamePlayer(GamePlayer gamePlayer)
+        {
+            if (_playerSceneDependencies != null)
+            {
+                _playerSceneDependencies.ConstructPlayer(gamePlayer);
+            }
+        }
 
         #endregion
     }

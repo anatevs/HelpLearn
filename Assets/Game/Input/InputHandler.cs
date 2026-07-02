@@ -8,6 +8,8 @@ namespace Assets.Input
     {
         public event Action OnJupmed;
 
+        public event Action OnShot;
+
         public Vector3 Move => _move;
 
         public Vector2 LookAngle => _look;
@@ -37,11 +39,15 @@ namespace Assets.Input
             _inputActions.Enable();
 
             _inputActions.Game.Jump.performed += HandleJump;
+
+            _inputActions.Game.Shoot.performed += HandleShoot;
         }
 
         private void OnDisable()
         {
             _inputActions.Game.Jump.performed -= HandleJump;
+
+            _inputActions.Game.Shoot.performed -= HandleShoot;
 
             _inputActions.Disable();
         }
@@ -64,6 +70,11 @@ namespace Assets.Input
         private void HandleJump(InputAction.CallbackContext context)
         {
             OnJupmed?.Invoke();
+        }
+
+        private void HandleShoot(InputAction.CallbackContext context)
+        {
+            OnShot?.Invoke();
         }
     }
 }

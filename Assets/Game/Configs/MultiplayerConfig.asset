@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05fb49fe504ffd64cb65f6158a85d81a, type: 3}
   m_Name: MultiplayerConfig
   m_EditorClassIdentifier: 
-  _minPlayers: 2
+  _minPlayers: 1
   _maxPlayers: 4
   _defaultNamePrefix: Name
   _nameLengthRange: 0200000006000000

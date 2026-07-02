@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Gameplay
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerMoveController : MonoBehaviour
     {
         [SerializeField]
         private PlayerMovingConfig _config;
