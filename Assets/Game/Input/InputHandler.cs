@@ -10,6 +10,10 @@ namespace Assets.Input
 
         public event Action OnShot;
 
+        public event Action OnHealed;
+
+        public event Action OnGrenadeShooted;
+
         public Vector3 Move => _move;
 
         public Vector2 LookAngle => _look;
@@ -41,6 +45,10 @@ namespace Assets.Input
             _inputActions.Game.Jump.performed += HandleJump;
 
             _inputActions.Game.Shoot.performed += HandleShoot;
+
+            _inputActions.Game.ShootGrenade.performed += HandleGrenade;
+
+            _inputActions.Game.Heal.performed += HandleHeal;
         }
 
         private void OnDisable()
@@ -48,6 +56,10 @@ namespace Assets.Input
             _inputActions.Game.Jump.performed -= HandleJump;
 
             _inputActions.Game.Shoot.performed -= HandleShoot;
+
+            _inputActions.Game.ShootGrenade.performed -= HandleGrenade;
+
+            _inputActions.Game.Heal.performed -= HandleHeal;
 
             _inputActions.Disable();
         }
@@ -75,6 +87,16 @@ namespace Assets.Input
         private void HandleShoot(InputAction.CallbackContext context)
         {
             OnShot?.Invoke();
+        }
+
+        private void HandleHeal(InputAction.CallbackContext context)
+        {
+            OnHealed?.Invoke();
+        }
+
+        private void HandleGrenade(InputAction.CallbackContext context)
+        {
+            OnGrenadeShooted?.Invoke();
         }
     }
 }

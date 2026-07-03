@@ -11,6 +11,7 @@ namespace Gameplay
         public event Action<float> OnKilled;
 
         public int HP => _hp;
+        public bool IsMaxHP => _hp == _healthConfig.MaxHP;
 
         public PlayerHealthConfig HPConfig => _healthConfig;
 

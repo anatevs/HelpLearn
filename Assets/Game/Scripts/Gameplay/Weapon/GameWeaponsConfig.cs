@@ -26,7 +26,7 @@ namespace Gameplay
         {
             foreach (var weaponConfig in _weaponConfigs)
             {
-                _weaponConfigsDict.Add(weaponConfig.Name, weaponConfig);
+                _weaponConfigsDict.TryAdd(weaponConfig.Name, weaponConfig);
             }
         }
 

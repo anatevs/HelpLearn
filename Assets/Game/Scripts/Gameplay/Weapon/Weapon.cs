@@ -85,7 +85,7 @@ namespace Gameplay
         {
             if (CanShoot)
             {
-                RpcTrgShowFlash();
+                TargetShowFlash();
                 ChangeCharge(-_config.ShootCost);
 
                 if (Physics.Raycast(viewPoint, direction, out var hit, _config.MaxDistance))
@@ -105,7 +105,7 @@ namespace Gameplay
         }
 
         [TargetRpc]
-        private void RpcTrgShowFlash()
+        private void TargetShowFlash()
         {
             _shootFlash.Play();
         }
@@ -117,7 +117,7 @@ namespace Gameplay
         }
 
         [TargetRpc]
-        private void RpcTrgEndRecharge()
+        private void TargetEndRecharge()
         {
             OnRechargeEnded?.Invoke();
         }
@@ -142,7 +142,7 @@ namespace Gameplay
 
             ChangeCharge(_config.Charge);
 
-            RpcTrgEndRecharge();
+            TargetEndRecharge();
         }
 
         private void HookSetCharge(int oldCharge, int newCharge)

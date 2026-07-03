@@ -11,9 +11,11 @@ namespace GameManagement
     {
         public event Action<float> OnRespawnCooldownStarted;
         public event Action OnRespawnCooldownCompleted;
+        public event Action<ItemType, int> OnInventoryUpdated;
 
         public Health Health => _health;
         public Weapon Weapon => _weapon;
+        public InventoryStorage InventoryStorage => _inventoryStorage;
 
         [SyncVar(hook = nameof(SetName))]
         public string Name = "nameDefault";
@@ -50,9 +52,16 @@ namespace GameManagement
 
         private Vector3 _startPosition;
 
-        public bool ConstructLocal(CameraFollower cameraFollower,
+        private GameItemsConfig _itemsConfig;
+        private PickableItemsService _pickableItemsService;
+
+        private readonly InventoryStorage _inventoryStorage = new();
+
+        public bool Construct(CameraFollower cameraFollower,
             InputHandler input,
-            WeaponTracerShower weaponTracerShower)
+            WeaponTracerShower weaponTracerShower,
+            GameItemsConfig itemsConfig,
+            PickableItemsService pickableItemsService)
         {
             if (isLocalPlayer)
             {
@@ -65,10 +74,15 @@ namespace GameManagement
                 _playerRotation.Init(_input);
 
                 _input.OnShot += HandleShoot;
+
+                _input.OnHealed += CmdHeal;
             }
 
             _weaponTracerShower = weaponTracerShower;
             _weapon.Init(_weaponTracerShower);
+
+            _itemsConfig = itemsConfig;
+            _pickableItemsService = pickableItemsService;
 
             return isLocalPlayer;
         }
@@ -91,6 +105,7 @@ namespace GameManagement
             if (_input != null)
             {
                 _input.OnShot -= HandleShoot;
+                _input.OnHealed -= CmdHeal;
             }
 
             _health.OnKilled -= HandleKill;
@@ -113,6 +128,20 @@ namespace GameManagement
             {
                 lobbyManager.RegisterGamePlayer(this);
             }
+        }
+
+        public override void OnStartServer()
+        {
+            base.OnStartServer();
+
+            _inventoryStorage.OnItemUpdated += TargetUpdateInventory;
+        }
+
+        public override void OnStopServer()
+        {
+            base.OnStopServer();
+
+            _inventoryStorage.OnItemUpdated -= TargetUpdateInventory;
         }
 
         private void Update()
@@ -144,6 +173,27 @@ namespace GameManagement
             }
 
             _cameraFollower.Follow();
+        }
+
+        //[ServerCallback]
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+
+            if (other.gameObject.TryGetComponent<PickableItem>(out var pickedItem))
+            {
+                CmdPickItem(pickedItem.netId);
+
+                //var itemType = pickedItem.Config.Type;
+                //_inventoryStorage.AddItem(itemType);
+
+                ////_pickableItemsService.Unspawn(pickedItem);
+
+                //pickedItem.Pick();//make this as a method with [ClientRpc] or change item to ntworkbh
+            }
         }
 
         private void SetName(string oldName, string newName)
@@ -195,6 +245,59 @@ namespace GameManagement
             if (isLocalPlayer)
             {
                 OnRespawnCooldownCompleted?.Invoke();
+            }
+        }
+
+        [TargetRpc]
+        private void TargetUpdateInventory(ItemType type, int count)
+        {
+            OnInventoryUpdated?.Invoke(type, count);
+        }
+
+        [Command]
+        private void CmdPickItem(uint itemNetId)
+        {
+            if (NetworkServer.spawned.TryGetValue(itemNetId, out NetworkIdentity identity))
+            {
+                if (identity.gameObject.TryGetComponent<PickableItem>(out var pickedItem))
+                {
+                    var sqrDistance = (transform.position - pickedItem.transform.position).sqrMagnitude;
+
+                    if (sqrDistance <= pickedItem.Config.PickSqrDistance)
+                    {
+                        var itemType = pickedItem.Config.Type;
+                        _inventoryStorage.AddItem(itemType);
+
+                        //_pickableItemsService.Unspawn(pickedItem);
+
+                        pickedItem.Pick();//make this as a method with [ClientRpc] or change item to ntworkbh
+                    }
+                    else
+                    {
+                        Debug.Log("try to pick item farther then pick distance");
+                    }
+                }
+                else
+                {
+                    Debug.Log("try to pick netId object without PickableItem on it");
+                }
+                return;
+            }
+
+            Debug.Log("try to pick non-existing netId");
+        }
+
+        [Command]
+        private void CmdHeal()
+        {
+            var type = ItemType.Medkit;
+
+            if (!_health.IsMaxHP &&
+                _inventoryStorage.TryTakeItem(type))
+            {
+                var config = (MedkitConfig)_itemsConfig.GetConfig(type);
+
+                _health.Heal(config.HealValue);
             }
         }
 

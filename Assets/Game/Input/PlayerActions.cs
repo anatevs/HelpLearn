@@ -154,6 +154,24 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShootGrenade"",
+                    ""type"": ""Button"",
+                    ""id"": ""ae0e303d-2cd9-47b8-b1f1-f328497feaaf"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Heal"",
+                    ""type"": ""Button"",
+                    ""id"": ""c3179e91-071e-485e-b2b3-c48bfab10b02"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -332,6 +350,28 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cdab3dd7-8fb5-432e-99c2-f05327f0c5ac"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShootGrenade"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8ea07fc8-a189-452e-9564-1ccb8df1668d"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Heal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -364,6 +404,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_Game_Dash = m_Game.FindAction("Dash", throwIfNotFound: true);
         m_Game_Look = m_Game.FindAction("Look", throwIfNotFound: true);
         m_Game_Shoot = m_Game.FindAction("Shoot", throwIfNotFound: true);
+        m_Game_ShootGrenade = m_Game.FindAction("ShootGrenade", throwIfNotFound: true);
+        m_Game_Heal = m_Game.FindAction("Heal", throwIfNotFound: true);
     }
 
     ~@PlayerActions()
@@ -451,6 +493,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Dash;
     private readonly InputAction m_Game_Look;
     private readonly InputAction m_Game_Shoot;
+    private readonly InputAction m_Game_ShootGrenade;
+    private readonly InputAction m_Game_Heal;
     /// <summary>
     /// Provides access to input actions defined in input action map "Game".
     /// </summary>
@@ -490,6 +534,14 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Game/Shoot".
         /// </summary>
         public InputAction @Shoot => m_Wrapper.m_Game_Shoot;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/ShootGrenade".
+        /// </summary>
+        public InputAction @ShootGrenade => m_Wrapper.m_Game_ShootGrenade;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/Heal".
+        /// </summary>
+        public InputAction @Heal => m_Wrapper.m_Game_Heal;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -537,6 +589,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Shoot.started += instance.OnShoot;
             @Shoot.performed += instance.OnShoot;
             @Shoot.canceled += instance.OnShoot;
+            @ShootGrenade.started += instance.OnShootGrenade;
+            @ShootGrenade.performed += instance.OnShootGrenade;
+            @ShootGrenade.canceled += instance.OnShootGrenade;
+            @Heal.started += instance.OnHeal;
+            @Heal.performed += instance.OnHeal;
+            @Heal.canceled += instance.OnHeal;
         }
 
         /// <summary>
@@ -569,6 +627,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Shoot.started -= instance.OnShoot;
             @Shoot.performed -= instance.OnShoot;
             @Shoot.canceled -= instance.OnShoot;
+            @ShootGrenade.started -= instance.OnShootGrenade;
+            @ShootGrenade.performed -= instance.OnShootGrenade;
+            @ShootGrenade.canceled -= instance.OnShootGrenade;
+            @Heal.started -= instance.OnHeal;
+            @Heal.performed -= instance.OnHeal;
+            @Heal.canceled -= instance.OnHeal;
         }
 
         /// <summary>
@@ -671,5 +735,19 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnShoot(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ShootGrenade" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnShootGrenade(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Heal" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHeal(InputAction.CallbackContext context);
     }
 }
