@@ -23,6 +23,8 @@ namespace GameManagement
 
         public MultiplayerSettingsConfig MultiplayerSettingsConfig => _settingsConfig;
 
+        public GameInfoPanel GameInfoPanel => _gameInfoPanel;
+
         [SerializeField]
         private LobbyHUDPresenter _lobbyHudPresenter;
 
@@ -37,12 +39,12 @@ namespace GameManagement
         private LobbyPlayer _lobbyPlayerPrefab;
 
         [SerializeField]
-        private GameInfoPanelPresenter _infoPanelPrefab;
+        private GameInfoPanel _infoPanelPrefab;
 
         [SerializeField]
         GameInfoViewInitializer _gameInfoView;
 
-        private GameInfoPanelPresenter _gameInfoPanel;
+        private GameInfoPanel _gameInfoPanel;
 
         private PlayerSceneDependencies _playerSceneDependencies;
 
@@ -91,7 +93,7 @@ namespace GameManagement
             _settingsPresenter.Init(_settingsConfig);
         }
 
-        public void RegisterInfoPanel(GameInfoPanelPresenter panel)
+        public void RegisterInfoPanel(GameInfoPanel panel)
         {
             _gameInfoPanel = panel;
             _gameInfoView.SetupInfoPanel(_gameInfoPanel);

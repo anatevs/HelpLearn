@@ -11,7 +11,7 @@ namespace UI
         [SerializeField]
         private TMP_Text _playersCountText;
 
-        public void SetupInfoPanel(GameInfoPanelPresenter panel)
+        public void SetupInfoPanel(GameInfoPanel panel)
         {
             panel.Init(_logView, _playersCountText);
         }

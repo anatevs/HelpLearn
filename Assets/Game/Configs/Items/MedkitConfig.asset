@@ -15,4 +15,5 @@ MonoBehaviour:
   _name: Medkit
   _pickablePrefab: {fileID: 2515627260792691352, guid: 75cc04414fc29394988c7b3ed32eda47, type: 3}
   _pickSqrDistance: 9
+  _useDelay: 5
   _healValue: 2

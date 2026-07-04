@@ -7,6 +7,8 @@ namespace Gameplay
     {
         public event Action<ItemType, int> OnItemUpdated;
 
+        public event Action<string> OnEmptyAccessed;
+
         private readonly Dictionary<ItemType, int> _items = new();
 
         public void AddItem(ItemType type)
@@ -25,6 +27,7 @@ namespace Gameplay
         {
             if (!_items.ContainsKey(typeName) || _items[typeName] <= 0)
             {
+                OnEmptyAccessed?.Invoke(typeName.ToString());
                 return false;
             }
 

@@ -13,16 +13,16 @@ namespace UI
 
         private int _initValue = 0;
 
-        public InventoriesPresenter(InventoriesView view, GamePlayer player, GameItemsConfig itemsConfig)
+        public InventoriesPresenter(InventoriesView view, GamePlayer player, ItemSpawnData[] itemsData)
         {
             _player = player;
             _view = view;
 
             _player.OnInventoryUpdated += UpdateValue;
 
-            foreach (var config in itemsConfig.Configs)
+            foreach (var data in itemsData)
             {
-                _view.AddNewView(config.Type, _initValue.ToString());
+                _view.AddNewView(data.Config.Type, _initValue.ToString());
             }
         }
 

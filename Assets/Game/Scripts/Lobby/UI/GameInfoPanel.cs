@@ -4,7 +4,7 @@ using TMPro;
 
 namespace UI
 {
-    public class GameInfoPanelPresenter : NetworkBehaviour
+    public class GameInfoPanel : NetworkBehaviour
     {
         private GameLogView _logView;
 
@@ -43,8 +43,15 @@ namespace UI
                 ClearViews();
             }
         }
+
         public void AddLog(string logText)
         {
+            if (_logText == logText)
+            {
+                _logText = $"{logText} ";
+                return;
+            }
+
             _logText = logText;
         }
 

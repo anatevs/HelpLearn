@@ -8,7 +8,8 @@ namespace Gameplay
         public string Name => _name;
         public float PickSqrDistance => _pickSqrDistance;
         public PickableItem PickablePrefab => _pickablePrefab;
-
+        public float UseDelay => _useDelay;
+        public WaitForSeconds UseWait => new WaitForSeconds(_useDelay);
 
         [SerializeField]
         private string _name;
@@ -18,5 +19,8 @@ namespace Gameplay
 
         [SerializeField]
         private float _pickSqrDistance;
+
+        [SerializeField]
+        private float _useDelay;
     }
 }

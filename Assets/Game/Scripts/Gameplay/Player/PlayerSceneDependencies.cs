@@ -35,39 +35,51 @@ namespace Gameplay
         private InventoriesView _inventoriesView;
 
         [SerializeField]
-        private GameItemsConfig _gameItemsConfig;
+        private PickItemsSpawnConfig _pickItemsSpawnConfig;
 
         [SerializeField]
         private PickableItemsService _pickableItemsService;
+
+        [SerializeField]
+        private LocalMessagesView _localMessagesView;
 
         private HPPresenter _hpPresenter;
 
         private InventoriesPresenter _inventoriesPresenter;
 
+        private GameplayInfoPresenter _gameplayInfoPresenter = new();
+
+        private LocalMessagesPresenter _localMessagesPresenter;
+
         private void Awake()
         {
-            _gameItemsConfig.Init();
-            _pickableItemsService.Init(_gameItemsConfig);
+            _pickItemsSpawnConfig.Init();
+            _pickableItemsService.Init(_pickItemsSpawnConfig);
         }
 
         private void OnDestroy()
         {
             _hpPresenter?.Dispose();
             _inventoriesPresenter?.Dispose();
+            _gameplayInfoPresenter?.Dispose();
         }
 
         public void ConstructPlayer(GamePlayer gamePlayer)
         {
             var isLocal = gamePlayer.Construct(_cameraFollower,
                 _inputHandler, _weaponTracerShower,
-                _gameItemsConfig, _pickableItemsService);
+                _pickItemsSpawnConfig, _pickableItemsService);
+
+            _gameplayInfoPresenter.AddPlayer(gamePlayer);
 
             if (isLocal)
             {
                 _hpPresenter = new HPPresenter(_hpView, gamePlayer.Health);
                 _playerLifeResetPresenter.Init(gamePlayer);
                 _weaponPresenter.Init(gamePlayer.Weapon);
-                _inventoriesPresenter = new InventoriesPresenter(_inventoriesView, gamePlayer, _gameItemsConfig);
+                _inventoriesPresenter = new InventoriesPresenter(_inventoriesView, gamePlayer,
+                    _pickItemsSpawnConfig.ItemsSpawnData);
+                _localMessagesPresenter = new LocalMessagesPresenter(_localMessagesView, gamePlayer);
             }
         }
     }

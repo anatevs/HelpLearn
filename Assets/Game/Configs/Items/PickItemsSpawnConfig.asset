@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b0d6ed496705a443834552838a34a53, type: 3}
-  m_Name: ItemsListConfig
+  m_Script: {fileID: 11500000, guid: 71a1bd1ffa71fc542978bda94a71be4b, type: 3}
+  m_Name: PickItemsSpawnConfig
   m_EditorClassIdentifier: 
-  _configs:
-  - {fileID: 11400000, guid: 7e1e68c69998533429d570ded5de8203, type: 2}
+  _itemsSpawnData:
+  - Config: {fileID: 11400000, guid: 7e1e68c69998533429d570ded5de8203, type: 2}
+    InitCount: 3
+    RespawnDelay: 4

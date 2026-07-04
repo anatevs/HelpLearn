@@ -12,6 +12,8 @@ namespace GameManagement
         public event Action<float> OnRespawnCooldownStarted;
         public event Action OnRespawnCooldownCompleted;
         public event Action<ItemType, int> OnInventoryUpdated;
+        public event Action<string, string> OnItemPicked;
+        public event Action<string> OnAbsentItemTried;
 
         public Health Health => _health;
         public Weapon Weapon => _weapon;
@@ -52,7 +54,9 @@ namespace GameManagement
 
         private Vector3 _startPosition;
 
-        private GameItemsConfig _itemsConfig;
+        private bool _useMedkitCooldown = true;
+
+        private PickItemsSpawnConfig _pickItemsConfig;
         private PickableItemsService _pickableItemsService;
 
         private readonly InventoryStorage _inventoryStorage = new();
@@ -60,7 +64,7 @@ namespace GameManagement
         public bool Construct(CameraFollower cameraFollower,
             InputHandler input,
             WeaponTracerShower weaponTracerShower,
-            GameItemsConfig itemsConfig,
+            PickItemsSpawnConfig pickItemsConfig,
             PickableItemsService pickableItemsService)
         {
             if (isLocalPlayer)
@@ -81,7 +85,7 @@ namespace GameManagement
             _weaponTracerShower = weaponTracerShower;
             _weapon.Init(_weaponTracerShower);
 
-            _itemsConfig = itemsConfig;
+            _pickItemsConfig = pickItemsConfig;
             _pickableItemsService = pickableItemsService;
 
             return isLocalPlayer;
@@ -98,6 +102,7 @@ namespace GameManagement
         private void OnEnable()
         {
             _health.OnKilled += HandleKill;
+            _inventoryStorage.OnEmptyAccessed += TargetTryUseAbsentItem;
         }
 
         private void OnDisable()
@@ -109,6 +114,7 @@ namespace GameManagement
             }
 
             _health.OnKilled -= HandleKill;
+            _inventoryStorage.OnEmptyAccessed -= TargetTryUseAbsentItem;
         }
 
         public override void OnStartClient()
@@ -175,7 +181,6 @@ namespace GameManagement
             _cameraFollower.Follow();
         }
 
-        //[ServerCallback]
         private void OnTriggerEnter(Collider other)
         {
             if (!isLocalPlayer)
@@ -186,13 +191,6 @@ namespace GameManagement
             if (other.gameObject.TryGetComponent<PickableItem>(out var pickedItem))
             {
                 CmdPickItem(pickedItem.netId);
-
-                //var itemType = pickedItem.Config.Type;
-                //_inventoryStorage.AddItem(itemType);
-
-                ////_pickableItemsService.Unspawn(pickedItem);
-
-                //pickedItem.Pick();//make this as a method with [ClientRpc] or change item to ntworkbh
             }
         }
 
@@ -254,12 +252,19 @@ namespace GameManagement
             OnInventoryUpdated?.Invoke(type, count);
         }
 
+        [TargetRpc]
+        private void TargetTryUseAbsentItem(string itemName)
+        {
+            OnAbsentItemTried?.Invoke(itemName);
+        }
+
         [Command]
         private void CmdPickItem(uint itemNetId)
         {
             if (NetworkServer.spawned.TryGetValue(itemNetId, out NetworkIdentity identity))
             {
-                if (identity.gameObject.TryGetComponent<PickableItem>(out var pickedItem))
+                if (identity.gameObject.TryGetComponent<PickableItem>(out var pickedItem) &&
+                    pickedItem.gameObject.activeSelf)
                 {
                     var sqrDistance = (transform.position - pickedItem.transform.position).sqrMagnitude;
 
@@ -271,6 +276,8 @@ namespace GameManagement
                         //_pickableItemsService.Unspawn(pickedItem);
 
                         pickedItem.Pick();//make this as a method with [ClientRpc] or change item to ntworkbh
+
+                        OnItemPicked?.Invoke(Name, pickedItem.Config.Name);
                     }
                     else
                     {
@@ -279,7 +286,7 @@ namespace GameManagement
                 }
                 else
                 {
-                    Debug.Log("try to pick netId object without PickableItem on it");
+                    Debug.Log("try to pick netId object without PickableItem on it or inactive gameObject");
                 }
                 return;
             }
@@ -292,12 +299,17 @@ namespace GameManagement
         {
             var type = ItemType.Medkit;
 
-            if (!_health.IsMaxHP &&
-                _inventoryStorage.TryTakeItem(type))
+            if (_inventoryStorage.TryTakeItem(type))
             {
-                var config = (MedkitConfig)_itemsConfig.GetConfig(type);
+                if (_useMedkitCooldown &&
+                    !_health.IsMaxHP)
+                {
+                    var config = (MedkitConfig)_pickItemsConfig.GetConfig(type);
 
-                _health.Heal(config.HealValue);
+                    _health.Heal(config.HealValue);
+
+                    StartCoroutine(WaitMedkitUsing(config.UseWait));
+                }
             }
         }
 
@@ -332,6 +344,15 @@ namespace GameManagement
             _health.ResetHP();
 
             RpcRespawn();
+        }
+
+        private IEnumerator WaitMedkitUsing(WaitForSeconds wait)
+        {
+            _useMedkitCooldown = false;
+
+            yield return wait;
+
+            _useMedkitCooldown = true;
         }
     }
 }

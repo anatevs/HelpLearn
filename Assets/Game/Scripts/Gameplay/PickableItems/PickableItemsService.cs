@@ -4,36 +4,87 @@ using Mirror;
 
 namespace Gameplay
 {
-    public class PickableItemsService : MonoBehaviour
+    public class PickableItemsService : NetworkBehaviour
     {
-        private GameItemsConfig _itemsConfig;
+        [SerializeField]
+        private ItemSpawnPoint _spawnPoint;
 
-        private Dictionary<ItemType, Queue<PickableItem>> _itemPools = new();
+
+        [SerializeField]
+        private Transform _pooledItems;
+
+        private PickItemsSpawnConfig _spawnConfig;
+
+        private readonly Dictionary<ItemType, Queue<PickableItem>> _itemPools = new();
 
         public void Start()
         {
-            foreach (var config in _itemsConfig.Configs)
+            if (isServer)
             {
-                NetworkClient.RegisterPrefab(config.PickablePrefab.gameObject);
-
-                _itemPools.Add(config.Type, new Queue<PickableItem>());
+                Spawn(ItemType.Medkit);
             }
         }
 
-        public void Init(GameItemsConfig itemsConfig)
+        public override void OnStartServer()
         {
-            _itemsConfig = itemsConfig;
+            base.OnStartServer();
+
+            _spawnPoint.OnSpawnRequested += HandleRespawn;
         }
 
-        public void Spawn(ItemType type)
+        public override void OnStopServer()
         {
+            base.OnStopServer();
 
+            _spawnPoint.OnSpawnRequested -= HandleRespawn;
         }
 
-        public void Unspawn()
+        public void Init(PickItemsSpawnConfig pickItemsSpawnConfig)
         {
-            //item.Pick();
-            //Destroy(item.gameObject);
+            _spawnConfig = pickItemsSpawnConfig;
+
+            var delay = _spawnConfig.GetSpawnData(_spawnPoint.ItemType).RespawnDelay;
+
+            _spawnPoint.Init(delay);
+
+            foreach (var data in _spawnConfig.ItemsSpawnData)
+            {
+                NetworkClient.RegisterPrefab(data.Config.PickablePrefab.gameObject);
+
+                _itemPools.Add(data.Config.Type, new Queue<PickableItem>());
+            }
+        }
+
+        [Server]
+        public PickableItem Spawn(ItemType type)
+        {
+            PickableItem item = Instantiate(_spawnConfig.GetConfig(type).PickablePrefab);
+
+            _spawnPoint.SetItemToPoint(item);
+
+            item.transform.SetParent(transform);
+
+            item.gameObject.SetActive(true);
+
+            NetworkServer.Spawn(item.gameObject);
+
+            item.OnPicked += Unspawn;
+
+            return item;
+        }
+
+        [Server]
+        public void Unspawn(PickableItem item)
+        {
+            item.OnPicked -= Unspawn;
+            item.gameObject.SetActive(false);
+            item.transform.SetParent(_pooledItems, false);
+            NetworkServer.Destroy(item.gameObject);
+        }
+
+        private void HandleRespawn(ItemType type)
+        {
+            Spawn(type);
         }
     }
 }
