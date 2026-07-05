@@ -21,7 +21,7 @@ namespace Gameplay
         {
             if (isServer)
             {
-                Spawn(ItemType.Medkit);
+                Spawn(_spawnPoint.ItemType);
             }
         }
 
@@ -58,7 +58,11 @@ namespace Gameplay
         [Server]
         public PickableItem Spawn(ItemType type)
         {
-            PickableItem item = Instantiate(_spawnConfig.GetConfig(type).PickablePrefab);
+            var itemConfig = _spawnConfig.GetConfig(type);
+
+            PickableItem item = Instantiate(itemConfig.PickablePrefab);
+
+            item.Init(itemConfig);
 
             _spawnPoint.SetItemToPoint(item);
 

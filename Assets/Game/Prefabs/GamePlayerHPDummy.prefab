@@ -153,7 +153,7 @@ GameObject:
   - component: {fileID: 4550518732798546122}
   - component: {fileID: 7608945027577876819}
   - component: {fileID: 5458298440043562069}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GamePlayerHPDummy
   m_TagString: Player
   m_Icon: {fileID: 0}

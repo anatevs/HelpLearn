@@ -4,22 +4,18 @@ using UnityEngine;
 
 namespace Gameplay
 {
+    [RequireComponent(typeof(NetworkIdentity))]
     public class PickableItem : NetworkBehaviour
     {
         public event Action<PickableItem> OnPicked;
 
         public ItemConfig Config => _config;
 
-        public Collider Collider => _collider;
-
-        [SerializeField]
         private ItemConfig _config;
 
-        private Collider _collider;
-
-        private void Awake()
+        public void Init(ItemConfig config)
         {
-            _collider = GetComponent<Collider>();
+            _config = config;
         }
 
         [Server]

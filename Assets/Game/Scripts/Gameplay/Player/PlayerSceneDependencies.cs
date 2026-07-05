@@ -41,6 +41,9 @@ namespace Gameplay
         private PickableItemsService _pickableItemsService;
 
         [SerializeField]
+        private GrenadesService _grenadesService;
+
+        [SerializeField]
         private LocalMessagesView _localMessagesView;
 
         private HPPresenter _hpPresenter;
@@ -55,6 +58,7 @@ namespace Gameplay
         {
             _pickItemsSpawnConfig.Init();
             _pickableItemsService.Init(_pickItemsSpawnConfig);
+            _grenadesService.Init(_pickItemsSpawnConfig);
         }
 
         private void OnDestroy()
@@ -68,7 +72,7 @@ namespace Gameplay
         {
             var isLocal = gamePlayer.Construct(_cameraFollower,
                 _inputHandler, _weaponTracerShower,
-                _pickItemsSpawnConfig, _pickableItemsService);
+                _pickItemsSpawnConfig, _grenadesService);
 
             _gameplayInfoPresenter.AddPlayer(gamePlayer);
 

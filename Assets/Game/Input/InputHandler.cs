@@ -12,7 +12,7 @@ namespace Assets.Input
 
         public event Action OnHealed;
 
-        public event Action OnGrenadeShooted;
+        public event Action OnGrenadeThrown;
 
         public Vector3 Move => _move;
 
@@ -96,7 +96,7 @@ namespace Assets.Input
 
         private void HandleGrenade(InputAction.CallbackContext context)
         {
-            OnGrenadeShooted?.Invoke();
+            OnGrenadeThrown?.Invoke();
         }
     }
 }

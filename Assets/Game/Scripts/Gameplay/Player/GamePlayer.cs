@@ -43,6 +43,9 @@ namespace GameManagement
         [SerializeField]
         private Weapon _weapon;
 
+        [SerializeField]
+        private Transform _grenadePoint;
+
         private CameraFollower _cameraFollower;
 
         private InputHandler _input;
@@ -56,8 +59,11 @@ namespace GameManagement
 
         private bool _useMedkitCooldown = true;
 
+        private bool _useGrenadeCooldown = true;
+
         private PickItemsSpawnConfig _pickItemsConfig;
-        private PickableItemsService _pickableItemsService;
+
+        private GrenadesService _grenadesService;
 
         private readonly InventoryStorage _inventoryStorage = new();
 
@@ -65,7 +71,7 @@ namespace GameManagement
             InputHandler input,
             WeaponTracerShower weaponTracerShower,
             PickItemsSpawnConfig pickItemsConfig,
-            PickableItemsService pickableItemsService)
+            GrenadesService grenadesService)
         {
             if (isLocalPlayer)
             {
@@ -80,13 +86,15 @@ namespace GameManagement
                 _input.OnShot += HandleShoot;
 
                 _input.OnHealed += CmdHeal;
+
+                _input.OnGrenadeThrown += CmdThrowGrenade;
             }
 
             _weaponTracerShower = weaponTracerShower;
             _weapon.Init(_weaponTracerShower);
 
             _pickItemsConfig = pickItemsConfig;
-            _pickableItemsService = pickableItemsService;
+            _grenadesService = grenadesService;
 
             return isLocalPlayer;
         }
@@ -111,6 +119,7 @@ namespace GameManagement
             {
                 _input.OnShot -= HandleShoot;
                 _input.OnHealed -= CmdHeal;
+                _input.OnGrenadeThrown -= CmdThrowGrenade;
             }
 
             _health.OnKilled -= HandleKill;
@@ -273,8 +282,6 @@ namespace GameManagement
                         var itemType = pickedItem.Config.Type;
                         _inventoryStorage.AddItem(itemType);
 
-                        //_pickableItemsService.Unspawn(pickedItem);
-
                         pickedItem.Pick();//make this as a method with [ClientRpc] or change item to ntworkbh
 
                         OnItemPicked?.Invoke(Name, pickedItem.Config.Name);
@@ -307,6 +314,24 @@ namespace GameManagement
                     var config = (MedkitConfig)_pickItemsConfig.GetConfig(type);
 
                     _health.Heal(config.HealValue);
+
+                    StartCoroutine(WaitMedkitUsing(config.UseWait));
+                }
+            }
+        }
+
+        [Command]
+        private void CmdThrowGrenade()
+        {
+            var type = ItemType.Grenade;
+
+            if (_inventoryStorage.TryTakeItem(type))
+            {
+                if (_useGrenadeCooldown)
+                {
+                    var config = (GrenadeConfig)_pickItemsConfig.GetConfig(type);
+
+                    _grenadesService.Spawn(_grenadePoint);
 
                     StartCoroutine(WaitMedkitUsing(config.UseWait));
                 }
@@ -353,6 +378,15 @@ namespace GameManagement
             yield return wait;
 
             _useMedkitCooldown = true;
+        }
+
+        private IEnumerator WaitGrenadeUsing(WaitForSeconds wait)
+        {
+            _useGrenadeCooldown = false;
+
+            yield return wait;
+
+            _useGrenadeCooldown = true;
         }
     }
 }
