@@ -56,6 +56,8 @@ namespace Gameplay
 
         private void Awake()
         {
+            ShowGameplayUI(false);
+
             _pickItemsSpawnConfig.Init();
             _pickableItemsService.Init(_pickItemsSpawnConfig);
             _grenadesService.Init(_pickItemsSpawnConfig);
@@ -78,6 +80,8 @@ namespace Gameplay
 
             if (isLocal)
             {
+                ShowGameplayUI(true);
+
                 _hpPresenter = new HPPresenter(_hpView, gamePlayer.Health);
                 _playerLifeResetPresenter.Init(gamePlayer);
                 _weaponPresenter.Init(gamePlayer.Weapon);
@@ -85,6 +89,15 @@ namespace Gameplay
                     _pickItemsSpawnConfig.ItemsSpawnData);
                 _localMessagesPresenter = new LocalMessagesPresenter(_localMessagesView, gamePlayer);
             }
+        }
+
+        public void ShowGameplayUI(bool isShow)
+        {
+            _hpView.gameObject.SetActive(isShow);
+
+            _weaponPresenter.ShowView(isShow);
+
+            _localMessagesView.gameObject.SetActive(isShow);
         }
     }
 }

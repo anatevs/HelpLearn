@@ -335,6 +335,8 @@ namespace GameManagement
                 if (sceneName == GameplayScene)
                 {
                     _gameInfoPanel.AddLog($"Match started!");
+
+                    InitGameplayDependencies();
                 }
             }
             else //in case for return to the RoomScene
@@ -353,15 +355,7 @@ namespace GameManagement
 
             if (Utils.IsSceneActive(GameplayScene))
             {
-                var sceneObjects = FindAnyObjectByType<PlayerSceneDependencies>(); //to Manager as public property with event of init and initing in OnServerSceneChanged or make in dpnds Awake() with injecting itself to mngr
-
-                if (sceneObjects == null)
-                {
-                    Debug.Log("no PlayerSceneDependencies object on a scene in OnClientSceneChanged()");
-                    return;
-                }
-
-                _playerSceneDependencies = sceneObjects;
+                InitGameplayDependencies();
             }
         }
 
@@ -532,6 +526,19 @@ namespace GameManagement
             }
 
             return false;
+        }
+
+        private void InitGameplayDependencies()
+        {
+            var sceneObjects = FindAnyObjectByType<PlayerSceneDependencies>(); //to Manager as public property with event of init and initing in OnServerSceneChanged or make in dpnds Awake() with injecting itself to mngr
+
+            if (sceneObjects == null)
+            {
+                Debug.Log("no PlayerSceneDependencies object on a scene in OnClientSceneChanged()");
+                return;
+            }
+
+            _playerSceneDependencies = sceneObjects;
         }
 
         public void RegisterGamePlayer(GamePlayer gamePlayer)

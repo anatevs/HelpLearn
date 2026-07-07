@@ -18,22 +18,22 @@ namespace UI
             _player = player;
             _view = view;
 
-            _player.OnInventoryUpdated += UpdateValue;
+            _player.OnInventoryNamedUpdeted += UpdateValue;
 
             foreach (var data in itemsData)
             {
-                _view.AddNewView(data.Config.Type, _initValue.ToString());
+                _view.AddNewView(data.Config.Name, _initValue.ToString());
             }
         }
 
         public void Dispose()
         {
-            _player.OnInventoryUpdated -= UpdateValue;
+            _player.OnInventoryNamedUpdeted -= UpdateValue;
         }
 
-        private void UpdateValue(ItemType type, int value)
+        private void UpdateValue(string itemName, int value)
         {
-            _view.SetValue(type, value.ToString());
+            _view.SetValue(itemName, value.ToString());
         }
     }
 }

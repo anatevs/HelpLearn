@@ -6,6 +6,8 @@ namespace Gameplay
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerMoveController : MonoBehaviour
     {
+        public PlayerMovingConfig Config => _config;
+
         [SerializeField]
         private PlayerMovingConfig _config;
 

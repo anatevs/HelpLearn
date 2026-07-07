@@ -64,6 +64,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncDirection: 0
   syncMode: 0
-  syncInterval: 0
-  _logView: {fileID: 0}
-  _playersCountText: {fileID: 0}
+  syncInterval: 0.1

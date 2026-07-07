@@ -12,6 +12,10 @@ namespace GameManagement
         public event Action<float> OnRespawnCooldownStarted;
         public event Action OnRespawnCooldownCompleted;
         public event Action<ItemType, int> OnInventoryUpdated;
+
+        public event Action<string, int> OnInventoryNamedUpdeted;
+
+
         public event Action<string, string> OnItemPicked;
         public event Action<string> OnAbsentItemTried;
 
@@ -46,6 +50,9 @@ namespace GameManagement
         [SerializeField]
         private Transform _grenadePoint;
 
+        [SerializeField]
+        private InventoryUser _inventoryUser;
+
         private CameraFollower _cameraFollower;
 
         private InputHandler _input;
@@ -57,15 +64,13 @@ namespace GameManagement
 
         private Vector3 _startPosition;
 
-        private bool _useMedkitCooldown = true;
-
-        private bool _useGrenadeCooldown = true;
-
         private PickItemsSpawnConfig _pickItemsConfig;
 
         private GrenadesService _grenadesService;
 
         private readonly InventoryStorage _inventoryStorage = new();
+
+        private bool _isRegistered = false;
 
         public bool Construct(CameraFollower cameraFollower,
             InputHandler input,
@@ -87,6 +92,8 @@ namespace GameManagement
 
                 _input.OnHealed += CmdHeal;
 
+                _input.OnBigHealed += CmdHealBig;
+
                 _input.OnGrenadeThrown += CmdThrowGrenade;
             }
 
@@ -95,6 +102,8 @@ namespace GameManagement
 
             _pickItemsConfig = pickItemsConfig;
             _grenadesService = grenadesService;
+
+            _inventoryUser.Init(_inventoryStorage, _pickItemsConfig);
 
             return isLocalPlayer;
         }
@@ -119,11 +128,21 @@ namespace GameManagement
             {
                 _input.OnShot -= HandleShoot;
                 _input.OnHealed -= CmdHeal;
+                _input.OnBigHealed -= CmdHealBig;
                 _input.OnGrenadeThrown -= CmdThrowGrenade;
             }
 
             _health.OnKilled -= HandleKill;
             _inventoryStorage.OnEmptyAccessed -= TargetTryUseAbsentItem;
+        }
+
+        private void Start()
+        {
+            if (NetworkManager.singleton is LobbyManager lobbyManager && !_isRegistered)
+            {
+                _isRegistered = true;
+                lobbyManager.RegisterGamePlayer(this);
+            }
         }
 
         public override void OnStartClient()
@@ -139,8 +158,9 @@ namespace GameManagement
                 _rigidbody.isKinematic = true;
             }
 
-            if (NetworkManager.singleton is LobbyManager lobbyManager)
+            if (NetworkManager.singleton is LobbyManager lobbyManager && !_isRegistered)
             {
+                _isRegistered = true;
                 lobbyManager.RegisterGamePlayer(this);
             }
         }
@@ -149,14 +169,16 @@ namespace GameManagement
         {
             base.OnStartServer();
 
-            _inventoryStorage.OnItemUpdated += TargetUpdateInventory;
+            //_inventoryStorage.OnItemUpdated += TargetUpdateInventory;
+            _inventoryStorage.OnItemNamedUpdated += TargetUpdateInventory;
         }
 
         public override void OnStopServer()
         {
             base.OnStopServer();
 
-            _inventoryStorage.OnItemUpdated -= TargetUpdateInventory;
+            //_inventoryStorage.OnItemUpdated -= TargetUpdateInventory;
+            _inventoryStorage.OnItemNamedUpdated -= TargetUpdateInventory;
         }
 
         private void Update()
@@ -226,6 +248,8 @@ namespace GameManagement
         [Server]
         private void HandleKill(float respawnTime)
         {
+            PrepareForSpawn();
+
             RpcHandleKill(respawnTime);
 
             StartCoroutine(ResetLifeCoroutine(respawnTime));
@@ -234,7 +258,7 @@ namespace GameManagement
         [ClientRpc]
         private void RpcHandleKill(float respawnTime)
         {
-            SetAlive(false);
+            PrepareForSpawn();
 
             if (isLocalPlayer)
             {
@@ -242,11 +266,16 @@ namespace GameManagement
             }
         }
 
+        private void PrepareForSpawn()
+        {
+            SetAlive(false);
+
+            transform.SetPositionAndRotation(_startPosition, Quaternion.identity);
+        }
+
         [ClientRpc]
         private void RpcRespawn()
         {
-            transform.SetPositionAndRotation(_startPosition, Quaternion.identity);
-
             SetAlive(true);
 
             if (isLocalPlayer)
@@ -260,6 +289,16 @@ namespace GameManagement
         {
             OnInventoryUpdated?.Invoke(type, count);
         }
+
+
+        [TargetRpc]
+        private void TargetUpdateInventory(string itemName, int count)
+        {
+            OnInventoryNamedUpdeted?.Invoke(itemName, count);
+        }
+
+
+
 
         [TargetRpc]
         private void TargetTryUseAbsentItem(string itemName)
@@ -277,12 +316,15 @@ namespace GameManagement
                 {
                     var sqrDistance = (transform.position - pickedItem.transform.position).sqrMagnitude;
 
-                    if (sqrDistance <= pickedItem.Config.PickSqrDistance)
+                    if (sqrDistance <= _playerMoveController.Config.PickItemSqrDistance)
                     {
-                        var itemType = pickedItem.Config.Type;
-                        _inventoryStorage.AddItem(itemType);
+                        //var itemType = pickedItem.Config.Type;
+                        //_inventoryStorage.AddItem(itemType);
 
-                        pickedItem.Pick();//make this as a method with [ClientRpc] or change item to ntworkbh
+                        var itemName = pickedItem.Config.Name;
+                        _inventoryStorage.AddItem(itemName);
+
+                        pickedItem.Pick();
 
                         OnItemPicked?.Invoke(Name, pickedItem.Config.Name);
                     }
@@ -304,38 +346,36 @@ namespace GameManagement
         [Command]
         private void CmdHeal()
         {
-            var type = ItemType.Medkit;
+            var medkitName = _pickItemsConfig.GetGroupData(ItemType.Medkit)[0].Config.Name;
 
-            if (_inventoryStorage.TryTakeItem(type))
+            _inventoryUser.UseItem(medkitName,
+                !_health.IsMaxHP,
+                (config) => _health.Heal(((MedkitConfig)config).HealValue));
+        }
+
+        [Command]
+        private void CmdHealBig()
+        {
+            var medkitList = _pickItemsConfig.GetGroupData(ItemType.Medkit);
+
+            if (medkitList.Count > 1)
             {
-                if (_useMedkitCooldown &&
-                    !_health.IsMaxHP)
-                {
-                    var config = (MedkitConfig)_pickItemsConfig.GetConfig(type);
+                var medkitName = medkitList[1].Config.Name;
 
-                    _health.Heal(config.HealValue);
-
-                    StartCoroutine(WaitMedkitUsing(config.UseWait));
-                }
+                _inventoryUser.UseItem(medkitName,
+                    !_health.IsMaxHP,
+                    (config) => _health.Heal(((MedkitConfig)config).HealValue));
             }
         }
 
         [Command]
         private void CmdThrowGrenade()
         {
-            var type = ItemType.Grenade;
+            var grenadeName = _pickItemsConfig.GetConfig(ItemType.Grenade).Name;
 
-            if (_inventoryStorage.TryTakeItem(type))
-            {
-                if (_useGrenadeCooldown)
-                {
-                    var config = (GrenadeConfig)_pickItemsConfig.GetConfig(type);
-
-                    _grenadesService.Spawn(_grenadePoint);
-
-                    StartCoroutine(WaitMedkitUsing(config.UseWait));
-                }
-            }
+            _inventoryUser.UseItem(grenadeName,
+                true,
+                (config) => _grenadesService.Spawn(_grenadePoint));
         }
 
         private void SetAlive(bool alive)
@@ -369,24 +409,6 @@ namespace GameManagement
             _health.ResetHP();
 
             RpcRespawn();
-        }
-
-        private IEnumerator WaitMedkitUsing(WaitForSeconds wait)
-        {
-            _useMedkitCooldown = false;
-
-            yield return wait;
-
-            _useMedkitCooldown = true;
-        }
-
-        private IEnumerator WaitGrenadeUsing(WaitForSeconds wait)
-        {
-            _useGrenadeCooldown = false;
-
-            yield return wait;
-
-            _useGrenadeCooldown = true;
         }
     }
 }

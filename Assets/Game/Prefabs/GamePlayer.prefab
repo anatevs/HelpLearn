@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 3703369904698632319}
   - component: {fileID: 7608945027577876819}
   - component: {fileID: 3775708334379216005}
+  - component: {fileID: 3440731149645313165}
   m_Layer: 7
   m_Name: GamePlayer
   m_TagString: Player
@@ -212,6 +213,7 @@ MonoBehaviour:
   _health: {fileID: 7608945027577876819}
   _weapon: {fileID: 3775708334379216005}
   _grenadePoint: {fileID: 3353491436028299748}
+  _inventoryUser: {fileID: 3440731149645313165}
 --- !u!54 &893555083348044801
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -357,6 +359,18 @@ MonoBehaviour:
   _shootPoint: {fileID: 4599295937856315994}
   _shootFlash: {fileID: 4971945760744848697}
   _weaponVisual: {fileID: 5036766887081565937}
+--- !u!114 &3440731149645313165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7057107610266177753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 951dd5218db45f84386cd651d91b89c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7365348775534514182
 GameObject:
   m_ObjectHideFlags: 0

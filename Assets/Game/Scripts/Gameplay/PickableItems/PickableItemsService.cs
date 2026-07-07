@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Mirror;
 
 namespace Gameplay
@@ -7,64 +6,94 @@ namespace Gameplay
     public class PickableItemsService : NetworkBehaviour
     {
         [SerializeField]
-        private ItemSpawnPoint _spawnPoint;
-
+        private ItemSpawnPoint[] _spawnPoints;
 
         [SerializeField]
         private Transform _pooledItems;
 
         private PickItemsSpawnConfig _spawnConfig;
 
-        private readonly Dictionary<ItemType, Queue<PickableItem>> _itemPools = new();
-
-        public void Start()
-        {
-            if (isServer)
-            {
-                Spawn(_spawnPoint.ItemType);
-            }
-        }
+        private ItemSpawnPointsStorage _spawnPointsStorage;
 
         public override void OnStartServer()
         {
             base.OnStartServer();
 
-            _spawnPoint.OnSpawnRequested += HandleRespawn;
+            _spawnPointsStorage = new ItemSpawnPointsStorage(_spawnPoints);
+
+            foreach (var type in _spawnConfig.Types)
+            {
+                var initCount = _spawnConfig.GetSpawnData(type).InitCount;
+
+                for (int i = 0; i < initCount; i++)
+                {
+                    Spawn(type);
+                }
+            }
         }
 
         public override void OnStopServer()
         {
             base.OnStopServer();
 
-            _spawnPoint.OnSpawnRequested -= HandleRespawn;
+            foreach (var point in _spawnPoints)
+            {
+                //point.OnSpawnRequested -= Spawn;
+                point.OnSpawnNameRequested -= Spawn;
+            }
+
+            _spawnPointsStorage.Dispose();
         }
+
 
         public void Init(PickItemsSpawnConfig pickItemsSpawnConfig)
         {
             _spawnConfig = pickItemsSpawnConfig;
 
-            var delay = _spawnConfig.GetSpawnData(_spawnPoint.ItemType).RespawnDelay;
+            foreach (var point in _spawnPoints)
+            {
+                var groupList = _spawnConfig.GetGroupData(point.ItemType);
 
-            _spawnPoint.Init(delay);
+                point.Init(groupList);
+
+                point.OnSpawnNameRequested += Spawn;
+            }
 
             foreach (var data in _spawnConfig.ItemsSpawnData)
             {
                 NetworkClient.RegisterPrefab(data.Config.PickablePrefab.gameObject);
-
-                _itemPools.Add(data.Config.Type, new Queue<PickableItem>());
             }
         }
 
         [Server]
-        public PickableItem Spawn(ItemType type)
+        private void Spawn(ItemType type)
         {
             var itemConfig = _spawnConfig.GetConfig(type);
 
+            SpawnItem(itemConfig);
+        }
+
+
+        [Server]
+        public void Spawn(string itemName)
+        {
+            var itemConfig = _spawnConfig.GetConfig(itemName);
+
+            SpawnItem(itemConfig);
+        }
+
+        private void SpawnItem(ItemConfig itemConfig)
+        {
             PickableItem item = Instantiate(itemConfig.PickablePrefab);
 
             item.Init(itemConfig);
 
-            _spawnPoint.SetItemToPoint(item);
+            if (!_spawnPointsStorage.TryGetRandomPoint(itemConfig.Type, out var spawnPoint))
+            {
+                return;
+            }
+
+            spawnPoint.SetItemToPoint(item);
 
             item.transform.SetParent(transform);
 
@@ -73,8 +102,6 @@ namespace Gameplay
             NetworkServer.Spawn(item.gameObject);
 
             item.OnPicked += Unspawn;
-
-            return item;
         }
 
         [Server]
@@ -83,12 +110,8 @@ namespace Gameplay
             item.OnPicked -= Unspawn;
             item.gameObject.SetActive(false);
             item.transform.SetParent(_pooledItems, false);
-            NetworkServer.Destroy(item.gameObject);
-        }
 
-        private void HandleRespawn(ItemType type)
-        {
-            Spawn(type);
+            NetworkServer.Destroy(item.gameObject);
         }
     }
 }

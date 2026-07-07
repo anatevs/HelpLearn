@@ -39,6 +39,11 @@ namespace UI
             }
         }
 
+        public void ShowView(bool isShow)
+        {
+            _view.gameObject.SetActive(isShow);
+        }
+
         private void HandleChargeSet(int charge)
         {
             _view.SetCharge(charge.ToString());

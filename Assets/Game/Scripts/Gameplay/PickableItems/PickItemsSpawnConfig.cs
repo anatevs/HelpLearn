@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Gameplay
@@ -9,6 +10,8 @@ namespace Gameplay
     public class PickItemsSpawnConfig : ScriptableObject
     {
         public ItemSpawnData[] ItemsSpawnData => _itemsSpawnData;
+
+        public ItemType[] Types => _dataDict.Keys.ToArray();
 
         [SerializeField]
         private ItemSpawnData[] _itemsSpawnData;
@@ -105,11 +108,7 @@ namespace Gameplay
         [SerializeField]
         public float RespawnDelay;
 
-        public ItemSpawnData(ItemConfig config, int count, float delay)
-        {
-            Config = config;
-            InitCount = count;
-            RespawnDelay = delay;
-        }
+        [SerializeField]
+        public float SpawnWeightRate;
     }
 }

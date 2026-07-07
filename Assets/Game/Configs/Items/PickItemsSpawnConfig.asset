@@ -16,6 +16,12 @@ MonoBehaviour:
   - Config: {fileID: 11400000, guid: 7e1e68c69998533429d570ded5de8203, type: 2}
     InitCount: 3
     RespawnDelay: 4
+    SpawnWeightRate: 1
   - Config: {fileID: 11400000, guid: d23d7d06db09a91418e7ac302e8e7f09, type: 2}
-    InitCount: 3
+    InitCount: 1
     RespawnDelay: 6
+    SpawnWeightRate: 1
+  - Config: {fileID: 11400000, guid: 1698a059acdc9584d9366f6b67689df6, type: 2}
+    InitCount: 0
+    RespawnDelay: 6
+    SpawnWeightRate: 0.2

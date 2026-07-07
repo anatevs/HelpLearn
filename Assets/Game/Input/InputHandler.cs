@@ -12,6 +12,8 @@ namespace Assets.Input
 
         public event Action OnHealed;
 
+        public event Action OnBigHealed;
+
         public event Action OnGrenadeThrown;
 
         public Vector3 Move => _move;
@@ -49,6 +51,8 @@ namespace Assets.Input
             _inputActions.Game.ShootGrenade.performed += HandleGrenade;
 
             _inputActions.Game.Heal.performed += HandleHeal;
+
+            _inputActions.Game.HealBig.performed += HandleHealBig;
         }
 
         private void OnDisable()
@@ -60,6 +64,8 @@ namespace Assets.Input
             _inputActions.Game.ShootGrenade.performed -= HandleGrenade;
 
             _inputActions.Game.Heal.performed -= HandleHeal;
+
+            _inputActions.Game.HealBig.performed -= HandleHealBig;
 
             _inputActions.Disable();
         }
@@ -92,6 +98,11 @@ namespace Assets.Input
         private void HandleHeal(InputAction.CallbackContext context)
         {
             OnHealed?.Invoke();
+        }
+
+        private void HandleHealBig(InputAction.CallbackContext context)
+        {
+            OnBigHealed?.Invoke();
         }
 
         private void HandleGrenade(InputAction.CallbackContext context)

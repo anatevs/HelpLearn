@@ -6,9 +6,7 @@ namespace Gameplay
     {
         public abstract ItemType Type { get; }
         public string Name => _name;
-        public float PickSqrDistance => _pickSqrDistance;
         public PickableItem PickablePrefab => _pickablePrefab;
-        public float UseDelay => _useDelay;
         public WaitForSeconds UseWait => new WaitForSeconds(_useDelay);
 
         [SerializeField]
@@ -16,9 +14,6 @@ namespace Gameplay
 
         [SerializeField]
         private PickableItem _pickablePrefab;
-
-        [SerializeField]
-        private float _pickSqrDistance;
 
         [SerializeField]
         private float _useDelay;

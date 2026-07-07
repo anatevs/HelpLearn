@@ -14,6 +14,8 @@ namespace Gameplay
         public float JumpSpeed => _jumpSpeed;
         public int MaxJumps => _maxJumps;
 
+        public float PickItemSqrDistance => _pickItemSqrDistance;
+
         [SerializeField]
         private LayerMask _groundedLayers;
 
@@ -32,6 +34,7 @@ namespace Gameplay
         [SerializeField]
         private int _maxJumps = 1;
 
-
+        [SerializeField]
+        private float _pickItemSqrDistance = 16f;
     }
 }

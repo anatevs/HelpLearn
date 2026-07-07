@@ -11,36 +11,38 @@ namespace UI
 
         private Dictionary<ItemType, InventoryStat> _views = new();
 
-        public void AddNewView(ItemType type, string value)
+        private Dictionary<string, InventoryStat> _viewsNamed = new();
+
+        public void AddNewView(string itemName, string value)
         {
-            if (_views.ContainsKey(type))
+            if (_viewsNamed.ContainsKey(itemName))
             {
-                Debug.LogError($"there is also inventory view with type {type}");
+                Debug.LogError($"there is also inventory view with type {itemName}");
                 return;
             }
 
             var view = Instantiate(_viewPrefab, transform);
 
-            SetTitle(view, type);
+            SetTitle(view, itemName);
             view.SetValue(value);
 
-            _views.Add(type, view);
+            _viewsNamed.Add(itemName, view);
         }
 
-        public void SetValue(ItemType type, string newValue)
+        public void SetValue(string itemName, string newValue)
         {
-            if (!_views.ContainsKey(type))
+            if (!_viewsNamed.ContainsKey(itemName))
             {
-                Debug.LogError($"no inventory view for {type}");
+                Debug.LogError($"no inventory view for {itemName}");
                 return;
             }
 
-            _views[type].SetValue(newValue);
+            _viewsNamed[itemName].SetValue(newValue);
         }
 
-        private void SetTitle(InventoryStat view, ItemType type)
+        private void SetTitle(InventoryStat view, string itemName)
         {
-            view.SetTitle($"{type}:");
+            view.SetTitle($"{itemName}:");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
@@ -8,18 +9,33 @@ namespace Gameplay
     {
         public event Action<ItemType> OnSpawnRequested;
 
-        public ItemType ItemType => _itemConfig.Type;
+        public event Action<string> OnSpawnNameRequested;
+
+        public event Action<ItemSpawnPoint> OnItemPicked;
+
+        public ItemType ItemType => _itemType;
 
         [SerializeField]
-        private ItemConfig _itemConfig;
+        private ItemType _itemType;
 
-        private float _respawnDelay;
+        private List<ItemSpawnData> _groupItemData;
 
-        public void Init(float respawnDelay)
+        private float[] _groupWeights;
+
+        private WaitForSeconds _respawnWait;
+
+        public void Init(List<ItemSpawnData> groupItemData)
         {
-            _respawnDelay = respawnDelay;
+            _groupItemData = groupItemData;
 
-            var rand = UnityEngine.Random.Range(0f, 1f);
+            _respawnWait = new WaitForSeconds(groupItemData[0].RespawnDelay);
+
+            _groupWeights = new float[groupItemData.Count];
+
+            for (int i = 0; i < groupItemData.Count; i++)
+            {
+                _groupWeights[i] = groupItemData[i].SpawnWeightRate;
+            }
         }
 
         public void SetItemToPoint(PickableItem item)
@@ -31,15 +47,22 @@ namespace Gameplay
 
         private IEnumerator SpawnItemsCoroutine()
         {
-            var timer = 0f;
+            yield return _respawnWait;
 
-            while (timer < _respawnDelay)
+            if (_groupWeights.Length == 1)
             {
-                timer += Time.deltaTime;
-                yield return null;
-            }
+                OnSpawnRequested?.Invoke(_itemType);
 
-            OnSpawnRequested?.Invoke(_itemConfig.Type);
+                Debug.Log($"ordinary point spawn request for {_itemType}");
+            }
+            else if (_groupWeights.Length > 1)
+            {
+                var index = GetRandomItemIndex(_groupWeights);
+
+                var itemName = _groupItemData[index].Config.Name;
+
+                OnSpawnNameRequested?.Invoke(itemName);
+            }
         }
 
         private void PickItem(PickableItem item)
@@ -47,35 +70,32 @@ namespace Gameplay
             if (item != null)
             {
                 item.OnPicked -= PickItem;
+                OnItemPicked?.Invoke(this);
             }
 
             StartCoroutine(SpawnItemsCoroutine());
         }
 
-
-
-
-        
-
-        int GetRandomItemIndex(float[] itemWeights)
+        private int GetRandomItemIndex(float[] itemWeights)
         {
             float totalWeight = CalculateTotalWeight(itemWeights);
-            float randomPoint = UnityEngine.Random.Range(0, totalWeight);
+            float randomValue = UnityEngine.Random.Range(0, totalWeight);
 
             for (int i = 0; i < itemWeights.Length; i++)
             {
-                if (randomPoint < itemWeights[i])
+                if (randomValue < itemWeights[i])
                 {
                     return i;
                 }
-                randomPoint -= itemWeights[i];
+                randomValue -= itemWeights[i];
             }
             return 0;
         }
 
-        float CalculateTotalWeight(float[] itemWeights)
+        private float CalculateTotalWeight(float[] itemWeights)
         {
             float total = 0;
+
             foreach (float weight in itemWeights)
             {
                 total += weight;

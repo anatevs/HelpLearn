@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 80849cee8fa1f9a46bc85d3ae448da72, type: 3}
-  m_Name: MedkitConfig
+  m_Name: MedkitBigConfig
   m_EditorClassIdentifier: 
-  _name: Medkit
-  _pickablePrefab: {fileID: 2515627260792691352, guid: 75cc04414fc29394988c7b3ed32eda47, type: 3}
-  _pickSqrDistance: 16
-  _useDelay: 5
-  _healValue: 2
+  _name: MedkitBig
+  _pickablePrefab: {fileID: 3683635387714379181, guid: 050f64531fe78eb4fa04fa5b7acd469e, type: 3}
+  _useDelay: 10
+  _healValue: 5

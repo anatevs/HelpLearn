@@ -172,6 +172,15 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HealBig"",
+                    ""type"": ""Button"",
+                    ""id"": ""ee8e9fea-e99a-4829-b047-7155c20b818b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -372,6 +381,17 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""action"": ""Heal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""776e9e60-4320-462c-9d84-e61146a62763"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HealBig"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -406,6 +426,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_Game_Shoot = m_Game.FindAction("Shoot", throwIfNotFound: true);
         m_Game_ShootGrenade = m_Game.FindAction("ShootGrenade", throwIfNotFound: true);
         m_Game_Heal = m_Game.FindAction("Heal", throwIfNotFound: true);
+        m_Game_HealBig = m_Game.FindAction("HealBig", throwIfNotFound: true);
     }
 
     ~@PlayerActions()
@@ -495,6 +516,7 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Shoot;
     private readonly InputAction m_Game_ShootGrenade;
     private readonly InputAction m_Game_Heal;
+    private readonly InputAction m_Game_HealBig;
     /// <summary>
     /// Provides access to input actions defined in input action map "Game".
     /// </summary>
@@ -542,6 +564,10 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Game/Heal".
         /// </summary>
         public InputAction @Heal => m_Wrapper.m_Game_Heal;
+        /// <summary>
+        /// Provides access to the underlying input action "Game/HealBig".
+        /// </summary>
+        public InputAction @HealBig => m_Wrapper.m_Game_HealBig;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -595,6 +621,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Heal.started += instance.OnHeal;
             @Heal.performed += instance.OnHeal;
             @Heal.canceled += instance.OnHeal;
+            @HealBig.started += instance.OnHealBig;
+            @HealBig.performed += instance.OnHealBig;
+            @HealBig.canceled += instance.OnHealBig;
         }
 
         /// <summary>
@@ -633,6 +662,9 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @Heal.started -= instance.OnHeal;
             @Heal.performed -= instance.OnHeal;
             @Heal.canceled -= instance.OnHeal;
+            @HealBig.started -= instance.OnHealBig;
+            @HealBig.performed -= instance.OnHealBig;
+            @HealBig.canceled -= instance.OnHealBig;
         }
 
         /// <summary>
@@ -749,5 +781,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnHeal(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "HealBig" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnHealBig(InputAction.CallbackContext context);
     }
 }

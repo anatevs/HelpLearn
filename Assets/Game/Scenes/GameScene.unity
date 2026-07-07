@@ -409,7 +409,13 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  _spawnPoint: {fileID: 1941432873}
+  _spawnPoints:
+  - {fileID: 1423791676}
+  - {fileID: 1941432873}
+  - {fileID: 324442341}
+  - {fileID: 1261312756}
+  - {fileID: 691130246}
+  - {fileID: 1011587409}
   _pooledItems: {fileID: 458555094}
 --- !u!1 &85310390
 GameObject:
@@ -919,6 +925,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 324442340}
+  - component: {fileID: 324442341}
   m_Layer: 0
   m_Name: PickPoint (2)
   m_TagString: Untagged
@@ -941,6 +948,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1864318938}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &324442341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324442339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61a75ea3b6f4cdc45bedaa0149cf114f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemType: 1
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1821,6 +1841,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 691130245}
+  - component: {fileID: 691130246}
   m_Layer: 0
   m_Name: PickPoint (4)
   m_TagString: Untagged
@@ -1843,6 +1864,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1864318938}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &691130246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691130244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61a75ea3b6f4cdc45bedaa0149cf114f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemType: 0
 --- !u!1 &702450058
 GameObject:
   m_ObjectHideFlags: 0
@@ -3020,6 +3054,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1011587408}
+  - component: {fileID: 1011587409}
   m_Layer: 0
   m_Name: PickPoint (5)
   m_TagString: Untagged
@@ -3042,6 +3077,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1864318938}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1011587409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011587407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61a75ea3b6f4cdc45bedaa0149cf114f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemType: 0
 --- !u!1 &1097768875
 GameObject:
   m_ObjectHideFlags: 0
@@ -3384,6 +3432,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1261312755}
+  - component: {fileID: 1261312756}
   m_Layer: 0
   m_Name: PickPoint (3)
   m_TagString: Untagged
@@ -3406,6 +3455,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1864318938}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1261312756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261312754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61a75ea3b6f4cdc45bedaa0149cf114f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _itemType: 1
 --- !u!1 &1284273590
 GameObject:
   m_ObjectHideFlags: 0
@@ -3999,7 +4061,7 @@ Transform:
   m_GameObject: {fileID: 1423791674}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.6, y: 0, z: 6.7}
+  m_LocalPosition: {x: 17.9, y: 0, z: -20.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4017,7 +4079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61a75ea3b6f4cdc45bedaa0149cf114f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemConfig: {fileID: 11400000, guid: 7e1e68c69998533429d570ded5de8203, type: 2}
+  _itemType: 0
 --- !u!1 &1438368871
 GameObject:
   m_ObjectHideFlags: 0
@@ -4866,7 +4928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61a75ea3b6f4cdc45bedaa0149cf114f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _itemConfig: {fileID: 11400000, guid: d23d7d06db09a91418e7ac302e8e7f09, type: 2}
+  _itemType: 1
 --- !u!1 &1945727982
 GameObject:
   m_ObjectHideFlags: 0

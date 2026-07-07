@@ -53,21 +53,39 @@ namespace UI
             }
 
             _logText = logText;
+
+            if (isServer)
+            {
+                ShowLogText(_logText);
+            }
         }
 
         public void SetPlayersCount(int count)
         {
             _playersCount = count;
+
+            if (isServer)
+            {
+                ShowPlayersCount(_playersCount);
+            }
         }
 
         private void HookAddLog(string oldAdd, string newAdd)
         {
+            if (isServer)
+            {
+                return;
+            }
+
             ShowLogText(newAdd);
         }
 
         private void HookPlayersCount(int oldCount, int newCount)
         {
-            ShowPlayersCount(newCount);
+            if (!isServer)
+            {
+                ShowPlayersCount(newCount);
+            }
         }
 
         private void ShowLogText(string text)
