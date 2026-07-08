@@ -25,7 +25,7 @@ namespace Gameplay
         }
 
         [Server]
-        public void Spawn(Transform throwPoint)
+        public void Spawn(Transform throwPoint, string throwerName)
         {
             Grenade grenade = Instantiate(_grenadePrefab, throwPoint.position, throwPoint.rotation, transform);
 
@@ -35,7 +35,7 @@ namespace Gameplay
 
             grenade.OnExploded += Unspawn;
 
-            grenade.Throw();
+            grenade.Throw(throwerName);
         }
 
         [Server]

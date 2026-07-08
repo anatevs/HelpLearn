@@ -9,13 +9,11 @@ namespace GameManagement
 {
     public class GamePlayer : NetworkBehaviour
     {
+        public event Action<GamePlayer, string> OnKilled;
+
         public event Action<float> OnRespawnCooldownStarted;
         public event Action OnRespawnCooldownCompleted;
-        public event Action<ItemType, int> OnInventoryUpdated;
-
         public event Action<string, int> OnInventoryNamedUpdeted;
-
-
         public event Action<string, string> OnItemPicked;
         public event Action<string> OnAbsentItemTried;
 
@@ -70,8 +68,6 @@ namespace GameManagement
 
         private readonly InventoryStorage _inventoryStorage = new();
 
-        private bool _isRegistered = false;
-
         public bool Construct(CameraFollower cameraFollower,
             InputHandler input,
             WeaponTracerShower weaponTracerShower,
@@ -98,7 +94,7 @@ namespace GameManagement
             }
 
             _weaponTracerShower = weaponTracerShower;
-            _weapon.Init(_weaponTracerShower);
+            _weapon.Init(_weaponTracerShower, Name);
 
             _pickItemsConfig = pickItemsConfig;
             _grenadesService = grenadesService;
@@ -138,9 +134,8 @@ namespace GameManagement
 
         private void Start()
         {
-            if (NetworkManager.singleton is LobbyManager lobbyManager && !_isRegistered)
+            if (NetworkManager.singleton is LobbyManager lobbyManager)
             {
-                _isRegistered = true;
                 lobbyManager.RegisterGamePlayer(this);
             }
         }
@@ -157,19 +152,12 @@ namespace GameManagement
             {
                 _rigidbody.isKinematic = true;
             }
-
-            if (NetworkManager.singleton is LobbyManager lobbyManager && !_isRegistered)
-            {
-                _isRegistered = true;
-                lobbyManager.RegisterGamePlayer(this);
-            }
         }
 
         public override void OnStartServer()
         {
             base.OnStartServer();
 
-            //_inventoryStorage.OnItemUpdated += TargetUpdateInventory;
             _inventoryStorage.OnItemNamedUpdated += TargetUpdateInventory;
         }
 
@@ -177,7 +165,6 @@ namespace GameManagement
         {
             base.OnStopServer();
 
-            //_inventoryStorage.OnItemUpdated -= TargetUpdateInventory;
             _inventoryStorage.OnItemNamedUpdated -= TargetUpdateInventory;
         }
 
@@ -246,13 +233,15 @@ namespace GameManagement
         }
 
         [Server]
-        private void HandleKill(float respawnTime)
+        private void HandleKill(float respawnTime, string killerName)
         {
             PrepareForSpawn();
 
             RpcHandleKill(respawnTime);
 
             StartCoroutine(ResetLifeCoroutine(respawnTime));
+
+            OnKilled?.Invoke(this, killerName);
         }
 
         [ClientRpc]
@@ -285,20 +274,10 @@ namespace GameManagement
         }
 
         [TargetRpc]
-        private void TargetUpdateInventory(ItemType type, int count)
-        {
-            OnInventoryUpdated?.Invoke(type, count);
-        }
-
-
-        [TargetRpc]
         private void TargetUpdateInventory(string itemName, int count)
         {
             OnInventoryNamedUpdeted?.Invoke(itemName, count);
         }
-
-
-
 
         [TargetRpc]
         private void TargetTryUseAbsentItem(string itemName)
@@ -318,9 +297,6 @@ namespace GameManagement
 
                     if (sqrDistance <= _playerMoveController.Config.PickItemSqrDistance)
                     {
-                        //var itemType = pickedItem.Config.Type;
-                        //_inventoryStorage.AddItem(itemType);
-
                         var itemName = pickedItem.Config.Name;
                         _inventoryStorage.AddItem(itemName);
 
@@ -375,7 +351,7 @@ namespace GameManagement
 
             _inventoryUser.UseItem(grenadeName,
                 true,
-                (config) => _grenadesService.Spawn(_grenadePoint));
+                (config) => _grenadesService.Spawn(_grenadePoint, Name));
         }
 
         private void SetAlive(bool alive)

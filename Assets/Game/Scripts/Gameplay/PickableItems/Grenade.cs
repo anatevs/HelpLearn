@@ -16,6 +16,8 @@ namespace Gameplay
         [SerializeField]
         private ParticleSystem _explosionVFX;
 
+        private string _currentThrower;
+
         private GrenadeConfig _config;
 
         private Rigidbody _rigidbody;
@@ -58,7 +60,7 @@ namespace Gameplay
         }
 
         [Server]
-        public void Throw()
+        public void Throw(string throwerName)
         {
             _grenadeVisual.SetActive(true);
 
@@ -67,6 +69,8 @@ namespace Gameplay
             _rigidbody.AddForce(_config.ThrowSpeed * transform.forward, ForceMode.Impulse);
 
             StartCoroutine(WaitExplosionCoroutine());
+
+            _currentThrower = throwerName;
         }
 
         [Server]
@@ -96,7 +100,7 @@ namespace Gameplay
             {
                 if (_damagedColliders[i].TryGetComponent<Health>(out var health))
                 {
-                    health.TakeDamage(_config.Damage);
+                    health.TakeDamage(_config.Damage, _currentThrower);
                 }
             }
         }

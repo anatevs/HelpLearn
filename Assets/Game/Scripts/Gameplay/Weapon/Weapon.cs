@@ -14,8 +14,6 @@ namespace Gameplay
 
         public Vector3 ShootPoint => _shootPoint.position;
 
-        public string Name => _config.Name;
-
         public WeaponConfig Config => _config;
 
         public int CurrentCharge => _currentCharge;
@@ -37,6 +35,8 @@ namespace Gameplay
 
         private WeaponTracerShower _tracerShower;
 
+        private string _ownerName;
+
         private bool _isCooldowning = false;
 
         private bool CanShoot => !_isCooldowning && _currentCharge > 0;
@@ -55,9 +55,10 @@ namespace Gameplay
             ChangeCharge(_config.Charge);
         }
 
-        public void Init(WeaponTracerShower tracerShower)
+        public void Init(WeaponTracerShower tracerShower, string ownerName)
         {
             _tracerShower = tracerShower;
+            _ownerName = ownerName;
         }
 
         public void ShowVisual(bool isShow)
@@ -92,13 +93,13 @@ namespace Gameplay
                 {
                     if (hit.collider.gameObject.TryGetComponent<Health>(out var hp))
                     {
-                        hp.TakeDamage(_config.Damage);
+                        hp.TakeDamage(_config.Damage, _ownerName);
 
                         StartCoroutine(Cooldown());
 
                         var endPoint = hit.point;
 
-                        _tracerShower.ShowTrace(_shootPoint.position, endPoint, Name);
+                        _tracerShower.ShowTrace(_shootPoint.position, endPoint, _config.Name);
                     }
                 }
             }

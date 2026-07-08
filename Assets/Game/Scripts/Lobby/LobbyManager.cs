@@ -25,6 +25,8 @@ namespace GameManagement
 
         public GameInfoPanel GameInfoPanel => _gameInfoPanel;
 
+        public MatchConfig MatchConfig => _matchConfig;
+
         [SerializeField]
         private LobbyHUDPresenter _lobbyHudPresenter;
 
@@ -33,6 +35,9 @@ namespace GameManagement
 
         [SerializeField]
         private MultiplayerSettingsConfig _settingsConfig;
+
+        [SerializeField]
+        private MatchConfig _matchConfig;
 
         [SerializeField]
         [Tooltip("Prefab to use for the Room Player")]
@@ -47,6 +52,9 @@ namespace GameManagement
         private GameInfoPanel _gameInfoPanel;
 
         private PlayerSceneDependencies _playerSceneDependencies;
+
+        private LeaderboardStorage _leaderboardStorage;
+        private LeaderboardController _leaderboardController;
 
         [Header("Scenes")]
         /// <summary>
@@ -91,6 +99,16 @@ namespace GameManagement
             base.Awake();
 
             _settingsPresenter.Init(_settingsConfig);
+
+            _leaderboardStorage = new LeaderboardStorage(_matchConfig.KillToScoreCoef);
+            _leaderboardController = new LeaderboardController(_leaderboardStorage);
+        }
+
+        public override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            _leaderboardController.Dispose();
         }
 
         public void RegisterInfoPanel(GameInfoPanel panel)
@@ -170,7 +188,7 @@ namespace GameManagement
         {
             if (Utils.IsSceneActive(RoomScene) && _lobbyPlayers.Count < _settingsConfig.MaxPlayers)
             {
-                ChangeEnoghReady(false);
+                ChangeEnoughReady(false);
 
                 var lobbyPlayer = Instantiate(_lobbyPlayerPrefab, Vector3.zero, Quaternion.identity);
 
@@ -314,7 +332,7 @@ namespace GameManagement
                     }
                 }
 
-                ChangeEnoghReady(false);
+                ChangeEnoughReady(false);
             }
 
             base.ServerChangeScene(newSceneName);
@@ -429,7 +447,7 @@ namespace GameManagement
             if (currentPlayers == readyPlayers)
                 CheckReadyToBegin();
             else
-                ChangeEnoghReady(false);
+                ChangeEnoughReady(false);
         }
 
         public void CheckReadyToBegin()
@@ -447,7 +465,7 @@ namespace GameManagement
                 numberOfReadyPlayers >= _settingsConfig.MinPlayers
                 && numberOfReadyPlayers <= _settingsConfig.MaxPlayers;
 
-            ChangeEnoghReady(enoughReadyPlayers);
+            ChangeEnoughReady(enoughReadyPlayers);
 
             if (enoughReadyPlayers)
             {
@@ -455,7 +473,7 @@ namespace GameManagement
             }
         }
 
-        private void ChangeEnoghReady(bool isEnoghReady)
+        private void ChangeEnoughReady(bool isEnoghReady)
         {
             if (isEnoghReady)
             {
@@ -493,19 +511,23 @@ namespace GameManagement
 
             Transform startPos = GetStartPosition();
 
-            GameObject gamePlayer = startPos != null
+            GameObject player = startPos != null
                 ? Instantiate(playerPrefab, startPos.position, startPos.rotation)
                 : Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
 
-            if (!OnRoomServerSceneLoadedForPlayer(roomPlayer, gamePlayer))
+            if (!OnRoomServerSceneLoadedForPlayer(roomPlayer, player))
             {
                 Debug.Log("not onroomserve...");
                 return;
             }
 
-            NetworkServer.ReplacePlayerForConnection(conn, gamePlayer, ReplacePlayerOptions.KeepAuthority);
+            NetworkServer.ReplacePlayerForConnection(conn, player, ReplacePlayerOptions.KeepAuthority);
 
-            _gamePlayers.Add(gamePlayer.GetComponent<GamePlayer>());
+            var gamePlayer = player.GetComponent<GamePlayer>();
+
+            _gamePlayers.Add(gamePlayer);
+
+            _leaderboardController.AddPlayer(gamePlayer);
         }
 
         public bool OnRoomServerSceneLoadedForPlayer(GameObject roomPlayer, GameObject gamePlayer)

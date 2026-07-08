@@ -8,7 +8,7 @@ namespace Gameplay
     {
         public event Action<int, int> OnHealthChange;
 
-        public event Action<float> OnKilled;
+        public event Action<float, string> OnKilled;
 
         public int HP => _hp;
         public bool IsMaxHP => _hp == _healthConfig.MaxHP;
@@ -34,7 +34,7 @@ namespace Gameplay
         }
 
         [Server]
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, string killerName)
         {
             ChangeHP(-damage);
 
@@ -42,7 +42,7 @@ namespace Gameplay
             {
                 var respawnTime = (float)NetworkTime.time + _healthConfig.RespawnDelay;
 
-                OnKilled?.Invoke(respawnTime);
+                OnKilled?.Invoke(respawnTime, killerName);
             }
         }
 
