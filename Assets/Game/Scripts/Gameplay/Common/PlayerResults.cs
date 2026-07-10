@@ -2,7 +2,7 @@
 {
     public class PlayerResults
     {
-        public PlayerResultsData Results => _data;
+        public PlayerResultsData Data => _data;
 
         private PlayerResultsData _data = new("", 0, 0, 0);
 
@@ -12,13 +12,6 @@
         {
             _data.Name = playerName;
             _killToScoreCoef = killToScoreCoef;
-        }
-
-        public void ResetDataForPlayer()
-        {
-            _data.Deaths = 0;
-            _data.Kills = 0;
-            _data.Score = 0;
         }
 
         public void AddKills(int value)

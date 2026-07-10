@@ -45,6 +45,13 @@ namespace Gameplay
             }
         }
 
+        public void Clear()
+        {
+            _dataDict.Clear();
+            _itemsGroupData.Clear();
+            _itemNameData.Clear();
+        }
+
         public ItemConfig GetConfig(ItemType type)
         {
             if (!_dataDict.ContainsKey(type))

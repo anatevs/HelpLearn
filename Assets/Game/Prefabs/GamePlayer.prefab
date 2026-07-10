@@ -203,7 +203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncDirection: 1
   syncMode: 0
-  syncInterval: 0
+  syncInterval: 0.05
   Name: Name0
   Color: {r: 1, g: 1, b: 1, a: 1}
   _playerVisual: {fileID: 8175257087871602367}

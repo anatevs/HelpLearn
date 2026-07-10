@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3ec98d9f8b2d064e8e6598a20eac930, type: 3}
   m_Name: MatchConfig
   m_EditorClassIdentifier: 
-  _matchTimeSeconds: 300
+  _matchTimeSeconds: 60
   _killToScoreCoef: 100

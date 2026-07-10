@@ -26,12 +26,9 @@ namespace Gameplay
             _playersResults.Remove(playerName);
         }
 
-        public void ResetData()
+        public void Clear()
         {
-            foreach (var player in _playersResults.Values)
-            {
-                player.ResetDataForPlayer();
-            }
+            _playersResults.Clear();
         }
 
         public void AddKills(string playerName, int value)
@@ -44,12 +41,14 @@ namespace Gameplay
             _playersResults[playerName].AddDeaths(value);
         }
 
-        public IEnumerable<PlayerResults> GetResults()
+        public List<PlayerResultsData> GetResultData()
         {
             return _playersResults.Values
-                .OrderByDescending(x => x.Results.Score)
-                .ThenBy(x => x.Results.Deaths)
-                .ThenBy(x => x.Results.Name);
+                .OrderByDescending(x => x.Data.Score)
+                .ThenBy(x => x.Data.Deaths)
+                .ThenBy(x => x.Data.Name)
+                .Select(x => x.Data)
+                .ToList();
         }
     }
 }

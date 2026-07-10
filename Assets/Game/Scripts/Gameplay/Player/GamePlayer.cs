@@ -134,31 +134,29 @@ namespace GameManagement
 
         private void Start()
         {
+            SetReady();
+
             if (NetworkManager.singleton is LobbyManager lobbyManager)
             {
                 lobbyManager.RegisterGamePlayer(this);
             }
-        }
 
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-
-            _playerVisual.SetName(Name);
-
-            _playerVisual.SetColor(Color);
-
-            if (!isLocalPlayer)
+            if (isServer)
             {
-                _rigidbody.isKinematic = true;
+                _inventoryStorage.OnItemNamedUpdated += TargetUpdateInventory;
             }
-        }
 
-        public override void OnStartServer()
-        {
-            base.OnStartServer();
+            if (isClient)
+            {
+                _playerVisual.SetName(Name);
 
-            _inventoryStorage.OnItemNamedUpdated += TargetUpdateInventory;
+                _playerVisual.SetColor(Color);
+
+                if (!isLocalPlayer)
+                {
+                    _rigidbody.isKinematic = true;
+                }
+            }
         }
 
         public override void OnStopServer()
@@ -212,6 +210,17 @@ namespace GameManagement
             }
         }
 
+        public void SetReady()
+        {
+            if (!NetworkClient.ready)
+            {
+                if (NetworkClient.connection != null)
+                {
+                    NetworkClient.Ready();
+                }
+            }
+        }
+
         private void SetName(string oldName, string newName)
         {
             _playerVisual.SetName(newName);
@@ -262,8 +271,31 @@ namespace GameManagement
             transform.SetPositionAndRotation(_startPosition, Quaternion.identity);
         }
 
+        [Server]
+        private void Respawn()
+        {
+            RespawnLogic();
+
+            RpcRespawn();
+        }
+
         [ClientRpc]
         private void RpcRespawn()
+        {
+            if (isServer)
+            {
+                return;
+            }
+
+            SetAlive(true);
+
+            if (isLocalPlayer)
+            {
+                OnRespawnCooldownCompleted?.Invoke();
+            }
+        }
+
+        private void RespawnLogic()
         {
             SetAlive(true);
 
@@ -306,7 +338,7 @@ namespace GameManagement
                     }
                     else
                     {
-                        Debug.Log("try to pick item farther then pick distance");
+                        Debug.Log($"try to pick item farther ({sqrDistance}) then pick distance ({_playerMoveController.Config.PickItemSqrDistance})");
                     }
                 }
                 else
@@ -384,7 +416,7 @@ namespace GameManagement
 
             _health.ResetHP();
 
-            RpcRespawn();
+            Respawn();
         }
     }
 }

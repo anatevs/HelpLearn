@@ -1,6 +1,9 @@
 ﻿using Mirror;
 using UnityEngine;
 using GameManagement;
+using UI;
+using System.Collections.Generic;
+using Gameplay;
 
 namespace Network.UI
 {
@@ -13,12 +16,19 @@ namespace Network.UI
         private StartGameView _startGameView;
 
         [SerializeField]
+        private LeaderBoardView _leaderBoardView;
+
+        [SerializeField]
         private string _readyStatus = "Ready";
 
         [SerializeField]
         private string _unreadyStatus = "Not ready";
 
         private LobbyManager _lobbyManager;
+
+        private LobbyLeaderboardPresenter _leaderboardPresenter;
+
+        private List<PlayerResultsData> _leaderboardData;
 
         private bool _isSubscribed = false;
 
@@ -59,12 +69,34 @@ namespace Network.UI
         {
             base.OnStartServer();
             _startGameView.gameObject.SetActive(true);
+
+            SetInitPlayers();
+
+            ShowOrHideLeaderboard();
+        }
+
+        public override void OnStartClient()
+        {
+            if (!isServer)
+            {
+                base.OnStartClient();
+
+                CmdRequestInit();
+            }
         }
 
         public override void OnStopServer()
         {
             base.OnStopServer();
             _startGameView.gameObject.SetActive(false);
+            _leaderboardPresenter.Hide();
+        }
+
+        public override void OnStopClient()
+        {
+            base.OnStopClient();
+
+            _leaderboardPresenter.Hide();
         }
 
         public void Init(LobbyManager lobbyManager)
@@ -74,6 +106,9 @@ namespace Network.UI
             _slotsView.Init(_lobbyManager.MultiplayerSettingsConfig.MaxPlayers);
 
             Subscribe();
+
+            _leaderboardPresenter = new LobbyLeaderboardPresenter(_leaderBoardView,
+                    _lobbyManager.LeaderboardStorage);
         }
 
         private void Subscribe()
@@ -93,6 +128,28 @@ namespace Network.UI
                 _slotsView.OnRemoveClicked += _lobbyManager.DisconnectPlayer;
 
                 _isSubscribed = true;
+            }
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdRequestInit()
+        {
+            SetInitPlayers();
+
+            RpcShowLeaderboard(_leaderboardData);
+        }
+
+        private void SetInitPlayers()
+        {
+            var lobbyPlayers = _lobbyManager.LobbyPlayers;
+
+            if (lobbyPlayers.Count > 0)
+            {
+                for (int i = 0; i < lobbyPlayers.Count; i++)
+                {
+                    var player = lobbyPlayers[i];
+                    UpdateSlot(i, player.Name, player.Color, true, player.isOwned);
+                }
             }
         }
 
@@ -144,6 +201,14 @@ namespace Network.UI
             RpcSetReadyStatus(index, isReady);
         }
 
+        [Server]
+        private void ShowOrHideLeaderboard()
+        {
+            _leaderboardData = _leaderboardPresenter.ShowOnServer();
+
+            RpcShowLeaderboard(_leaderboardData);
+        }
+
         [ClientRpc]
         private void RpcSetName(int index, string name)
         {
@@ -174,6 +239,11 @@ namespace Network.UI
             SetReadyStatusLogic(index, ready);
         }
 
+        [ClientRpc]
+        private void RpcShowLeaderboard(List<PlayerResultsData> data)
+        {
+            _leaderboardPresenter.Show(data);
+        }
 
         private void SetNameLogic(int index, string name)
         {

@@ -21,7 +21,13 @@ namespace Gameplay
             _grenadeConfig = (GrenadeConfig)_spawnConfig.GetConfig(ItemType.Grenade);
             _grenadePrefab = _grenadeConfig.GrenadePrefab;
 
-            NetworkClient.RegisterPrefab(_grenadePrefab.gameObject);
+            if (_grenadePrefab.TryGetComponent<NetworkIdentity>(out var identity))
+            {
+                if (!NetworkClient.prefabs.ContainsKey(identity.assetId))
+                {
+                    NetworkClient.RegisterPrefab(_grenadePrefab.gameObject);
+                }
+            }
         }
 
         [Server]

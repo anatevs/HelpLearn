@@ -21,11 +21,13 @@ namespace GameManagement
 
         public event Action<bool> OnCanStartChanged;
 
+        public List<LobbyPlayer> LobbyPlayers => _lobbyPlayers;
+
         public MultiplayerSettingsConfig MultiplayerSettingsConfig => _settingsConfig;
 
         public GameInfoPanel GameInfoPanel => _gameInfoPanel;
 
-        public MatchConfig MatchConfig => _matchConfig;
+        public LeaderboardStorage LeaderboardStorage => _leaderboardStorage;
 
         [SerializeField]
         private LobbyHUDPresenter _lobbyHudPresenter;
@@ -52,6 +54,8 @@ namespace GameManagement
         private GameInfoPanel _gameInfoPanel;
 
         private PlayerSceneDependencies _playerSceneDependencies;
+
+        private MatchTimer _matchTimer;
 
         private LeaderboardStorage _leaderboardStorage;
         private LeaderboardController _leaderboardController;
@@ -279,6 +283,14 @@ namespace GameManagement
                     playerName = gamePlayer.Name;
                     _gamePlayers.Remove(gamePlayer);
 
+                    var lobbyInstance = _lobbyPlayers.Find(x => x.Name == playerName);
+
+                    if (lobbyInstance != null)
+                    {
+                        _lobbyPlayers.Remove(lobbyInstance);
+                        NetworkServer.Destroy(lobbyInstance.gameObject);
+                    }
+
                     remainPlayers = _gamePlayers.Count;
                 }
 
@@ -327,7 +339,6 @@ namespace GameManagement
                     if (NetworkServer.active)
                     {
                         // re-add the room object
-                        lobbyPlayer.GetComponent<LobbyPlayer>().ReadyToBegin = false;
                         NetworkServer.ReplacePlayerForConnection(identity.connectionToClient, lobbyPlayer.gameObject, ReplacePlayerOptions.KeepAuthority);
                     }
                 }
@@ -342,6 +353,8 @@ namespace GameManagement
         {
             if (sceneName != RoomScene)
             {
+                _leaderboardStorage.Clear();
+
                 // call SceneLoadedForPlayer on any players that become ready while we were loading the scene.
                 foreach (PendingPlayer pending in _pendingPlayers)
                 {
@@ -355,6 +368,10 @@ namespace GameManagement
                     _gameInfoPanel.AddLog($"Match started!");
 
                     InitGameplayDependencies();
+
+                    _matchTimer.StartTimer();
+
+                    _matchTimer.OnTimerEnded += LoadLobbyAfterMatch;
                 }
             }
             else //in case for return to the RoomScene
@@ -362,8 +379,10 @@ namespace GameManagement
                 if (_settingsPresenter == null)
                 {
                     _settingsPresenter = FindAnyObjectByType<LobbyPlayerSettingsPresenter>();
-                    _settingsPresenter.Init(_settingsConfig);
+                    _settingsPresenter.gameObject.SetActive(false);
                 }
+
+                OnCanStartChanged?.Invoke(true);
             }
         }
 
@@ -409,6 +428,8 @@ namespace GameManagement
         public override void OnStopServer()
         {
             _lobbyPlayers.Clear();
+
+            _leaderboardStorage.Clear();
         }
 
         public override void OnStartClient()
@@ -495,12 +516,17 @@ namespace GameManagement
             ServerChangeScene(GameplayScene);
         }
 
+        public void LoadLobbyAfterMatch()
+        {
+            _matchTimer.OnTimerEnded -= LoadLobbyAfterMatch;
+
+            ServerChangeScene(RoomScene);
+        }
+
         private void SceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
         {
             if (Utils.IsSceneActive(RoomScene))
             {
-                Debug.Log("on room scene");
-
                 // cant be ready in room, add to ready list
                 PendingPlayer pending;
                 pending.conn = conn;
@@ -521,9 +547,13 @@ namespace GameManagement
                 return;
             }
 
+            var gamePlayer = player.GetComponent<GamePlayer>();
+
+            gamePlayer.SetReady();
+
             NetworkServer.ReplacePlayerForConnection(conn, player, ReplacePlayerOptions.KeepAuthority);
 
-            var gamePlayer = player.GetComponent<GamePlayer>();
+            gamePlayer = player.GetComponent<GamePlayer>();
 
             _gamePlayers.Add(gamePlayer);
 
@@ -552,7 +582,7 @@ namespace GameManagement
 
         private void InitGameplayDependencies()
         {
-            var sceneObjects = FindAnyObjectByType<PlayerSceneDependencies>(); //to Manager as public property with event of init and initing in OnServerSceneChanged or make in dpnds Awake() with injecting itself to mngr
+            var sceneObjects = FindAnyObjectByType<PlayerSceneDependencies>();
 
             if (sceneObjects == null)
             {
@@ -561,6 +591,8 @@ namespace GameManagement
             }
 
             _playerSceneDependencies = sceneObjects;
+
+            _matchTimer = _playerSceneDependencies.InitMatch(_matchConfig);
         }
 
         public void RegisterGamePlayer(GamePlayer gamePlayer)

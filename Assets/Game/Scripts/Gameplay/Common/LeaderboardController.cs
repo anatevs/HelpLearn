@@ -1,8 +1,6 @@
 ﻿using GameManagement;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Gameplay
 {
@@ -53,14 +51,6 @@ namespace Gameplay
         {
             _leaderboardStorage.AddKills(killerName, 1);
             _leaderboardStorage.AddDeaths(player.Name, 1);
-
-            //Debug.Log($"leaderboard updated");
-
-            //foreach (var result in _leaderboardStorage.GetResults())
-            //{
-            //    var data = result.Results;
-            //    Debug.Log($"{data.Name} - kills: {data.Kills}, deaths: {data.Deaths}, score {data.Score}");
-            //}
         }
     }
 }

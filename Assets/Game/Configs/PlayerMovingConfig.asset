@@ -22,3 +22,4 @@ MonoBehaviour:
   - 45
   _jumpSpeed: 6
   _maxJumps: 1
+  _pickItemSqrDistance: 20

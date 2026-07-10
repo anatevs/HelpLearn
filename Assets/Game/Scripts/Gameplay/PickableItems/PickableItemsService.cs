@@ -61,7 +61,15 @@ namespace Gameplay
 
             foreach (var data in _spawnConfig.ItemsSpawnData)
             {
-                NetworkClient.RegisterPrefab(data.Config.PickablePrefab.gameObject);
+                var prefabGO = data.Config.PickablePrefab.gameObject;
+
+                if (prefabGO.TryGetComponent<NetworkIdentity>(out var identity))
+                {
+                    if (!NetworkClient.prefabs.ContainsKey(identity.assetId))
+                    {
+                        NetworkClient.RegisterPrefab(prefabGO);
+                    }
+                }
             }
         }
 

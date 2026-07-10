@@ -1,6 +1,5 @@
 ﻿using Assets.Input;
 using GameManagement;
-using Mirror;
 using UI;
 using UnityEngine;
 
@@ -56,11 +55,7 @@ namespace Gameplay
 
         private LocalMessagesPresenter _localMessagesPresenter;
 
-        private MatchConfig _matchConfig;
-
         private MatchTimerPresenter _timerPresenter;
-
-        //private LeaderboardStorage _leaderboardStorage;
 
         private void Awake()
         {
@@ -69,16 +64,6 @@ namespace Gameplay
             _pickItemsSpawnConfig.Init();
             _pickableItemsService.Init(_pickItemsSpawnConfig);
             _grenadesService.Init(_pickItemsSpawnConfig);
-
-            if (NetworkManager.singleton is LobbyManager lobbyManager)
-            {
-                _matchConfig = lobbyManager.MatchConfig;
-                //_leaderboardStorage = lobbyManager.LeaderboardStorage;
-            }
-
-            _matchTimer.Init(_matchConfig.MatchTime);
-
-            _timerPresenter = new MatchTimerPresenter(_matchTimerView, _matchTimer);
         }
 
         private void OnDestroy()
@@ -87,6 +72,17 @@ namespace Gameplay
             _inventoriesPresenter?.Dispose();
             _gameplayInfoPresenter?.Dispose();
             _timerPresenter?.Dispose();
+
+            _pickItemsSpawnConfig.Clear();
+        }
+
+        public MatchTimer InitMatch(MatchConfig matchConfig)
+        {
+            _matchTimer.Init(matchConfig.MatchTime);
+
+            _timerPresenter = new MatchTimerPresenter(_matchTimerView, _matchTimer);
+
+            return _matchTimer;
         }
 
         public void ConstructPlayer(GamePlayer gamePlayer)

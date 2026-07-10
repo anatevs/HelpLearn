@@ -60,7 +60,6 @@ namespace Gameplay
             OnRemainTimeChanged?.Invoke(newValue);
         }
 
-
         private IEnumerator RechargeCoroutine(double endTime)
         {
             var remain = endTime - NetworkTime.time;
