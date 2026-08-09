@@ -138,7 +138,11 @@ namespace GameManagement
 
             if (NetworkManager.singleton is LobbyManager lobbyManager)
             {
-                lobbyManager.RegisterGamePlayer(this);
+                var gameInitializer = lobbyManager.GameInitializer;
+
+                var sceneDepenenies = gameInitializer.PlayerSceneDependencies;
+
+                sceneDepenenies.ConstructPlayer(this);
             }
 
             if (isServer)

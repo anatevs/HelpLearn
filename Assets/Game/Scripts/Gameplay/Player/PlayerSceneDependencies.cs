@@ -45,17 +45,22 @@ namespace Gameplay
         private MatchTimer _matchTimer;
 
         [SerializeField]
+        private MatchConfig _matchConfig;
+
+        [SerializeField]
         private MatchTimerView _matchTimerView;
 
         private HPPresenter _hpPresenter;
 
         private InventoriesPresenter _inventoriesPresenter;
 
-        private GameplayInfoPresenter _gameplayInfoPresenter = new();
+        private GameplayInfoPresenter _gameplayInfoPresenter;
 
         private LocalMessagesPresenter _localMessagesPresenter;
 
         private MatchTimerPresenter _timerPresenter;
+
+        private SceneStateManager _sceneStateManager;
 
         private void Awake()
         {
@@ -64,6 +69,8 @@ namespace Gameplay
             _pickItemsSpawnConfig.Init();
             _pickableItemsService.Init(_pickItemsSpawnConfig);
             _grenadesService.Init(_pickItemsSpawnConfig);
+
+            _timerPresenter = new MatchTimerPresenter(_matchTimerView, _matchTimer);
         }
 
         private void OnDestroy()
@@ -76,13 +83,15 @@ namespace Gameplay
             _pickItemsSpawnConfig.Clear();
         }
 
-        public MatchTimer InitMatch(MatchConfig matchConfig)
+        public void Construct(GameInfoPanel gameInfoPanel, SceneStateManager sceneStateManager) //server
         {
-            _matchTimer.Init(matchConfig.MatchTime);
+            _gameplayInfoPresenter = new GameplayInfoPresenter(gameInfoPanel, _matchTimer);
 
-            _timerPresenter = new MatchTimerPresenter(_matchTimerView, _matchTimer);
+            _sceneStateManager = sceneStateManager;
 
-            return _matchTimer;
+            _matchTimer.StartTimer(_matchConfig.MatchTime);
+
+            _matchTimer.OnTimerEnded += HandleEndMatch;
         }
 
         public void ConstructPlayer(GamePlayer gamePlayer)
@@ -91,7 +100,7 @@ namespace Gameplay
                 _inputHandler, _weaponTracerShower,
                 _pickItemsSpawnConfig, _grenadesService);
 
-            _gameplayInfoPresenter.AddPlayer(gamePlayer);
+            _gameplayInfoPresenter?.AddPlayer(gamePlayer); //server
 
             if (isLocal)
             {
@@ -113,6 +122,12 @@ namespace Gameplay
             _weaponPresenter.ShowView(isShow);
 
             _localMessagesView.gameObject.SetActive(isShow);
+        }
+
+        private void HandleEndMatch()
+        {
+            _matchTimer.OnTimerEnded -= HandleEndMatch;
+            _sceneStateManager.LoadLobby();
         }
     }
 }

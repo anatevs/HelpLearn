@@ -1,6 +1,6 @@
-﻿using GameManagement;
-using Mirror;
+﻿using Mirror;
 using TMPro;
+using GameManagement;
 
 namespace UI
 {
@@ -24,7 +24,9 @@ namespace UI
 
             if (NetworkManager.singleton is LobbyManager lobbyManager)
             {
-                lobbyManager.RegisterInfoPanel(this);
+                var initializer = lobbyManager.GameInitializer;
+
+                initializer.RegisterInfoPanel(this);
             }
         }
 
@@ -46,6 +48,11 @@ namespace UI
 
         public void AddLog(string logText)
         {
+            if (isServer)
+            {
+                ShowLogText(logText);
+            }
+
             if (_logText == logText)
             {
                 _logText = $"{logText} ";
@@ -53,11 +60,6 @@ namespace UI
             }
 
             _logText = logText;
-
-            if (isServer)
-            {
-                ShowLogText(_logText);
-            }
         }
 
         public void SetPlayersCount(int count)

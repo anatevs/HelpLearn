@@ -46,9 +46,6 @@ namespace GameManagement
             base.OnStartLocalPlayer();
 
             OnStarted?.Invoke(this);
-
-            //CmdSetName(Name);
-            //CmdSetColor(Color);
         }
 
         public override void OnStopLocalPlayer()

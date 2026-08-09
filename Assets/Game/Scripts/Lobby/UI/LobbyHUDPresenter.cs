@@ -24,7 +24,14 @@ namespace Network.UI
         [SerializeField]
         private string _unreadyStatus = "Not ready";
 
+        [SerializeField]
+        private LobbyPlayerSettingsPresenter _playerSettingsPresenter;
+
         private LobbyManager _lobbyManager;
+
+        private SceneStateManager _sceneStateManager;
+
+        private LobbyPlayersManager _lobbyPlayersManager;
 
         private LobbyLeaderboardPresenter _leaderboardPresenter;
 
@@ -36,38 +43,18 @@ namespace Network.UI
         {
             if (NetworkManager.singleton is LobbyManager lobbyManager)
             {
-                Init(lobbyManager);
-            }
-        }
-
-        private void OnEnable()
-        {
-            Subscribe();
-        }
-
-        private void OnDisable()
-        {
-            if (_lobbyManager != null)
-            {
-                _lobbyManager.OnPlayerAdded -= ShowRemoveButton;
-                _lobbyManager.OnSlotEmptied -= SetSlotEmpty;
-                _lobbyManager.OnNameChanged -= SetName;
-                _lobbyManager.OnColorChanged -= SetColor;
-                _lobbyManager.OnReadyChanged -= SetReadyStatus;
-                _lobbyManager.OnSlotUpdated -= UpdateSlot;
-
-                _lobbyManager.OnCanStartChanged -= _startGameView.EnableButton;
-
-                _startGameView.OnStartClicked -= HandleStartClick;
-                _slotsView.OnRemoveClicked -= _lobbyManager.DisconnectPlayer;
-
-                _isSubscribed = false;
+                Init(lobbyManager, lobbyManager.GameInitializer);
             }
         }
 
         public override void OnStartServer()
         {
             base.OnStartServer();
+
+            _lobbyPlayersManager = _lobbyManager.LobbyPlayersManager;
+
+            Subscribe();
+
             _startGameView.gameObject.SetActive(true);
 
             SetInitPlayers();
@@ -83,6 +70,8 @@ namespace Network.UI
 
                 CmdRequestInit();
             }
+
+            _playerSettingsPresenter.Show(_sceneStateManager.IsStartLobby);
         }
 
         public override void OnStopServer()
@@ -90,6 +79,8 @@ namespace Network.UI
             base.OnStopServer();
             _startGameView.gameObject.SetActive(false);
             _leaderboardPresenter.Hide();
+
+            Unsubscribe();
         }
 
         public override void OnStopClient()
@@ -99,28 +90,32 @@ namespace Network.UI
             _leaderboardPresenter.Hide();
         }
 
-        public void Init(LobbyManager lobbyManager)
+        public void Init(LobbyManager lobbyManager, GameInitializer gameInitializer)
         {
             _lobbyManager = lobbyManager;
 
-            _slotsView.Init(_lobbyManager.MultiplayerSettingsConfig.MaxPlayers);
+            var multiplayerConfig = _lobbyManager.MultiplayerSettingsConfig;
 
-            Subscribe();
+            _slotsView.Init(multiplayerConfig.MaxPlayers);
 
             _leaderboardPresenter = new LobbyLeaderboardPresenter(_leaderBoardView,
-                    _lobbyManager.LeaderboardStorage);
+                    gameInitializer.LeaderboardStorage);
+
+            _playerSettingsPresenter.Init(multiplayerConfig);
+
+            _sceneStateManager = gameInitializer.SceneStateManager;
         }
 
         private void Subscribe()
         {
             if (!_isSubscribed)
             {
-                _lobbyManager.OnPlayerAdded += ShowRemoveButton;
-                _lobbyManager.OnSlotEmptied += SetSlotEmpty;
-                _lobbyManager.OnNameChanged += SetName;
-                _lobbyManager.OnColorChanged += SetColor;
-                _lobbyManager.OnReadyChanged += SetReadyStatus;
-                _lobbyManager.OnSlotUpdated += UpdateSlot;
+                _lobbyPlayersManager.OnPlayerAdded += ShowRemoveButton;
+                _lobbyPlayersManager.OnPlayerRemoved += SetSlotEmpty;
+                _lobbyPlayersManager.OnNameChanged += SetName;
+                _lobbyPlayersManager.OnColorChanged += SetColor;
+                _lobbyPlayersManager.OnReadyChanged += SetReadyStatus;
+                _lobbyPlayersManager.OnSlotUpdated += UpdateSlot;
 
                 _lobbyManager.OnCanStartChanged += _startGameView.EnableButton;
 
@@ -128,6 +123,29 @@ namespace Network.UI
                 _slotsView.OnRemoveClicked += _lobbyManager.DisconnectPlayer;
 
                 _isSubscribed = true;
+            }
+        }
+
+        private void Unsubscribe()
+        {
+            if (_lobbyManager != null && _isSubscribed)
+            {
+                if (_lobbyPlayersManager != null)
+                {
+                    _lobbyPlayersManager.OnPlayerAdded -= ShowRemoveButton;
+                    _lobbyPlayersManager.OnPlayerRemoved -= SetSlotEmpty;
+                    _lobbyPlayersManager.OnNameChanged -= SetName;
+                    _lobbyPlayersManager.OnColorChanged -= SetColor;
+                    _lobbyPlayersManager.OnReadyChanged -= SetReadyStatus;
+                    _lobbyPlayersManager.OnSlotUpdated -= UpdateSlot;
+                }
+
+                _lobbyManager.OnCanStartChanged -= _startGameView.EnableButton;
+
+                _startGameView.OnStartClicked -= HandleStartClick;
+                _slotsView.OnRemoveClicked -= _lobbyManager.DisconnectPlayer;
+
+                _isSubscribed = false;
             }
         }
 
@@ -141,15 +159,10 @@ namespace Network.UI
 
         private void SetInitPlayers()
         {
-            var lobbyPlayers = _lobbyManager.LobbyPlayers;
-
-            if (lobbyPlayers.Count > 0)
+            for (int i = 0; i < _lobbyPlayersManager.Count; i++)
             {
-                for (int i = 0; i < lobbyPlayers.Count; i++)
-                {
-                    var player = lobbyPlayers[i];
-                    UpdateSlot(i, player.Name, player.Color, true, player.isOwned);
-                }
+                var player = _lobbyPlayersManager.GetPlayer(i);
+                UpdateSlot(i, player.Name, player.Color, player.ReadyToBegin, player.isOwned);
             }
         }
 
@@ -287,7 +300,7 @@ namespace Network.UI
 
         private void HandleStartClick()
         {
-            _lobbyManager.LoadGameScene();
+            _sceneStateManager.LoadGameScene();
         }
     }
 }

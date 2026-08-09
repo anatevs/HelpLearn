@@ -2,83 +2,41 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Network.UI;
-using static Mirror.NetworkRoomManager;
 using System.Linq;
-using UI;
-using Gameplay;
 
 namespace GameManagement
 {
     public class LobbyManager : NetworkManager
     {
-        public event Action<int, string> OnNameChanged;
-        public event Action<int, Color> OnColorChanged;
-        public event Action<int, string, Color, bool, bool> OnSlotUpdated;
-        public event Action<int, bool> OnReadyChanged;
-        public event Action<int, bool> OnPlayerAdded;
-        public event Action<int> OnSlotEmptied;
-
         public event Action<bool> OnCanStartChanged;
+        public event Action<string, int> OnServerPlayerDisconnected;
+        public event Action OnClientDisconnected;
+        public event Action<GamePlayer> OnGamePlayerSpawned;
+        public event Action OnServerStopped;
+        public event Action OnServerGameplayStarted;
+        public event Action OnClientGameplayStarted;
 
-        public List<LobbyPlayer> LobbyPlayers => _lobbyPlayers;
+        public GameInitializer GameInitializer => _gameInitializer;
+
+        public LobbyPlayersManager LobbyPlayersManager => _lobbyPlayersManager;
 
         public MultiplayerSettingsConfig MultiplayerSettingsConfig => _settingsConfig;
 
-        public GameInfoPanel GameInfoPanel => _gameInfoPanel;
-
-        public LeaderboardStorage LeaderboardStorage => _leaderboardStorage;
-
-        [SerializeField]
-        private LobbyHUDPresenter _lobbyHudPresenter;
-
-        [SerializeField]
-        private LobbyPlayerSettingsPresenter _settingsPresenter;
-
-        [SerializeField]
-        private MultiplayerSettingsConfig _settingsConfig;
-
-        [SerializeField]
-        private MatchConfig _matchConfig;
-
+        [Header("LobbySettings")]
         [SerializeField]
         [Tooltip("Prefab to use for the Room Player")]
         private LobbyPlayer _lobbyPlayerPrefab;
 
         [SerializeField]
-        private GameInfoPanel _infoPanelPrefab;
+        private MultiplayerSettingsConfig _settingsConfig;
 
         [SerializeField]
-        GameInfoViewInitializer _gameInfoView;
+        private GameInitializer _gameInitializer;
 
-        private GameInfoPanel _gameInfoPanel;
 
-        private PlayerSceneDependencies _playerSceneDependencies;
+        private SceneStateManager _sceneStateManager;
 
-        private MatchTimer _matchTimer;
-
-        private LeaderboardStorage _leaderboardStorage;
-        private LeaderboardController _leaderboardController;
-
-        [Header("Scenes")]
-        /// <summary>
-        /// The scene to use for the room. This is similar to the offlineScene of the NetworkManager.
-        /// </summary>
-        [Scene]
-        public string RoomScene;
-
-        /// <summary>
-        /// The scene to use for the playing the game from the room. This is similar to the onlineScene of the NetworkManager.
-        /// </summary>
-        [Scene]
-        public string GameplayScene;
-
-        /// <summary>
-        /// List of players that are in the Room
-        /// </summary>
-        private readonly HashSet<PendingPlayer> _pendingPlayers = new HashSet<PendingPlayer>();
-
-        private readonly List<LobbyPlayer> _lobbyPlayers = new();
+        private LobbyPlayersManager _lobbyPlayersManager;
 
         private readonly List<GamePlayer> _gamePlayers = new();
 
@@ -98,91 +56,42 @@ namespace GameManagement
             }
         }
 
-        public override void Awake()
+        public void ConstructOnServer(LobbyPlayersManager lobbyPlayersManager,
+            SceneStateManager sceneStateManager)
         {
-            base.Awake();
+            _lobbyPlayersManager = lobbyPlayersManager;
 
-            _settingsPresenter.Init(_settingsConfig);
+            _lobbyPlayersManager.OnReadyChanged += HandleReadyChange;
 
-            _leaderboardStorage = new LeaderboardStorage(_matchConfig.KillToScoreCoef);
-            _leaderboardController = new LeaderboardController(_leaderboardStorage);
+            _sceneStateManager = sceneStateManager;
+
+            _sceneStateManager.OnSceneLoadRequested += ServerChangeScene;
+        }
+
+        public void ConstructOnClient(SceneStateManager sceneStateManager)
+        {
+            _sceneStateManager = sceneStateManager;
         }
 
         public override void OnDestroy()
         {
             base.OnDestroy();
 
-            _leaderboardController.Dispose();
-        }
-
-        public void RegisterInfoPanel(GameInfoPanel panel)
-        {
-            _gameInfoPanel = panel;
-            _gameInfoView.SetupInfoPanel(_gameInfoPanel);
+            if (_lobbyPlayersManager != null)
+            {
+                _lobbyPlayersManager.OnReadyChanged -= HandleReadyChange;
+            }
         }
 
         #endregion
 
 
         #region Player data changing
-
-        public void HandleChangeNameRequest(int index, string newName)
-        {
-            if (!CanSetName(index, newName))
-            {
-                return;
-            }
-
-            ChangeName(index, newName);
-        }
-
-        public void ChangeName(int index, string newName)
-        {
-            _lobbyPlayers[index].Name = newName;
-            OnNameChanged?.Invoke(index, newName);
-        }
-
-        public void ChangeColor(int index, Color color)
-        {
-            OnColorChanged?.Invoke(index, color);
-        }
-
-        public void ChangeReady(int index, bool isReady)
-        {
-            OnReadyChanged?.Invoke(index, isReady);
-
-            ReadyStatusChanged();
-        }
-
         public void DisconnectPlayer(int index)
         {
-            _lobbyPlayers[index].GetComponent<NetworkIdentity>().connectionToClient.Disconnect();
+            _lobbyPlayersManager.GetPlayer(index)
+                .GetComponent<NetworkIdentity>().connectionToClient.Disconnect();
         }
-
-        private string GetDefaultName(int index)
-        {
-            return $"{_settingsConfig.DefaultNamePrefix}{index}";
-        }
-
-        private bool CanSetName(int index, string newName)
-        {
-            bool isOtherDefault = (newName.StartsWith(_settingsConfig.DefaultNamePrefix) &&
-                int.TryParse(newName[_settingsConfig.DefaultNamePrefix.Length..], out int number) &&
-                number >= 0 &&
-                number < _settingsConfig.MaxPlayers &&
-                number != index);
-
-            if (newName.Length < _settingsConfig.NameLengthRange[0]
-                || newName.Length > _settingsConfig.NameLengthRange[1]
-                || (_lobbyPlayers.Any(x => x.Name == newName))
-                || isOtherDefault)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         #endregion
 
 
@@ -190,32 +99,13 @@ namespace GameManagement
 
         public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
-            if (Utils.IsSceneActive(RoomScene) && _lobbyPlayers.Count < _settingsConfig.MaxPlayers)
+            if (_sceneStateManager.IsInLobby && _lobbyPlayersManager.Count < _settingsConfig.MaxPlayers)
             {
                 ChangeEnoughReady(false);
 
                 var lobbyPlayer = Instantiate(_lobbyPlayerPrefab, Vector3.zero, Quaternion.identity);
 
-                lobbyPlayer.PlayerID = _lobbyPlayers.Count;
-                lobbyPlayer.Init(GetDefaultName(lobbyPlayer.PlayerID));
-
-                lobbyPlayer.OnNameChangeRequested += HandleChangeNameRequest;
-                lobbyPlayer.OnColorChanged += ChangeColor;
-                lobbyPlayer.OnReadyChanged += ChangeReady;
-
-                NetworkServer.AddPlayerForConnection(conn, lobbyPlayer.gameObject);
-
-                OnPlayerAdded?.Invoke(lobbyPlayer.PlayerID, lobbyPlayer.isOwned);
-
-                _lobbyPlayers.Add(lobbyPlayer);
-
-                foreach (var player in _lobbyPlayers)
-                {
-                    OnSlotUpdated?.Invoke(player.PlayerID, player.Name, player.Color, player.ReadyToBegin, player.isOwned);
-                }
-
-                _gameInfoPanel.AddLog($"Connected player: {lobbyPlayer.Name}");
-                _gameInfoPanel.SetPlayersCount(_lobbyPlayers.Count);
+                _lobbyPlayersManager.AddPlayer(lobbyPlayer, conn);
             }
             else
             {
@@ -228,7 +118,7 @@ namespace GameManagement
         public override void OnServerConnect(NetworkConnectionToClient conn)
         {
             // cannot join game in progress
-            if (!Utils.IsSceneActive(RoomScene))
+            if (!_sceneStateManager.IsInLobby)
             {
                 Debug.Log($"Not in Room scene...disconnecting {conn}");
                 conn.Disconnect();
@@ -243,39 +133,16 @@ namespace GameManagement
             if (conn.identity != null)
             {
                 var playerName = "";
-                var remainPlayers = _lobbyPlayers.Count;
+                var remainPlayers = _lobbyPlayersManager.Count;
 
                 if (conn.identity.TryGetComponent<LobbyPlayer>(out var disconnectedPlayer))
                 {
-                    ChangeReady(disconnectedPlayer.PlayerID, false);
-
-                    disconnectedPlayer.OnNameChangeRequested -= HandleChangeNameRequest;
-                    disconnectedPlayer.OnColorChanged -= ChangeColor;
-                    disconnectedPlayer.OnReadyChanged -= ChangeReady;
-
-                    _lobbyPlayers.Remove(disconnectedPlayer);
-
-                    for (int i = disconnectedPlayer.PlayerID; i < _lobbyPlayers.Count; i++)
-                    {
-                        var newName = _lobbyPlayers[i].Name;
-
-                        if (_lobbyPlayers[i].Name == GetDefaultName(i + 1))
-                        {
-                            newName = GetDefaultName(i);
-                            _lobbyPlayers[i].Name = newName;
-                        }
-
-                        _lobbyPlayers[i].PlayerID = i;
-
-                        OnSlotUpdated?.Invoke(_lobbyPlayers[i].PlayerID, _lobbyPlayers[i].Name, _lobbyPlayers[i].Color, _lobbyPlayers[i].ReadyToBegin, _lobbyPlayers[i].isOwned);
-                    }
-
-                    var emptyIndex = _lobbyPlayers.Count;
-
-                    OnSlotEmptied?.Invoke(emptyIndex);
+                    _lobbyPlayersManager.RemovePlayer(disconnectedPlayer);
 
                     playerName = disconnectedPlayer.Name;
-                    remainPlayers = _lobbyPlayers.Count;
+                    remainPlayers = _lobbyPlayersManager.Count;
+
+                    CheckReadiness();
                 }
 
                 else if (conn.identity.TryGetComponent<GamePlayer>(out var gamePlayer))
@@ -283,19 +150,21 @@ namespace GameManagement
                     playerName = gamePlayer.Name;
                     _gamePlayers.Remove(gamePlayer);
 
-                    var lobbyInstance = _lobbyPlayers.Find(x => x.Name == playerName);
+                    var lobbyInstance = _lobbyPlayersManager.GetPlayer(playerName);
 
                     if (lobbyInstance != null)
                     {
-                        _lobbyPlayers.Remove(lobbyInstance);
+                        _lobbyPlayersManager.RemovePlayer(lobbyInstance);
                         NetworkServer.Destroy(lobbyInstance.gameObject);
                     }
 
                     remainPlayers = _gamePlayers.Count;
                 }
 
-                _gameInfoPanel.AddLog($"Disconnected player: {playerName}");
-                _gameInfoPanel.SetPlayersCount(remainPlayers);
+                _lobbyPlayersManager.OnReadyChanged -= HandleReadyChange;
+                _sceneStateManager.OnSceneLoadRequested -= ServerChangeScene;
+
+                OnServerPlayerDisconnected?.Invoke(playerName, remainPlayers);
             }
 
             base.OnServerDisconnect(conn);
@@ -308,6 +177,13 @@ namespace GameManagement
             }
         }
 
+        public override void OnClientDisconnect()
+        {
+            base.OnClientDisconnect();
+
+            OnClientDisconnected?.Invoke();
+        }
+
 
         public override void OnServerReady(NetworkConnectionToClient conn)
         {
@@ -315,21 +191,25 @@ namespace GameManagement
 
             if (conn != null && conn.identity != null)
             {
-                GameObject lobbyPlayer = conn.identity.gameObject;
+                GameObject lobbyPlayerGO = conn.identity.gameObject;
 
-                if (lobbyPlayer != null && lobbyPlayer.GetComponent<LobbyPlayer>() != null)
+                if (lobbyPlayerGO != null 
+                    && lobbyPlayerGO.GetComponent<LobbyPlayer>() != null
+                    && !_sceneStateManager.IsInLobby)
                 {
-                    SceneLoadedForPlayer(conn, lobbyPlayer);
+                    ChangeToGamePlayer(conn, lobbyPlayerGO);
                 }
             }
         }
 
         public override void ServerChangeScene(string newSceneName)
         {
-            if (newSceneName == RoomScene)
+            if(_sceneStateManager.IsLobby(newSceneName))
             {
-                foreach (LobbyPlayer lobbyPlayer in _lobbyPlayers)
+                for (int i = 0; i < _lobbyPlayersManager.Count; i++)
                 {
+                    var lobbyPlayer = _lobbyPlayersManager.GetPlayer(i);
+
                     if (lobbyPlayer == null)
                         continue;
 
@@ -339,7 +219,9 @@ namespace GameManagement
                     if (NetworkServer.active)
                     {
                         // re-add the room object
-                        NetworkServer.ReplacePlayerForConnection(identity.connectionToClient, lobbyPlayer.gameObject, ReplacePlayerOptions.KeepAuthority);
+                        NetworkServer.ReplacePlayerForConnection(
+                            identity.connectionToClient,
+                            lobbyPlayer.gameObject, ReplacePlayerOptions.KeepAuthority);
                     }
                 }
 
@@ -351,38 +233,13 @@ namespace GameManagement
 
         public override void OnServerSceneChanged(string sceneName)
         {
-            if (sceneName != RoomScene)
+            if (_sceneStateManager.IsLobby(sceneName))
             {
-                _leaderboardStorage.Clear();
-
-                // call SceneLoadedForPlayer on any players that become ready while we were loading the scene.
-                foreach (PendingPlayer pending in _pendingPlayers)
-                {
-                    SceneLoadedForPlayer(pending.conn, pending.roomPlayer);
-                }
-
-                _pendingPlayers.Clear();
-
-                if (sceneName == GameplayScene)
-                {
-                    _gameInfoPanel.AddLog($"Match started!");
-
-                    InitGameplayDependencies();
-
-                    _matchTimer.StartTimer();
-
-                    _matchTimer.OnTimerEnded += LoadLobbyAfterMatch;
-                }
-            }
-            else //in case for return to the RoomScene
-            {
-                if (_settingsPresenter == null)
-                {
-                    _settingsPresenter = FindAnyObjectByType<LobbyPlayerSettingsPresenter>();
-                    _settingsPresenter.gameObject.SetActive(false);
-                }
-
                 OnCanStartChanged?.Invoke(true);
+            }
+            else if (_sceneStateManager.IsGameplay(sceneName))
+            {
+                OnServerGameplayStarted?.Invoke();
             }
         }
 
@@ -390,46 +247,16 @@ namespace GameManagement
         {
             base.OnClientSceneChanged();
 
-            if (Utils.IsSceneActive(GameplayScene))
+
+            if (_sceneStateManager.IsInGameplay)
             {
-                InitGameplayDependencies();
+                OnClientGameplayStarted?.Invoke();
             }
         }
 
         public override void OnStartServer()
         {
-            if (string.IsNullOrWhiteSpace(RoomScene))
-            {
-                Debug.LogError("NetworkRoomManager RoomScene is empty. Set the RoomScene in the inspector for the NetworkRoomManager");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(GameplayScene))
-            {
-                Debug.LogError("NetworkRoomManager PlayScene is empty. Set the PlayScene in the inspector for the NetworkRoomManager");
-                return;
-            }
-
-            if (_infoPanelPrefab == null)
-            {
-                Debug.LogError("InfoPanel prefab is null");
-                return;
-            }
-            else
-            {
-                var infoPanel = Instantiate(_infoPanelPrefab);
-
-                NetworkServer.Spawn(infoPanel.gameObject);
-
-                RegisterInfoPanel(infoPanel);
-            }
-        }
-
-        public override void OnStopServer()
-        {
-            _lobbyPlayers.Clear();
-
-            _leaderboardStorage.Clear();
+            _gameInitializer.InitOnServer(_settingsConfig, this);
         }
 
         public override void OnStartClient()
@@ -442,7 +269,12 @@ namespace GameManagement
             if (playerPrefab == null)
                 Debug.LogError("NetworkRoomManager no GamePlayer prefab is registered. Please add a GamePlayer prefab.");
 
-            NetworkClient.RegisterPrefab(_infoPanelPrefab.gameObject);
+            _gameInitializer.InitOnClient(_settingsConfig, this);
+        }
+
+        public override void OnStopServer()
+        {
+            OnServerStopped?.Invoke();
         }
 
         #endregion
@@ -450,13 +282,20 @@ namespace GameManagement
 
         #region Ready check and handle
 
-        public virtual void ReadyStatusChanged()
+        private void HandleReadyChange(int playerId, bool isReady)
+        {
+            CheckReadiness();
+        }
+
+        public void CheckReadiness()
         {
             int currentPlayers = 0;
             int readyPlayers = 0;
 
-            foreach (LobbyPlayer player in _lobbyPlayers)
+            for (int i = 0; i < _lobbyPlayersManager.Count; i++)
             {
+                var player = _lobbyPlayersManager.GetPlayer(i);
+
                 if (player != null)
                 {
                     currentPlayers++;
@@ -473,7 +312,7 @@ namespace GameManagement
 
         public void CheckReadyToBegin()
         {
-            if (!Utils.IsSceneActive(RoomScene))
+            if (!_sceneStateManager.IsInLobby)
                 return;
 
             int numberOfReadyPlayers = NetworkServer.connections.Count(conn =>
@@ -487,11 +326,6 @@ namespace GameManagement
                 && numberOfReadyPlayers <= _settingsConfig.MaxPlayers;
 
             ChangeEnoughReady(enoughReadyPlayers);
-
-            if (enoughReadyPlayers)
-            {
-                _pendingPlayers.Clear();
-            }
         }
 
         private void ChangeEnoughReady(bool isEnoghReady)
@@ -500,7 +334,7 @@ namespace GameManagement
             {
                 if (Utils.IsHeadless())
                 {
-                    ServerChangeScene(GameplayScene);
+                    _sceneStateManager.LoadGameScene();
                 }
             }
 
@@ -508,101 +342,36 @@ namespace GameManagement
         }
         #endregion
 
-
-        #region Scene change
-
-        public void LoadGameScene()
+        private void ChangeToGamePlayer(NetworkConnectionToClient conn, GameObject lobbyPlayerGO)
         {
-            ServerChangeScene(GameplayScene);
-        }
-
-        public void LoadLobbyAfterMatch()
-        {
-            _matchTimer.OnTimerEnded -= LoadLobbyAfterMatch;
-
-            ServerChangeScene(RoomScene);
-        }
-
-        private void SceneLoadedForPlayer(NetworkConnectionToClient conn, GameObject roomPlayer)
-        {
-            if (Utils.IsSceneActive(RoomScene))
-            {
-                // cant be ready in room, add to ready list
-                PendingPlayer pending;
-                pending.conn = conn;
-                pending.roomPlayer = roomPlayer;
-                _pendingPlayers.Add(pending);
-                return;
-            }
-
             Transform startPos = GetStartPosition();
 
-            GameObject player = startPos != null
+            GameObject playerGO = startPos != null
                 ? Instantiate(playerPrefab, startPos.position, startPos.rotation)
                 : Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
 
-            if (!OnRoomServerSceneLoadedForPlayer(roomPlayer, player))
+
+            if (lobbyPlayerGO.TryGetComponent<LobbyPlayer>(out var lobbyPlayer) &&
+                playerGO.TryGetComponent<GamePlayer>(out var gamePlayer))
             {
-                Debug.Log("not onroomserve...");
+                gamePlayer.Name = lobbyPlayer.Name;
+                gamePlayer.Color = lobbyPlayer.Color;
+            }
+            else
+            {
+                Debug.Log("not onroomserver...");
                 return;
             }
-
-            var gamePlayer = player.GetComponent<GamePlayer>();
 
             gamePlayer.SetReady();
 
-            NetworkServer.ReplacePlayerForConnection(conn, player, ReplacePlayerOptions.KeepAuthority);
+            NetworkServer.ReplacePlayerForConnection(conn, playerGO, ReplacePlayerOptions.KeepAuthority);
 
-            gamePlayer = player.GetComponent<GamePlayer>();
+            gamePlayer = playerGO.GetComponent<GamePlayer>();
 
             _gamePlayers.Add(gamePlayer);
 
-            _leaderboardController.AddPlayer(gamePlayer);
+            OnGamePlayerSpawned?.Invoke(gamePlayer);
         }
-
-        public bool OnRoomServerSceneLoadedForPlayer(GameObject roomPlayer, GameObject gamePlayer)
-        {
-            if (roomPlayer.TryGetComponent<LobbyPlayer>(out var lobbyPlayer))
-            {
-                OnSlotEmptied?.Invoke(lobbyPlayer.PlayerID);
-
-                if (gamePlayer.TryGetComponent<GamePlayer>(out var player))
-                {
-                    player.Name = lobbyPlayer.Name;
-                    player.Color = lobbyPlayer.Color;
-                }
-
-                _gameInfoPanel.AddLog($"Spawned player: {player.Name}");
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private void InitGameplayDependencies()
-        {
-            var sceneObjects = FindAnyObjectByType<PlayerSceneDependencies>();
-
-            if (sceneObjects == null)
-            {
-                Debug.Log("no PlayerSceneDependencies object on a scene in OnClientSceneChanged()");
-                return;
-            }
-
-            _playerSceneDependencies = sceneObjects;
-
-            _matchTimer = _playerSceneDependencies.InitMatch(_matchConfig);
-        }
-
-        public void RegisterGamePlayer(GamePlayer gamePlayer)
-        {
-            if (_playerSceneDependencies != null)
-            {
-                _playerSceneDependencies.ConstructPlayer(gamePlayer);
-            }
-        }
-
-        #endregion
     }
 }

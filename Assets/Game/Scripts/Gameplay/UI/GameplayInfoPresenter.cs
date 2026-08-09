@@ -1,5 +1,5 @@
 ﻿using GameManagement;
-using Mirror;
+using Gameplay;
 using System;
 using System.Collections.Generic;
 
@@ -11,12 +11,14 @@ namespace UI
         private readonly GameInfoPanel _panel;
         private readonly List<GamePlayer> _players = new();
 
-        public GameplayInfoPresenter()
+        private readonly MatchTimer _matchTimer;
+
+        public GameplayInfoPresenter(GameInfoPanel gameInfoPanel, MatchTimer matchTimer)
         {
-            if (NetworkManager.singleton is LobbyManager lobbyManager)
-            {
-                _panel = lobbyManager.GameInfoPanel;
-            }
+            _panel = gameInfoPanel;
+
+            _matchTimer = matchTimer;
+            _matchTimer.OnTimerStarted += HandleMatchStart;
         }
 
         public void AddPlayer(GamePlayer player)
@@ -28,6 +30,11 @@ namespace UI
 
         public void Dispose()
         {
+            if (_matchTimer != null)
+            {
+                _matchTimer.OnTimerStarted -= HandleMatchStart;
+            }
+
             foreach (GamePlayer player in _players)
             {
                 if (player != null)
@@ -40,6 +47,11 @@ namespace UI
         private void HandleItemPick(string playerName, string itemName)
         {
             _panel.AddLog($"Player {playerName} picked item {itemName}");
+        }
+
+        private void HandleMatchStart()
+        {
+            _panel.AddLog($"Match started!");
         }
     }
 }

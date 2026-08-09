@@ -8,6 +8,8 @@ namespace Gameplay
     [RequireComponent(typeof(NetworkIdentity))]
     public class MatchTimer : NetworkBehaviour
     {
+        public event Action OnTimerStarted;
+
         public event Action<double> OnRemainTimeChanged;
 
         public event Action OnTimerEnded;
@@ -15,24 +17,12 @@ namespace Gameplay
         [SyncVar(hook = nameof(HookChangeRemainTime))]
         private double _remainTime;
 
-        private float _matchTime;
-
-        public void Init(float matchTime)
-        {
-            _matchTime = matchTime;
-        }
-
-        public override void OnStartServer()
-        {
-            base.OnStartServer();
-
-            StartTimer();
-        }
-
         [Server]
-        public void StartTimer()
+        public void StartTimer(float matchTime)
         {
-            ChangeRemain(_matchTime);
+            OnTimerStarted?.Invoke();
+
+            ChangeRemain(matchTime);
 
             var endTime = NetworkTime.time + _remainTime;
 

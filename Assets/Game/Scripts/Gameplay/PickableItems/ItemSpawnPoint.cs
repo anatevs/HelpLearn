@@ -52,8 +52,6 @@ namespace Gameplay
             if (_groupWeights.Length == 1)
             {
                 OnSpawnRequested?.Invoke(_itemType);
-
-                Debug.Log($"ordinary point spawn request for {_itemType}");
             }
             else if (_groupWeights.Length > 1)
             {

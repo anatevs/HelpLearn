@@ -178,6 +178,7 @@ MonoBehaviour:
   _leaderBoardView: {fileID: 2119822658}
   _readyStatus: Ready
   _unreadyStatus: Not ready
+  _playerSettingsPresenter: {fileID: 1383277653}
 --- !u!114 &17324833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -957,6 +958,55 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 305829986}
   m_CullTransparentMesh: 1
+--- !u!1 &528792847
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 528792849}
+  - component: {fileID: 528792848}
+  m_Layer: 0
+  m_Name: GameInitializer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &528792848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528792847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cac795d63f39ba84ab377c19aadc88a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _infoPanelPrefab: {fileID: 4107893333843113587, guid: 29321883046788048b0600390472e304, type: 3}
+  _logView: {fileID: 1407473317}
+  _playersCountText: {fileID: 1257847531}
+  _matchConfig: {fileID: 11400000, guid: bbba26ba67a9eb64084582be32645e30, type: 2}
+  _sceneConfig: {fileID: 11400000, guid: 59e89899512a6d94988cedad1183ab81, type: 2}
+--- !u!4 &528792849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 528792847}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1283217755}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &737789123
 GameObject:
   m_ObjectHideFlags: 0
@@ -1176,7 +1226,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1301171827}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.33333334
+  m_Size: 0.33329347
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1539,7 +1589,6 @@ GameObject:
   - component: {fileID: 1034524571}
   - component: {fileID: 1034524570}
   - component: {fileID: 1034524569}
-  - component: {fileID: 1034524573}
   m_Layer: 5
   m_Name: GameInfoCanvas
   m_TagString: Untagged
@@ -1631,20 +1680,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1034524573
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1034524568}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4829de95eca56b246a9abd8dec298e8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _logView: {fileID: 1407473317}
-  _playersCountText: {fileID: 1257847531}
 --- !u!1 &1081486049
 GameObject:
   m_ObjectHideFlags: 0
@@ -1950,6 +1985,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1034524572}
+  - {fileID: 528792849}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1283217756
@@ -1995,7 +2031,8 @@ MonoBehaviour:
   playerPrefab: {fileID: 7057107610266177753, guid: 9de252c16bcae68409a737e9a05ac758, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 1
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 4215839793717919263, guid: 29321883046788048b0600390472e304, type: 3}
   exceptionsDisconnect: 1
   snapshotSettings:
     bufferTimeMultiplier: 3
@@ -2011,15 +2048,9 @@ MonoBehaviour:
   evaluationMethod: 0
   evaluationInterval: 3
   timeInterpolationGui: 0
-  _lobbyHudPresenter: {fileID: 17324832}
-  _settingsPresenter: {fileID: 1383277653}
-  _settingsConfig: {fileID: 11400000, guid: 0c689f1e76b711b499f3e16a20cd9ae4, type: 2}
-  _matchConfig: {fileID: 11400000, guid: bbba26ba67a9eb64084582be32645e30, type: 2}
   _lobbyPlayerPrefab: {fileID: 7954818000056387764, guid: 59a8c8be3a3222d4fa03e358f85e336b, type: 3}
-  _infoPanelPrefab: {fileID: 4107893333843113587, guid: 29321883046788048b0600390472e304, type: 3}
-  _gameInfoView: {fileID: 1034524573}
-  RoomScene: Assets/Game/Scenes/LobbyScene.unity
-  GameplayScene: Assets/Game/Scenes/GameScene.unity
+  _settingsConfig: {fileID: 11400000, guid: 0c689f1e76b711b499f3e16a20cd9ae4, type: 2}
+  _gameInitializer: {fileID: 528792848}
 --- !u!114 &1283217758
 MonoBehaviour:
   m_ObjectHideFlags: 0

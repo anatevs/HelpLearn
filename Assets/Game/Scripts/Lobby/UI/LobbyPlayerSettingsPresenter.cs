@@ -25,6 +25,11 @@ namespace Network.UI
             DisableView();
         }
 
+        public void Show(bool isShow)
+        {
+            gameObject.SetActive(isShow);
+        }
+
         private void Subscribe()
         {
             LobbyPlayer.OnStarted += HandlePlayerStarted;
@@ -40,12 +45,12 @@ namespace Network.UI
 
         private void HandlePlayerStarted(LobbyPlayer lobbyPlayer)
         {
-            var view = CreateView();
-
             if (!lobbyPlayer.isLocalPlayer)
             {
                 return;
             }
+
+            var view = CreateView();
 
             _player = lobbyPlayer;
             _view = view;

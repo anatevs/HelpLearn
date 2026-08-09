@@ -25,6 +25,14 @@ namespace Gameplay
             player.OnKilled += HandlePlayerKill;
         }
 
+        public void Clear()
+        {
+            Dispose();
+
+            _players.Clear();
+            _leaderboardStorage.Clear();
+        }
+
         public void RemovePlayer(GamePlayer player)
         {
             if (player != null)
