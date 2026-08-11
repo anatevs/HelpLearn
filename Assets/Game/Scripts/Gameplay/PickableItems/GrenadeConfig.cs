@@ -9,6 +9,7 @@ namespace Gameplay
         public override ItemType Type => ItemType.Grenade;
 
         public Grenade GrenadePrefab => _grenadePrefab;
+        public int InitPoolSize => _initPoolSize;
         public float ThrowSpeed => _throwSpeed;
         public float GravityMultiplier => _gravityMultiplier;
         public WaitForSeconds ExplosionWait => new WaitForSeconds(_explosionDelay);
@@ -18,6 +19,9 @@ namespace Gameplay
 
         [SerializeField]
         private Grenade _grenadePrefab;
+
+        [SerializeField]
+        private int _initPoolSize = 5;
 
         [SerializeField]
         private float _throwSpeed;

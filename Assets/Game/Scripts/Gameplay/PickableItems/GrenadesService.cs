@@ -14,6 +14,8 @@ namespace Gameplay
         private Grenade _grenadePrefab;
         private GrenadeConfig _grenadeConfig;
 
+        private ClientPool<Grenade> _pool;
+
         public void Init(PickItemsSpawnConfig pickItemsSpawnConfig)
         {
             _spawnConfig = pickItemsSpawnConfig;
@@ -21,19 +23,20 @@ namespace Gameplay
             _grenadeConfig = (GrenadeConfig)_spawnConfig.GetConfig(ItemType.Grenade);
             _grenadePrefab = _grenadeConfig.GrenadePrefab;
 
-            if (_grenadePrefab.TryGetComponent<NetworkIdentity>(out var identity))
-            {
-                if (!NetworkClient.prefabs.ContainsKey(identity.assetId))
-                {
-                    NetworkClient.RegisterPrefab(_grenadePrefab.gameObject);
-                }
-            }
+            _pool = new ClientPool<Grenade>(_grenadePrefab, _grenadeConfig.InitPoolSize, _poolTransform, transform);
+        }
+
+        private void OnDestroy()
+        {
+            _pool.Dispose();
         }
 
         [Server]
         public void Spawn(Transform throwPoint, string throwerName)
         {
-            Grenade grenade = Instantiate(_grenadePrefab, throwPoint.position, throwPoint.rotation, transform);
+            var grenade = _pool.Spawn();
+
+            grenade.transform.SetPositionAndRotation(throwPoint.position, throwPoint.rotation);
 
             NetworkServer.Spawn(grenade.gameObject);
 
@@ -48,10 +51,8 @@ namespace Gameplay
         public void Unspawn(Grenade grenade)
         {
             grenade.OnExploded -= Unspawn;
-            grenade.gameObject.SetActive(false);
-            grenade.transform.SetParent(_poolTransform, false);
 
-            NetworkServer.Destroy(grenade.gameObject);
+            _pool.Unspawn(grenade);
         }
     }
 }

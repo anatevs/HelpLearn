@@ -33,7 +33,6 @@ namespace GameManagement
         [SerializeField]
         private GameInitializer _gameInitializer;
 
-
         private SceneStateManager _sceneStateManager;
 
         private LobbyPlayersManager _lobbyPlayersManager;
@@ -51,7 +50,7 @@ namespace GameManagement
                 if (identity == null)
                 {
                     _lobbyPlayerPrefab = null;
-                    Debug.LogError("RoomPlayer prefab must have a NetworkIdentity component.");
+                    Debug.LogError("LobbyPlayer prefab must have a NetworkIdentity component.");
                 }
             }
         }
@@ -73,13 +72,16 @@ namespace GameManagement
             _sceneStateManager = sceneStateManager;
         }
 
-        public override void OnDestroy()
+        private void UnsubscribeOnServer()
         {
-            base.OnDestroy();
-
             if (_lobbyPlayersManager != null)
             {
                 _lobbyPlayersManager.OnReadyChanged -= HandleReadyChange;
+            }
+
+            if (_sceneStateManager != null)
+            {
+                _sceneStateManager.OnSceneLoadRequested -= ServerChangeScene;
             }
         }
 
@@ -99,7 +101,8 @@ namespace GameManagement
 
         public override void OnServerAddPlayer(NetworkConnectionToClient conn)
         {
-            if (_sceneStateManager.IsInLobby && _lobbyPlayersManager.Count < _settingsConfig.MaxPlayers)
+            if (_sceneStateManager.IsStartLobby
+                && _lobbyPlayersManager.Count < _settingsConfig.MaxPlayers)
             {
                 ChangeEnoughReady(false);
 
@@ -110,7 +113,7 @@ namespace GameManagement
             else
             {
                 // Late joiners not supported...should've been kicked by OnServerDisconnect
-                Debug.Log($"Not in Room scene or players amount exceeded...disconnecting {conn}");
+                Debug.Log($"Server is not on starting lobby scene or players amount exceeded...disconnecting {conn}");
                 conn.Disconnect();
             }
         }
@@ -140,7 +143,6 @@ namespace GameManagement
                     _lobbyPlayersManager.RemovePlayer(disconnectedPlayer);
 
                     playerName = disconnectedPlayer.Name;
-                    remainPlayers = _lobbyPlayersManager.Count;
 
                     CheckReadiness();
                 }
@@ -157,12 +159,9 @@ namespace GameManagement
                         _lobbyPlayersManager.RemovePlayer(lobbyInstance);
                         NetworkServer.Destroy(lobbyInstance.gameObject);
                     }
-
-                    remainPlayers = _gamePlayers.Count;
                 }
 
-                _lobbyPlayersManager.OnReadyChanged -= HandleReadyChange;
-                _sceneStateManager.OnSceneLoadRequested -= ServerChangeScene;
+                remainPlayers = _lobbyPlayersManager.Count;
 
                 OnServerPlayerDisconnected?.Invoke(playerName, remainPlayers);
             }
@@ -274,6 +273,8 @@ namespace GameManagement
 
         public override void OnStopServer()
         {
+            UnsubscribeOnServer();
+
             OnServerStopped?.Invoke();
         }
 
@@ -359,7 +360,7 @@ namespace GameManagement
             }
             else
             {
-                Debug.Log("not onroomserver...");
+                Debug.Log("player is not LobbyPlayer or try to change to not GamePlayer...");
                 return;
             }
 

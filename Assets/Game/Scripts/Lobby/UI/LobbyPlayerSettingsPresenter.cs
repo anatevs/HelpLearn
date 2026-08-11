@@ -5,68 +5,67 @@ namespace Network.UI
 {
     public class LobbyPlayerSettingsPresenter : MonoBehaviour
     {
-        private LobbyPlayer _player;
+        [SerializeField]
         private LobbyPlayerSettingsView _view;
+
+        private LobbyPlayer _player;
 
         private MultiplayerSettingsConfig _config;
 
         public void Init(MultiplayerSettingsConfig settingsConfig)
         {
             _config = settingsConfig;
+        }
 
-            Subscribe();
+        private void OnEnable()
+        {
+            LobbyPlayer.OnConnected += HandlePlayerConnected;
+            LobbyPlayer.OnDisconnected += HandlePlayerDisconnected;
         }
 
         private void OnDisable()
         {
-            LobbyPlayer.OnStarted -= HandlePlayerStarted;
-            LobbyPlayer.OnStopped -= HandlePlayerRemove;
-
-            DisableView();
+            LobbyPlayer.OnConnected -= HandlePlayerConnected;
+            LobbyPlayer.OnDisconnected -= HandlePlayerDisconnected;
         }
 
         public void Show(bool isShow)
         {
-            gameObject.SetActive(isShow);
+            if (!isShow)
+            {
+                _view.Hide();
+                return;
+            }
+
+            if (_player == null)
+            {
+                return;
+            }
+
+            _view.Show(_player.Name, _player.Color, _player.ReadyToBegin, _config.NameLengthRange);
         }
 
-        private void Subscribe()
-        {
-            LobbyPlayer.OnStarted += HandlePlayerStarted;
-            LobbyPlayer.OnStopped += HandlePlayerRemove;
-        }
-
-        private LobbyPlayerSettingsView CreateView()
-        {
-            var view = Instantiate(_config.PlayerViewPrefab, transform);
-
-            return view;
-        }
-
-        private void HandlePlayerStarted(LobbyPlayer lobbyPlayer)
+        private void HandlePlayerConnected(LobbyPlayer lobbyPlayer)
         {
             if (!lobbyPlayer.isLocalPlayer)
             {
                 return;
             }
 
-            var view = CreateView();
-
             _player = lobbyPlayer;
-            _view = view;
 
-            view.OnNameSetRequested += _player.CmdRequestNameChange;
+            _view.OnNameSetRequested += _player.CmdRequestNameChange;
 
-            view.OnColorSet += _player.CmdSetColor;
+            _view.OnColorSet += _player.CmdSetColor;
 
-            view.OnReadyChanged += _player.CmdChangeReadyState;
+            _view.OnReadyChanged += _player.CmdChangeReadyState;
 
-            view.Show(lobbyPlayer.Name, lobbyPlayer.Color, _config.NameLengthRange);
+            _view.Show(_player.Name, _player.Color, _player.ReadyToBegin, _config.NameLengthRange);
 
             _player.OnNameChanged += HandleChangeName;
         }
 
-        private void HandlePlayerRemove(LobbyPlayer lobbyPlayer)
+        private void HandlePlayerDisconnected(LobbyPlayer lobbyPlayer)
         {
             if (!lobbyPlayer.isLocalPlayer)
             {
@@ -80,17 +79,18 @@ namespace Network.UI
         {
             if (_view != null)
             {
-                _view.OnNameSetRequested -= _player.CmdRequestNameChange;
+                if (_player != null)
+                {
+                    _view.OnNameSetRequested -= _player.CmdRequestNameChange;
 
-                _view.OnColorSet -= _player.CmdSetColor;
+                    _view.OnColorSet -= _player.CmdSetColor;
 
-                _view.OnReadyChanged -= _player.CmdChangeReadyState;
+                    _view.OnReadyChanged -= _player.CmdChangeReadyState;
+
+                    _player.OnNameChanged -= HandleChangeName;
+                }
 
                 _view.Hide();
-
-                _player.OnNameChanged -= HandleChangeName;
-
-                Destroy(_view.gameObject);
             }
         }
 

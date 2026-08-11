@@ -9,9 +9,14 @@ namespace Gameplay
     {
         public event Action<PickableItem> OnPicked;
 
+        [SyncVar]
+        public uint SpawnId;
+
         public ItemConfig Config => _config;
 
         private ItemConfig _config;
+
+        private uint _spawnId;
 
         public void Init(ItemConfig config)
         {

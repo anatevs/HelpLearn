@@ -6,8 +6,8 @@ namespace GameManagement
 {
     public class LobbyPlayer : NetworkBehaviour
     {
-        public static event Action<LobbyPlayer> OnStarted;
-        public static event Action<LobbyPlayer> OnStopped;
+        public static event Action<LobbyPlayer> OnConnected;
+        public static event Action<LobbyPlayer> OnDisconnected;
 
         public event Action<int, string> OnNameChanged;
         public event Action<int, Color> OnColorChanged;
@@ -18,7 +18,7 @@ namespace GameManagement
         public string Name;
 
         [SyncVar]
-        public Color Color = Color.black;
+        public Color Color = Color.white;
 
         [SyncVar]
         public int PlayerID;
@@ -31,6 +31,10 @@ namespace GameManagement
             Name = name;
             this.name = name;
             OnNameChanged?.Invoke(PlayerID, name);
+
+            Color = Color.white;
+
+            ReadyToBegin = false;
         }
 
         public virtual void Start()
@@ -41,18 +45,25 @@ namespace GameManagement
             DontDestroyOnLoad(gameObject);
         }
 
-        public override void OnStartLocalPlayer()
-        {
-            base.OnStartLocalPlayer();
 
-            OnStarted?.Invoke(this);
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            if (isLocalPlayer)
+            {
+                OnConnected?.Invoke(this);
+            }
         }
 
-        public override void OnStopLocalPlayer()
+        public override void OnStopClient()
         {
-            base.OnStopLocalPlayer();
+            base.OnStopClient();
 
-            OnStopped?.Invoke(this);
+            if (isLocalPlayer)
+            {
+                OnDisconnected?.Invoke(this);
+            }
         }
 
         #region Hooks
@@ -72,15 +83,6 @@ namespace GameManagement
         public void CmdRequestNameChange(string newName)
         {
             OnNameChangeRequested?.Invoke(PlayerID, newName);
-        }
-
-        [Command]
-        public void CmdSetName(string name)
-        {
-            Name = name;
-            this.name = name;
-
-            OnNameChanged?.Invoke(PlayerID, name);
         }
 
         [Command]

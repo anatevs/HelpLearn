@@ -81,7 +81,7 @@ namespace Gameplay
             }
         }
 
-        [Command]
+        [Server]
         public void Shoot(Vector3 viewPoint, Vector3 direction)
         {
             if (CanShoot)
@@ -89,19 +89,21 @@ namespace Gameplay
                 TargetShowFlash();
                 ChangeCharge(-_config.ShootCost);
 
+
+
                 if (Physics.Raycast(viewPoint, direction, out var hit, _config.MaxDistance))
                 {
                     if (hit.collider.gameObject.TryGetComponent<Health>(out var hp))
                     {
                         hp.TakeDamage(_config.Damage, _ownerName);
 
-                        StartCoroutine(Cooldown());
-
                         var endPoint = hit.point;
 
                         _tracerShower.ShowTrace(_shootPoint.position, endPoint, _config.Name);
                     }
                 }
+
+                StartCoroutine(Cooldown());
             }
         }
 

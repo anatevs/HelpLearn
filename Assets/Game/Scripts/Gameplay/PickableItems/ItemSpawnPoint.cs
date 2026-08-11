@@ -7,8 +7,6 @@ namespace Gameplay
 {
     public class ItemSpawnPoint : MonoBehaviour
     {
-        public event Action<ItemType> OnSpawnRequested;
-
         public event Action<string> OnSpawnNameRequested;
 
         public event Action<ItemSpawnPoint> OnItemPicked;
@@ -49,18 +47,16 @@ namespace Gameplay
         {
             yield return _respawnWait;
 
-            if (_groupWeights.Length == 1)
-            {
-                OnSpawnRequested?.Invoke(_itemType);
-            }
-            else if (_groupWeights.Length > 1)
-            {
-                var index = GetRandomItemIndex(_groupWeights);
+            int index = 0;
 
-                var itemName = _groupItemData[index].Config.Name;
-
-                OnSpawnNameRequested?.Invoke(itemName);
+            if (_groupWeights.Length > 1)
+            {
+                index = GetRandomItemIndex(_groupWeights);
             }
+
+            var itemName = _groupItemData[index].Config.Name;
+
+            OnSpawnNameRequested?.Invoke(itemName);
         }
 
         private void PickItem(PickableItem item)

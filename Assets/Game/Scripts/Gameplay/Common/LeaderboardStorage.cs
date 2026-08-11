@@ -16,6 +16,11 @@ namespace Gameplay
 
         public void AddPlayerName(string playerName)
         {
+            if (_playersResults.ContainsKey(playerName))
+            {
+                _playersResults.Remove(playerName);
+            }
+
             var data = new PlayerResults(playerName, _killToScoreCoef);
 
             _playersResults.Add(playerName, data);

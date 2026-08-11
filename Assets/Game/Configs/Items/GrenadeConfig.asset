@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Grenade
   _pickablePrefab: {fileID: 2435615767040817374, guid: 4bc652e9104d62843aa32a27b88b484d, type: 3}
-  _pickSqrDistance: 16
   _useDelay: 5
   _grenadePrefab: {fileID: 3978598359290481264, guid: d1ab0147b70201140a7f47919bbc937c, type: 3}
+  _initPoolSize: 2
   _throwSpeed: 20
   _gravityMultiplier: 4
   _explosionDelay: 1

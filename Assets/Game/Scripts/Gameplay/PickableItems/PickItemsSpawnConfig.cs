@@ -10,11 +10,14 @@ namespace Gameplay
     public class PickItemsSpawnConfig : ScriptableObject
     {
         public ItemSpawnData[] ItemsSpawnData => _itemsSpawnData;
-
+        public int InitPoolSize => _initPoolSize;
         public ItemType[] Types => _dataDict.Keys.ToArray();
 
         [SerializeField]
         private ItemSpawnData[] _itemsSpawnData;
+
+        [SerializeField]
+        private int _initPoolSize = 5;
 
         private readonly Dictionary<ItemType, ItemSpawnData> _dataDict = new();
 

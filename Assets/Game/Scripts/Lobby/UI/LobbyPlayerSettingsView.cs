@@ -75,11 +75,15 @@ namespace Network.UI
             OnColorSet = null;
         }
 
-        public void Show(string currentName, Color currentColor, int[] nameLengthRange)
+        public void Show(string currentName, Color currentColor, bool isReady, int[] nameLengthRange)
         {
             SetNameTitle(currentName);
 
+            _nameField.text = currentName;
+
             SetupColor(currentColor);
+
+            _readyView.SwitchViewButton(isReady);
 
             gameObject.SetActive(true);
 

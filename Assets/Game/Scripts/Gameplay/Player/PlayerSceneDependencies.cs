@@ -81,6 +81,8 @@ namespace Gameplay
             _timerPresenter?.Dispose();
 
             _pickItemsSpawnConfig.Clear();
+
+            _matchTimer.OnTimerEnded -= HandleEndMatch;
         }
 
         public void Construct(GameInfoPanel gameInfoPanel, SceneStateManager sceneStateManager) //server
@@ -98,7 +100,8 @@ namespace Gameplay
         {
             var isLocal = gamePlayer.Construct(_cameraFollower,
                 _inputHandler, _weaponTracerShower,
-                _pickItemsSpawnConfig, _grenadesService);
+                _pickItemsSpawnConfig, _grenadesService,
+                _pickableItemsService);
 
             _gameplayInfoPresenter?.AddPlayer(gamePlayer); //server
 

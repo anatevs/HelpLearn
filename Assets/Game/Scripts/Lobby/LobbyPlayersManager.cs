@@ -93,8 +93,6 @@ namespace GameManagement
         }
 
 
-
-
         #region Player data changing
 
         public void HandleChangeNameRequest(int index, string newName)
@@ -121,8 +119,6 @@ namespace GameManagement
         public void ChangeReady(int index, bool isReady)
         {
             OnReadyChanged?.Invoke(index, isReady);
-
-            //ReadyStatusChanged();
         }
 
         private string GetDefaultName(int index)
@@ -150,27 +146,5 @@ namespace GameManagement
         }
 
         #endregion
-
-
-        //public virtual void ReadyStatusChanged()
-        //{
-        //    int currentPlayers = 0;
-        //    int readyPlayers = 0;
-
-        //    foreach (LobbyPlayer player in _lobbyPlayers)
-        //    {
-        //        if (player != null)
-        //        {
-        //            currentPlayers++;
-        //            if (player.ReadyToBegin)
-        //                readyPlayers++;
-        //        }
-        //    }
-
-        //    //if (currentPlayers == readyPlayers)
-        //    //    CheckReadyToBegin();
-        //    //else
-        //    //    ChangeEnoughReady(false);
-        //}
     }
 }

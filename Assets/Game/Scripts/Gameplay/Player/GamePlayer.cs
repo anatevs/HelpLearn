@@ -19,7 +19,6 @@ namespace GameManagement
 
         public Health Health => _health;
         public Weapon Weapon => _weapon;
-        public InventoryStorage InventoryStorage => _inventoryStorage;
 
         [SyncVar(hook = nameof(SetName))]
         public string Name = "nameDefault";
@@ -68,11 +67,16 @@ namespace GameManagement
 
         private readonly InventoryStorage _inventoryStorage = new();
 
+
+        private PickableItemsService _pickableItemsService;
+
+
         public bool Construct(CameraFollower cameraFollower,
             InputHandler input,
             WeaponTracerShower weaponTracerShower,
             PickItemsSpawnConfig pickItemsConfig,
-            GrenadesService grenadesService)
+            GrenadesService grenadesService,
+            PickableItemsService pickableItemsService)
         {
             if (isLocalPlayer)
             {
@@ -91,6 +95,11 @@ namespace GameManagement
                 _input.OnBigHealed += CmdHealBig;
 
                 _input.OnGrenadeThrown += CmdThrowGrenade;
+            }
+
+            if (isServer)
+            {
+                _pickableItemsService = pickableItemsService;
             }
 
             _weaponTracerShower = weaponTracerShower;
@@ -143,22 +152,23 @@ namespace GameManagement
                 var sceneDepenenies = gameInitializer.PlayerSceneDependencies;
 
                 sceneDepenenies.ConstructPlayer(this);
-            }
 
-            if (isServer)
-            {
-                _inventoryStorage.OnItemNamedUpdated += TargetUpdateInventory;
-            }
 
-            if (isClient)
-            {
-                _playerVisual.SetName(Name);
-
-                _playerVisual.SetColor(Color);
-
-                if (!isLocalPlayer)
+                if (isServer)
                 {
-                    _rigidbody.isKinematic = true;
+                    _inventoryStorage.OnItemNamedUpdated += TargetUpdateInventory;
+                }
+
+                if (isClient)
+                {
+                    _playerVisual.SetName(Name);
+
+                    _playerVisual.SetColor(Color);
+
+                    if (!isLocalPlayer)
+                    {
+                        _rigidbody.isKinematic = true;
+                    }
                 }
             }
         }
@@ -210,7 +220,7 @@ namespace GameManagement
 
             if (other.gameObject.TryGetComponent<PickableItem>(out var pickedItem))
             {
-                CmdPickItem(pickedItem.netId);
+                CmdPickPooledItem(pickedItem.SpawnId);
             }
         }
 
@@ -242,6 +252,12 @@ namespace GameManagement
                 return;
             }
 
+            CmdShoot();
+        }
+
+        [Command]
+        private void CmdShoot()
+        {
             _weapon.Shoot(_cameraPoint.position, transform.forward);
         }
 
@@ -322,37 +338,30 @@ namespace GameManagement
         }
 
         [Command]
-        private void CmdPickItem(uint itemNetId)
+        private void CmdPickPooledItem(uint spawnId)
         {
-            if (NetworkServer.spawned.TryGetValue(itemNetId, out NetworkIdentity identity))
+            if (!(_pickableItemsService.TryGetSpawnedItem(spawnId, out var pickedItem) &&
+                    pickedItem.gameObject.activeSelf))
             {
-                if (identity.gameObject.TryGetComponent<PickableItem>(out var pickedItem) &&
-                    pickedItem.gameObject.activeSelf)
-                {
-                    var sqrDistance = (transform.position - pickedItem.transform.position).sqrMagnitude;
-
-                    if (sqrDistance <= _playerMoveController.Config.PickItemSqrDistance)
-                    {
-                        var itemName = pickedItem.Config.Name;
-                        _inventoryStorage.AddItem(itemName);
-
-                        pickedItem.Pick();
-
-                        OnItemPicked?.Invoke(Name, pickedItem.Config.Name);
-                    }
-                    else
-                    {
-                        Debug.Log($"try to pick item farther ({sqrDistance}) then pick distance ({_playerMoveController.Config.PickItemSqrDistance})");
-                    }
-                }
-                else
-                {
-                    Debug.Log("try to pick netId object without PickableItem on it or inactive gameObject");
-                }
+                Debug.Log($"try to pick non-existed in itemsService item with spawnId {spawnId} or inactive gameObject");
                 return;
             }
 
-            Debug.Log("try to pick non-existing netId");
+            var sqrDistance = (transform.position - pickedItem.transform.position).sqrMagnitude;
+
+            if (sqrDistance <= _playerMoveController.Config.PickItemSqrDistance)
+            {
+                var itemName = pickedItem.Config.Name;
+                _inventoryStorage.AddItem(itemName);
+
+                pickedItem.Pick();
+
+                OnItemPicked?.Invoke(Name, pickedItem.Config.Name);
+            }
+            else
+            {
+                Debug.Log($"try to pick item farther ({sqrDistance}) then pick distance ({_playerMoveController.Config.PickItemSqrDistance})");
+            }
         }
 
         [Command]
