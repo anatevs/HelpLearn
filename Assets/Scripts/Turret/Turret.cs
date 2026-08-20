@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,36 +6,78 @@ namespace Gameplay
 {
     public class Turret : MonoBehaviour
     {
-        [SerializeField]
-        private Transform _shootPoint;
+        public int BarrelsAmount => _barrelData.Length;
 
         [SerializeField]
-        private float _shootDelay;
+        private TurretBarrelData[] _barrelData;
+
+        [SerializeField]
+        private float _projectileSpeed;
+
+        [SerializeField]
+        private float _projectileLifetime;
 
         private ProjectileSpawnService _projectileService;
 
-        private WaitForSeconds _shootWait;
-
-        private void Awake()
-        {
-            _shootWait = new WaitForSeconds(_shootDelay);
-        }
+        private WaitForSeconds[] _shootWait;
 
         public void Init(ProjectileSpawnService projectileService)
         {
+            _shootWait = new WaitForSeconds[_barrelData.Length];
+
+            for (int i = 0; i < _barrelData.Length; i++)
+            {
+                _shootWait[i] = new WaitForSeconds(_barrelData[i].ShootPeriod);
+            }
+
             _projectileService = projectileService;
 
-            StartCoroutine(ShootCoroutine());
-        }
-
-        private IEnumerator ShootCoroutine()
-        {
-            while (true)
+            if (gameObject.activeSelf)
             {
-                _projectileService.Spawn(_shootPoint);
-
-                yield return _shootWait;
+                for (int i = 0; i < _barrelData.Length; i++)
+                {
+                    StartCoroutine(ShootCoroutine(_barrelData[i], _shootWait[i]));
+                }
             }
         }
+
+        public void SetShootSpeedAndPeriod(float speed, float shootPeriod)
+        {
+            for (int i = 0; i < _barrelData.Length; i++)
+            {
+                var data = _barrelData[i];
+
+                data.ProjectileSpeed = speed;
+                data.ShootPeriod = shootPeriod;
+
+                _barrelData[i] = data;
+            }
+        }
+
+        private IEnumerator ShootCoroutine(TurretBarrelData barrelData, WaitForSeconds shootWait)
+        {
+            yield return new WaitForSeconds(barrelData.StartDelay);
+
+            while (true)
+            {
+                _projectileService.Spawn(barrelData.ShootPoint, barrelData.ProjectileSpeed, _projectileLifetime, barrelData.ProjectileType);
+
+                yield return shootWait;
+            }
+        }
+    }
+
+    [Serializable]
+    public struct TurretBarrelData
+    {
+        public Transform ShootPoint;
+
+        public float ProjectileSpeed;
+
+        public ProjectileType ProjectileType;
+
+        public float StartDelay;
+
+        public float ShootPeriod;
     }
 }

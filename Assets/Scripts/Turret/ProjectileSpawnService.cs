@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
@@ -10,8 +11,9 @@ namespace Gameplay
         public event Action OnUnspawned;
         public string SpawnObjectName => "Projectiles";
 
-        [SerializeField]
-        private float _speed;
+        public List<IInfoPool> InfoPools => _infoPools;
+
+        public Transform PoolTransform => _poolTransform;
 
         [SerializeField]
         private LayerMask _damageMask;
@@ -19,23 +21,46 @@ namespace Gameplay
         [SerializeField]
         private Transform _poolTransform;
 
-        private IPool<Projectile> _pool;
+        //private IPool<Projectile> _pool;
 
-        public void Init(IPool<Projectile> pool)
+        private readonly Dictionary<ProjectileType, IPool<Projectile>> _pools = new();
+
+        private Dictionary<ProjectileType, ProjectileTypeData> _typesData;
+
+        private List<IInfoPool> _infoPools;
+
+        public void InitPool(ProjectileType projectileType, IPool<Projectile> pool)
         {
-            _pool = pool;
+            //_pool = pool;
+
+            _pools.Add(projectileType, pool);
+
+            if (pool is IInfoPool infoPool)
+            {
+                _infoPools ??= new();
+
+                _infoPools.Add(infoPool);
+            }
         }
 
-        public void Spawn(Transform startPoint)
+        public void Init(ProjectileTypesConfig typeSpeedsConfig)
         {
-            var projectile = _pool.Get();
+            _typesData = typeSpeedsConfig.GetData();
+        }
+
+        public void Spawn(Transform startPoint, float speed, float lifetime, ProjectileType projectileType)
+        {
+            var projectile = _pools[projectileType].Get();
 
             projectile.transform.SetParent(transform);
+
             projectile.transform.SetPositionAndRotation(startPoint.position, startPoint.rotation);
 
-            projectile.SetParameters(_speed, _damageMask);
+            speed *= _typesData[projectileType].SpeedMultiplier;
 
-            projectile.OnCollided += Unspawn;
+            projectile.SetParameters(speed, lifetime, _damageMask, projectileType);
+
+            projectile.OnDestroyed += Unspawn;
 
             projectile.gameObject.SetActive(true);
 
@@ -44,13 +69,15 @@ namespace Gameplay
 
         private void Unspawn(Projectile projectile)
         {
+            projectile.OnDestroyed -= Unspawn;
+
             projectile.gameObject.SetActive(false);
 
-            projectile.SetParameters(0, _damageMask);
+            projectile.SetParameters(0, _damageMask, 0, projectile.ProjectileType);
 
             projectile.transform.SetParent(_poolTransform);
 
-            _pool.Release(projectile);
+            _pools[projectile.ProjectileType].Release(projectile);
 
             OnUnspawned?.Invoke();
         }

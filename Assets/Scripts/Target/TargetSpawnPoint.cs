@@ -6,13 +6,7 @@ namespace Gameplay
     public class TargetSpawnPoint : MonoBehaviour
     {
         [SerializeField]
-        private float _startDelay;
-
-        [SerializeField]
-        private float _spawnPeriod;
-
-        [SerializeField]
-        private float _targetSpeed;
+        private SpawnPointData _data;
 
         private TargetSpawnService _targetService;
 
@@ -23,9 +17,15 @@ namespace Gameplay
             _targetService = targetService;
         }
 
+        public void SetupData(SpawnPointData data)
+        {
+            _data = data;
+            _spawnWait = new WaitForSeconds(_data.SpawnPeriod);
+        }
+
         private void Awake()
         {
-            _spawnWait = new WaitForSeconds(_spawnPeriod);
+            _spawnWait = new WaitForSeconds(_data.SpawnPeriod);
         }
 
         private void Start()
@@ -35,11 +35,11 @@ namespace Gameplay
 
         private IEnumerator SpawnCoroutine()
         {
-            yield return new WaitForSeconds(_startDelay);
+            yield return new WaitForSeconds(_data.StartDelay);
 
             while (true)
             {
-                _targetService.Spawn(transform, _targetSpeed);
+                _targetService.Spawn(transform, _data.TargetSpeed);
 
                 yield return _spawnWait;
             }

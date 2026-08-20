@@ -21,7 +21,7 @@ namespace Gameplay
             _rb = GetComponent<Rigidbody>();
         }
 
-        public void Init(float speed, Vector3 moveDirection)
+        public void SetParameters(float speed, Vector3 moveDirection)
         {
             _speed = speed;
 

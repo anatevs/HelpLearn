@@ -14,6 +14,19 @@ namespace UI
         [SerializeField]
         private TMP_Text _currentValueText;
 
+        [Header("Pool info")]
+        [SerializeField]
+        private GameObject[] _poolInfoObjects;
+
+        [SerializeField]
+        private TMP_Text _poolSizeText;
+
+        [SerializeField]
+        private TMP_Text _inPoolCountText;
+
+        [SerializeField]
+        private TMP_Text _repeatUseCountText;
+
         public void SetObjectsName(string objectsName)
         {
             _objectsName.text = objectsName;
@@ -33,6 +46,29 @@ namespace UI
         public void SetCurrent(string value)
         {
             _currentValueText.text = value;
+        }
+
+        public void ShowPoolInfo(bool isShow)
+        {
+            for (int i = 0; i < _poolInfoObjects.Length; i++)
+            {
+                _poolInfoObjects[i].gameObject.SetActive(isShow);
+            }
+        }
+
+        public void SetPoolSize(string poolSize)
+        {
+            _poolSizeText.text = poolSize;
+        }
+
+        public void SetFreeCount(string freeCount)
+        {
+            _inPoolCountText.text = freeCount;
+        }
+
+        public void SetRepeatUsing(string repeatUsing)
+        {
+            _repeatUseCountText.text = repeatUsing;
         }
     }
 }
