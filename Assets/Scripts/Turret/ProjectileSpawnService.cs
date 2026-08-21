@@ -58,6 +58,8 @@ namespace Gameplay
 
             speed *= _typesData[projectileType].SpeedMultiplier;
 
+            lifetime /= _typesData[projectileType].SpeedMultiplier;
+
             projectile.SetParameters(speed, lifetime, _damageMask, projectileType);
 
             projectile.OnDestroyed += Unspawn;

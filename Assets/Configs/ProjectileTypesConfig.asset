@@ -18,7 +18,7 @@ MonoBehaviour:
     Prefab: {fileID: 5027492130635052937, guid: d4a372b3f8a03f340870ce069d76fe08, type: 3}
   - Type: 1
     SpeedMultiplier: 1.5
-    Prefab: {fileID: 5027492130635052937, guid: d4a372b3f8a03f340870ce069d76fe08, type: 3}
+    Prefab: {fileID: 5027492130635052937, guid: 8ee3424b8c486b14398cfe0cffb92913, type: 3}
   - Type: 2
     SpeedMultiplier: 0.7
-    Prefab: {fileID: 5027492130635052937, guid: d4a372b3f8a03f340870ce069d76fe08, type: 3}
+    Prefab: {fileID: 5027492130635052937, guid: 258344ae0c9ee204f9ee69b2579370f9, type: 3}

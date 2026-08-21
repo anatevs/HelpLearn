@@ -34,6 +34,9 @@ namespace GameTest
         [SerializeField]
         private float _testProjectileSpeed;
 
+        [SerializeField]
+        private float _testProjectileLifetime;
+
 
         [Header("Test parameters")]
         [SerializeField]
@@ -104,7 +107,7 @@ namespace GameTest
 
             _projectilesInitCount = CalculateProjectileInitCount(turret.BarrelsAmount, turret.transform.position.z);
 
-            turret.SetShootSpeedAndPeriod(_testProjectileSpeed, 1 / _shootRate);
+            turret.ChangeBarrelParameters(_testProjectileSpeed, _testProjectileLifetime, 1 / _shootRate);
         }
 
         private void DisableCurrentPoints()

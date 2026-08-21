@@ -49,17 +49,22 @@ MonoBehaviour:
   _barrelData:
   - ShootPoint: {fileID: 533221070694406885}
     ProjectileSpeed: 15
+    ProjectileLifetime: 3
+    ProjectileType: 0
     StartDelay: 0.1
-    ShootPeriod: 0.2
+    ShootPeriod: 0.5
   - ShootPoint: {fileID: 3012631488821110998}
     ProjectileSpeed: 15
-    StartDelay: 0.15
-    ShootPeriod: 0.2
+    ProjectileLifetime: 3
+    ProjectileType: 2
+    StartDelay: 0.3
+    ShootPeriod: 0.5
   - ShootPoint: {fileID: 3151566915854315298}
     ProjectileSpeed: 15
-    StartDelay: 0.2
-    ShootPeriod: 0.2
-  _projectileSpeed: 15
+    ProjectileLifetime: 3
+    ProjectileType: 1
+    StartDelay: 0.5
+    ShootPeriod: 0.5
   _projectileLifetime: 4
 --- !u!1 &3310441275378783674
 GameObject:

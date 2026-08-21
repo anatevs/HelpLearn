@@ -12,9 +12,6 @@ namespace Gameplay
         private TurretBarrelData[] _barrelData;
 
         [SerializeField]
-        private float _projectileSpeed;
-
-        [SerializeField]
         private float _projectileLifetime;
 
         private ProjectileSpawnService _projectileService;
@@ -41,13 +38,14 @@ namespace Gameplay
             }
         }
 
-        public void SetShootSpeedAndPeriod(float speed, float shootPeriod)
+        public void ChangeBarrelParameters(float speed, float lifetime, float shootPeriod)
         {
             for (int i = 0; i < _barrelData.Length; i++)
             {
                 var data = _barrelData[i];
 
                 data.ProjectileSpeed = speed;
+                data.ProjectileLifetime = lifetime;
                 data.ShootPeriod = shootPeriod;
 
                 _barrelData[i] = data;
@@ -60,7 +58,7 @@ namespace Gameplay
 
             while (true)
             {
-                _projectileService.Spawn(barrelData.ShootPoint, barrelData.ProjectileSpeed, _projectileLifetime, barrelData.ProjectileType);
+                _projectileService.Spawn(barrelData.ShootPoint, barrelData.ProjectileSpeed, barrelData.ProjectileLifetime, barrelData.ProjectileType);
 
                 yield return shootWait;
             }
@@ -73,6 +71,8 @@ namespace Gameplay
         public Transform ShootPoint;
 
         public float ProjectileSpeed;
+
+        public float ProjectileLifetime;
 
         public ProjectileType ProjectileType;
 
