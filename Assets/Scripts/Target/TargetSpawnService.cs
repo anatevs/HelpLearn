@@ -4,27 +4,27 @@ using System.Collections.Generic;
 
 namespace Gameplay
 {
-    public class TargetSpawnService : MonoBehaviour,
+    public class TargetSpawnService :
         ISpawnService
     {
         public event Action OnSpawned;
         public event Action OnUnspawned;
-        public string SpawnObjectName => "Targets";
-
-        public Transform PoolTransform => _poolTransform;
 
         public List<IInfoPool> InfoPools => _infoPools;
 
-        [SerializeField]
-        private Transform _poolTransform;
-
         private IPool<Target> _pool;
 
-        private List<IInfoPool> _infoPools;
+        private readonly Transform _activesTransform;
 
-        public void InitPool(IPool<Target> pool)
+        private readonly MovablesSystem _movablesSystem;
+
+        private readonly List<IInfoPool> _infoPools;
+
+        public TargetSpawnService(IPool<Target> pool, Transform activesTargetsTransform, MovablesSystem movablesSystem)
         {
             _pool = pool;
+            _activesTransform = activesTargetsTransform;
+            _movablesSystem = movablesSystem;
 
             if (pool is IInfoPool infoPool)
             {
@@ -38,7 +38,7 @@ namespace Gameplay
         {
             var target = _pool.Get();
 
-            target.transform.SetParent(transform);
+            target.transform.SetParent(_activesTransform);
 
             target.transform.position = spawnPoint.position;
 
@@ -49,6 +49,8 @@ namespace Gameplay
             target.OnKilled += Unspawn;
 
             OnSpawned?.Invoke();
+
+            _movablesSystem.AddMovable(target);
 
             return target;
         }
@@ -61,11 +63,11 @@ namespace Gameplay
 
             target.SetParameters(0, Vector3.zero);
 
-            target.transform.SetParent(_poolTransform, false);
-
             _pool?.Release(target);
 
             OnUnspawned?.Invoke();
+
+            _movablesSystem.RemoveMovable(target);
         }
     }
 }

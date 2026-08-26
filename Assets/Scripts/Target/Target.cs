@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class Target : MonoBehaviour
+    public class Target : MonoBehaviour,
+        IMovableFixedUpd
     {
         public event Action<Target> OnKilled;
 
@@ -28,7 +29,7 @@ namespace Gameplay
             _deltaMove = _speed * Time.fixedDeltaTime * moveDirection;
         }
 
-        private void FixedUpdate()
+        public void MoveFixedUpd()
         {
             var nextPos = transform.position + _deltaMove;
 

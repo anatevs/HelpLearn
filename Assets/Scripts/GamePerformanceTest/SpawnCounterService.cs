@@ -14,11 +14,11 @@ namespace GameTest
 
         private int _objectsPeakCount = 0;
 
-        public void AddSpawnService(ISpawnService spawnService)
+        public void AddSpawnService(ISpawnService spawnService, string spawnObjectsTitle)
         {
             var counter = new SpawnCounter(spawnService);
 
-            OnServiceAdded?.Invoke(counter, spawnService.SpawnObjectName, spawnService.InfoPools);
+            OnServiceAdded?.Invoke(counter, spawnObjectsTitle, spawnService.InfoPools);
 
             _spawnCounters.Add(counter);
 

@@ -65,7 +65,9 @@ MonoBehaviour:
     ProjectileType: 1
     StartDelay: 0.5
     ShootPeriod: 0.5
-  _projectileLifetime: 4
+  _damagableMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &3310441275378783674
 GameObject:
   m_ObjectHideFlags: 0

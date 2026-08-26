@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class Projectile : MonoBehaviour
+    public class Projectile : MonoBehaviour,
+        IMovableUpd,
+        ILifetimed
     {
         public ProjectileType ProjectileType => _type;
 
@@ -29,12 +31,15 @@ namespace Gameplay
             _timer = 0f;
         }
 
-        private void Update()
+        public void MoveUpdate()
         {
             var deltaMove = _speed * Time.deltaTime * transform.forward;
 
             transform.Translate(deltaMove);
+        }
 
+        public void CheckLifetime(float deltaTime)
+        {
             _timer += Time.deltaTime;
 
             if (_timer >= _lifetime)

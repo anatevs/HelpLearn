@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c27856e9aea4f4cbe917d9e8e00b22, type: 3}
-  m_Name: ProjectileConfig
+  m_Script: {fileID: 11500000, guid: eeddc6f3cf9a56d4d8ac69f3eabe2fe8, type: 3}
+  m_Name: UITitlesConfig
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 5027492130635052937, guid: d4a372b3f8a03f340870ce069d76fe08, type: 3}
+  _projectiles: Projectiles
+  _targets: Targets

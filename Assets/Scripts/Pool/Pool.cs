@@ -17,10 +17,10 @@ namespace Gameplay
 
         private readonly Transform _poolTransform;
 
+        private readonly int _initCount = 0;
+
         private int _poolSize = 0;
         private int _repeatUsing = 0;
-
-        private int _initCount = 0;
 
         public Pool(T prefab, int initCount, Transform poolTransform)
         {

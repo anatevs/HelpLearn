@@ -7,9 +7,16 @@ namespace GameManagement
 {
     public class GameInitializer : MonoBehaviour
     {
+        [Header("GameplayServices")]
+        [SerializeField]
+        private MovablesSystem _movablesSystem;
+
+        [SerializeField]
+        private LifetimedSystem _lifetimedSystem;
+
         [Header("Targets")]
         [SerializeField]
-        private TargetSpawnService _targetSpawnService;
+        private Transform _targetsActiveTransform;
 
         [SerializeField]
         private TargetSpawnPoint[] _targetSpawnPoints;
@@ -22,13 +29,10 @@ namespace GameManagement
         private Turret _turret;
 
         [SerializeField]
-        private ProjectileSpawnService _projectileService;
+        private Transform _projectilesActiveTransform;
 
         [SerializeField]
-        private ProjectileConfig _projectileConfig;
-
-        [SerializeField]
-        private ProjectileTypesConfig _projectileTypeSpeedConfig;
+        private ProjectileTypesConfig _projectileTypesConfig;
 
         [Header("Pools")]
         [SerializeField]
@@ -37,6 +41,11 @@ namespace GameManagement
         [SerializeField]
         private int _projectilePoolInitCount;
 
+        [SerializeField]
+        private Transform _targetsPoolTransform;
+
+        [SerializeField]
+        private Transform _projectilesPoolTransform;
 
         [Header("PerformanceTest")]
         [SerializeField]
@@ -54,6 +63,13 @@ namespace GameManagement
         [SerializeField]
         private ModeView _modeView;
 
+        [SerializeField]
+        private UITitlesConfig _titlesConfig;
+
+        private TargetSpawnService _targetSpawnService;
+
+        private ProjectileSpawnService _projectileService;
+
         private SpawnCounterService _spawnCounterService;
 
         private ModePresenter _modePresenter;
@@ -61,6 +77,13 @@ namespace GameManagement
         private void Awake()
         {
             _modePresenter = new ModePresenter(_modeView, _spawnModeController);
+
+            var targetPool = _spawnModeController
+                .CreatePool<Target>(_targetConfig.Prefab,
+                _targetPoolInitCount,
+                _targetsPoolTransform);
+
+            _targetSpawnService = new TargetSpawnService(targetPool, _targetsActiveTransform, _movablesSystem);
 
             _targetSpawnAdjuster.SetupSpawn(_targetSpawnService, _turret);
 
@@ -81,17 +104,10 @@ namespace GameManagement
                 _projectilePoolInitCount = _targetSpawnAdjuster.ProjectilesInitCount;
             }
 
-            var targetPool = _spawnModeController
-                .CreatePool<Target>(_targetConfig.Prefab,
-                _targetPoolInitCount,
-                _targetSpawnService.PoolTransform);
+            _projectileService = new ProjectileSpawnService(_projectileTypesConfig,
+                _projectilesActiveTransform, _turret.DamagableMask, _movablesSystem, _lifetimedSystem);
 
-            _targetSpawnService.InitPool(targetPool);
-
-
-            _projectileService.Init(_projectileTypeSpeedConfig);
-
-            var projectileTypesData = _projectileTypeSpeedConfig.GetData();
+            var projectileTypesData = _projectileTypesConfig.GetData();
 
             var typeInitCount = (int)Mathf.Ceil(_projectilePoolInitCount / projectileTypesData.Count);
 
@@ -100,9 +116,9 @@ namespace GameManagement
                 var projectilePool = _spawnModeController
                     .CreatePool<Projectile>(projectileData.Prefab,
                     typeInitCount,
-                    _projectileService.PoolTransform);
+                    _projectilesPoolTransform);
 
-                _projectileService.InitPool(projectileData.Type, projectilePool);
+                _projectileService.AddPool(projectileData.Type, projectilePool);
             }
 
             _turret.Init(_projectileService);
@@ -111,8 +127,8 @@ namespace GameManagement
             _spawnInfoController.Init(_spawnCounterService);
             _performancePresenter.Init(_spawnCounterService);
 
-            _spawnCounterService.AddSpawnService(_targetSpawnService);
-            _spawnCounterService.AddSpawnService(_projectileService);
+            _spawnCounterService.AddSpawnService(_targetSpawnService, _titlesConfig.TargetsTitle);
+            _spawnCounterService.AddSpawnService(_projectileService, _titlesConfig.ProjectilesTitle);
         }
 
         private void OnDestroy()

@@ -8,11 +8,13 @@ namespace Gameplay
     {
         public int BarrelsAmount => _barrelData.Length;
 
+        public LayerMask DamagableMask => _damagableMask;
+
         [SerializeField]
         private TurretBarrelData[] _barrelData;
 
         [SerializeField]
-        private float _projectileLifetime;
+        private LayerMask _damagableMask;
 
         private ProjectileSpawnService _projectileService;
 

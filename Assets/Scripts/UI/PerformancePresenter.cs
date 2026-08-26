@@ -6,7 +6,7 @@ namespace UI
     public class PerformancePresenter : MonoBehaviour
     {
         [SerializeField]
-        private PerformanceCounter _performanceCounter;
+        private FPSCounter _fpsCounter;
 
         [SerializeField]
         private PerformanceView _view;
@@ -22,14 +22,12 @@ namespace UI
 
         private void OnEnable()
         {
-            _performanceCounter.OnFPSChanged += HandleFPSChange;
-            _performanceCounter.OnDurationChanged += HandleDurationChange;
+            _fpsCounter.OnFPSUpdated += HandleFPSChange;
         }
 
         private void OnDisable()
         {
-            _performanceCounter.OnFPSChanged -= HandleFPSChange;
-            _performanceCounter.OnDurationChanged -= HandleDurationChange;
+            _fpsCounter.OnFPSUpdated -= HandleFPSChange;
 
             if (_spawnCounterService != null)
             {
@@ -40,6 +38,8 @@ namespace UI
         private void HandleFPSChange(float fps)
         {
             _view.SetFPS(fps.ToString("0"));
+
+            HandleDurationChange(1 / fps);
         }
 
         private void HandleDurationChange(float duration)

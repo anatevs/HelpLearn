@@ -45,8 +45,6 @@ namespace UI
                     pool.OnPoolSizeChanged += SetPoolSizeChange;
                     pool.OnCurrentFreeChanged += SetFreeCountChange;
                     pool.OnRepeatUsingChanged += SetRepeatUsingChange;
-
-                    //_infoPool.RaisePoolInfoEvents();
                 }
 
                 SetPoolSizeChange(0);
