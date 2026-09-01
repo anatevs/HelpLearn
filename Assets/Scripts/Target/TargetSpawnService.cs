@@ -12,18 +12,15 @@ namespace Gameplay
 
         public List<IInfoPool> InfoPools => _infoPools;
 
-        private IPool<Target> _pool;
-
-        private readonly Transform _activesTransform;
+        private readonly IPool<Target> _pool;
 
         private readonly MovablesSystem _movablesSystem;
 
         private readonly List<IInfoPool> _infoPools;
 
-        public TargetSpawnService(IPool<Target> pool, Transform activesTargetsTransform, MovablesSystem movablesSystem)
+        public TargetSpawnService(IPool<Target> pool, MovablesSystem movablesSystem)
         {
             _pool = pool;
-            _activesTransform = activesTargetsTransform;
             _movablesSystem = movablesSystem;
 
             if (pool is IInfoPool infoPool)
@@ -38,13 +35,11 @@ namespace Gameplay
         {
             var target = _pool.Get();
 
-            target.transform.SetParent(_activesTransform);
-
             target.transform.position = spawnPoint.position;
 
             target.SetParameters(speed, spawnPoint.forward);
 
-            target.gameObject.SetActive(true);
+            target.Activate(true);
 
             target.OnKilled += Unspawn;
 
@@ -59,15 +54,13 @@ namespace Gameplay
         {
             target.OnKilled -= Unspawn;
 
-            target.gameObject.SetActive(false);
+            _movablesSystem.RemoveMovable(target);
 
             target.SetParameters(0, Vector3.zero);
 
             _pool?.Release(target);
 
             OnUnspawned?.Invoke();
-
-            _movablesSystem.RemoveMovable(target);
         }
     }
 }

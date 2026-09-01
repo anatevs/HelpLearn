@@ -170,7 +170,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 12.600006, y: -4.399994}
+  m_AnchoredPosition: {x: 12.599976, y: -4.399994}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &68766220
@@ -288,37 +288,6 @@ Transform:
   - {fileID: 1861840266}
   - {fileID: 393231458}
   m_Father: {fileID: 2032231273}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &180992144
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 180992145}
-  m_Layer: 0
-  m_Name: TargetPool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &180992145
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180992144}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1038673372}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &270206055
 GameObject:
@@ -1721,37 +1690,6 @@ Transform:
   - {fileID: 826184429}
   m_Father: {fileID: 1009385665}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &760028424
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 760028425}
-  m_Layer: 0
-  m_Name: ProjectilePool
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &760028425
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 760028424}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2084288948}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &781687274
 GameObject:
   m_ObjectHideFlags: 0
@@ -2106,7 +2044,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movablesSystem: {fileID: 407745694}
   _lifetimedSystem: {fileID: 407745695}
-  _targetsActiveTransform: {fileID: 1038673372}
+  _targetsTransform: {fileID: 1038673372}
   _targetSpawnPoints:
   - {fileID: 8141512718571233657}
   - {fileID: 1447471012}
@@ -2116,12 +2054,10 @@ MonoBehaviour:
   - {fileID: 393231457}
   _targetConfig: {fileID: 11400000, guid: ce8bbda62f857b642a0f454c5ff51d2f, type: 2}
   _turret: {fileID: 6617901692393249680}
-  _projectilesActiveTransform: {fileID: 2084288948}
+  _projectilesTransform: {fileID: 2084288948}
   _projectileTypesConfig: {fileID: 11400000, guid: de255b05eab882f4db8937ab34feedf1, type: 2}
   _targetPoolInitCount: 100
   _projectilePoolInitCount: 100
-  _targetsPoolTransform: {fileID: 180992145}
-  _projectilesPoolTransform: {fileID: 760028425}
   _spawnModeController: {fileID: 1222330354}
   _spawnInfoController: {fileID: 1754318587}
   _targetSpawnAdjuster: {fileID: 1222330352}
@@ -2465,8 +2401,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 180992145}
+  m_Children: []
   m_Father: {fileID: 2071422989}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1042687873
@@ -2812,8 +2747,8 @@ MonoBehaviour:
   _testProjectileLifetime: 1
   _isTargetsTestOn: 1
   _isProjectilesTestOn: 1
-  _targetsAmount: 200
-  _shootRate: 100
+  _targetsAmount: 350
+  _shootRate: 200
 --- !u!4 &1222330353
 Transform:
   m_ObjectHideFlags: 0
@@ -2842,7 +2777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de5d69edfebaf0744831c10226ffabdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mode: 0
+  _mode: 1
 --- !u!1 &1440284293
 GameObject:
   m_ObjectHideFlags: 0
@@ -3506,7 +3441,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 12.600012, y: -4.4000244}
+  m_AnchoredPosition: {x: 12.600037, y: -4.4000244}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1713794738
@@ -4297,8 +4232,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 760028425}
+  m_Children: []
   m_Father: {fileID: 2071422989}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2113038512

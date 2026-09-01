@@ -9,6 +9,8 @@ namespace Gameplay
 
         private readonly List<ILifetimed> _removeQueue = new();
 
+        private int _toRemoveCount = 0;
+
         public void AddLifetimed(ILifetimed lifetimed)
         {
             _lifetimed.Add(lifetimed);
@@ -16,18 +18,27 @@ namespace Gameplay
 
         public void RemoveLifetimed(ILifetimed lifetimed)
         {
-            _removeQueue.Add(lifetimed);
+            _toRemoveCount++;
+
+            if (_removeQueue.Count >= _toRemoveCount)
+            {
+                _removeQueue[_toRemoveCount - 1] = lifetimed;
+            }
+            else
+            {
+                _removeQueue.Add(lifetimed);
+            }
         }
 
         private void Update()
         {
-            if (_removeQueue.Count > 0)
+            if (_toRemoveCount > 0)
             {
-                for (int i = _removeQueue.Count - 1; i >= 0; i--)
+                for (int i = _toRemoveCount - 1; i >= 0; i--)
                 {
                     _lifetimed.Remove(_removeQueue[i]);
-                    _removeQueue.RemoveAt(i);
                 }
+                _toRemoveCount = 0;
             }
 
             foreach (var lifetimed in _lifetimed)

@@ -4,12 +4,16 @@ using UnityEngine;
 namespace Gameplay
 {
     public class Projectile : MonoBehaviour,
+        IPoolable,
         IMovableUpd,
         ILifetimed
     {
         public ProjectileType ProjectileType => _type;
 
         public event Action<Projectile> OnDestroyed;
+
+        [SerializeField]
+        private Renderer[] _renderers;
 
         private float _speed;
 
@@ -20,6 +24,23 @@ namespace Gameplay
         private float _timer = 0f;
 
         private ProjectileType _type;
+
+        private Collider _collider;
+
+        private void Awake()
+        {
+            _collider = GetComponent<Collider>();
+        }
+
+        public void Activate(bool isActive)
+        {
+            _collider.enabled = isActive;
+
+            foreach (var renderer in _renderers)
+            {
+                renderer.enabled = isActive;
+            }
+        }
 
         public void SetParameters(float speed, float lifetime, LayerMask damagableMask, ProjectileType type)
         {
@@ -40,7 +61,7 @@ namespace Gameplay
 
         public void CheckLifetime(float deltaTime)
         {
-            _timer += Time.deltaTime;
+            _timer += deltaTime;
 
             if (_timer >= _lifetime)
             {

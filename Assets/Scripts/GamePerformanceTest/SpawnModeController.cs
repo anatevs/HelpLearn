@@ -13,17 +13,17 @@ namespace GameManagement
         [SerializeField]
         private GameSpawnMode _mode = GameSpawnMode.Naive;
 
-        public IPool<T> CreatePool<T>(T prefab, int initSize, Transform poolTransform) where T : MonoBehaviour
+        public IPool<T> CreatePool<T>(T prefab, int initSize, Transform objectsTransform) where T : MonoBehaviour, IPoolable
         {
             IPool<T> pool = null;
 
             if (_mode == GameSpawnMode.Naive)
             {
-                pool = new MockPool<T>(prefab);
+                pool = new MockPool<T>(prefab, objectsTransform);
             }
             else if (_mode == GameSpawnMode.Pool)
             {
-                pool = new Pool<T>(prefab, initSize, poolTransform);
+                pool = new Pool<T>(prefab, initSize, objectsTransform);
 
                 OnPrewarmPoolCreated?.Invoke(pool as IPrewarmPool);
             }

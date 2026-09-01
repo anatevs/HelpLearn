@@ -14,8 +14,6 @@ namespace Gameplay
 
         private Dictionary<ProjectileType, ProjectileTypeData> _typesData;
 
-        private readonly Transform _activesTransform;
-
         private readonly LayerMask _damagableMask;
 
         private readonly MovablesSystem _movablesSystem;
@@ -27,13 +25,11 @@ namespace Gameplay
         private List<IInfoPool> _infoPools;
 
         public ProjectileSpawnService(ProjectileTypesConfig typesConfig,
-            Transform activesTransform,
             LayerMask damagableMask,
             MovablesSystem movablesSystem,
             LifetimedSystem lifetimedSystem)
         {
             _typesData = typesConfig.GetData();
-            _activesTransform = activesTransform;
             _damagableMask = damagableMask;
             _movablesSystem = movablesSystem;
             _lifetimedSystem = lifetimedSystem;
@@ -55,8 +51,6 @@ namespace Gameplay
         {
             var projectile = _pools[projectileType].Get();
 
-            projectile.transform.SetParent(_activesTransform);
-
             projectile.transform.SetPositionAndRotation(startPoint.position, startPoint.rotation);
 
             speed *= _typesData[projectileType].SpeedMultiplier;
@@ -67,7 +61,7 @@ namespace Gameplay
 
             projectile.OnDestroyed += Unspawn;
 
-            projectile.gameObject.SetActive(true);
+            projectile.Activate(true);
 
             OnSpawned?.Invoke();
 
@@ -79,16 +73,14 @@ namespace Gameplay
         {
             projectile.OnDestroyed -= Unspawn;
 
-            projectile.gameObject.SetActive(false);
+            _movablesSystem.RemoveMovable(projectile);
+            _lifetimedSystem.RemoveLifetimed(projectile);
 
-            projectile.SetParameters(0, _damagableMask, 0, projectile.ProjectileType);
+            projectile.SetParameters(0, 0, _damagableMask, projectile.ProjectileType);
 
             _pools[projectile.ProjectileType].Release(projectile);
 
             OnUnspawned?.Invoke();
-
-            _movablesSystem.RemoveMovable(projectile);
-            _lifetimedSystem.RemoveLifetimed(projectile);
         }
     }
 }

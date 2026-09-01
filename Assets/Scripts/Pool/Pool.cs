@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Gameplay
 {
     public class Pool<T> : IPool<T>, IInfoPool, IPrewarmPool
-        where T : MonoBehaviour
+        where T : MonoBehaviour, IPoolable
     {
         public event Action<int> OnPoolSizeChanged;
         public event Action<int> OnCurrentFreeChanged;
@@ -15,17 +15,17 @@ namespace Gameplay
 
         private readonly Queue<T> _pool = new();
 
-        private readonly Transform _poolTransform;
+        private readonly Transform _parentTransform;
 
         private readonly int _initCount = 0;
 
         private int _poolSize = 0;
         private int _repeatUsing = 0;
 
-        public Pool(T prefab, int initCount, Transform poolTransform)
+        public Pool(T prefab, int initCount, Transform parentTransform)
         {
             _prefab = prefab;
-            _poolTransform = poolTransform;
+            _parentTransform = parentTransform;
 
             _initCount = initCount;
         }
@@ -48,9 +48,9 @@ namespace Gameplay
 
         public void Release(T item)
         {
-            item.gameObject.SetActive(false);
+            item.Activate(false);
 
-            item.transform.SetParent(_poolTransform, false);
+            item.transform.position = _parentTransform.position;
 
             _pool.Enqueue(item);
             OnCurrentFreeChanged?.Invoke(1);
@@ -73,10 +73,12 @@ namespace Gameplay
         private T CreateNew()
         {
             var item = GameObject.Instantiate(_prefab);
-            item.gameObject.SetActive(false);
+            item.Activate(false);
 
             _poolSize++;
             OnPoolSizeChanged?.Invoke(1);
+
+            item.transform.SetParent(_parentTransform);
 
             return item;
         }

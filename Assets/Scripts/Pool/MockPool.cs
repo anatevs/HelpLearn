@@ -6,13 +6,19 @@ namespace Gameplay
     {
         private readonly T _prefab;
 
-        public MockPool(T prefab)
+        private Transform _parentTransform;
+
+        public MockPool(T prefab, Transform parentTransform)
         {
             _prefab = prefab;
+            _parentTransform = parentTransform;
         }
 
         public T Get()
         {
+            var item = UnityEngine.Object.Instantiate(_prefab);
+            item.transform.SetParent(_parentTransform);
+
             return UnityEngine.Object.Instantiate(_prefab);
         }
 

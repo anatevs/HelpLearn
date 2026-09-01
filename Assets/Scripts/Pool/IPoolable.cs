@@ -2,6 +2,6 @@
 {
     public interface IPoolable
     {
-        public int PoolId { get; set; }
+        public void Activate(bool isActive);
     }
 }

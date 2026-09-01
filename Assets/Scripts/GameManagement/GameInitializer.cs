@@ -16,7 +16,7 @@ namespace GameManagement
 
         [Header("Targets")]
         [SerializeField]
-        private Transform _targetsActiveTransform;
+        private Transform _targetsTransform;
 
         [SerializeField]
         private TargetSpawnPoint[] _targetSpawnPoints;
@@ -29,7 +29,7 @@ namespace GameManagement
         private Turret _turret;
 
         [SerializeField]
-        private Transform _projectilesActiveTransform;
+        private Transform _projectilesTransform;
 
         [SerializeField]
         private ProjectileTypesConfig _projectileTypesConfig;
@@ -40,12 +40,6 @@ namespace GameManagement
 
         [SerializeField]
         private int _projectilePoolInitCount;
-
-        [SerializeField]
-        private Transform _targetsPoolTransform;
-
-        [SerializeField]
-        private Transform _projectilesPoolTransform;
 
         [Header("PerformanceTest")]
         [SerializeField]
@@ -81,9 +75,9 @@ namespace GameManagement
             var targetPool = _spawnModeController
                 .CreatePool<Target>(_targetConfig.Prefab,
                 _targetPoolInitCount,
-                _targetsPoolTransform);
+                _targetsTransform);
 
-            _targetSpawnService = new TargetSpawnService(targetPool, _targetsActiveTransform, _movablesSystem);
+            _targetSpawnService = new TargetSpawnService(targetPool, _movablesSystem);
 
             _targetSpawnAdjuster.SetupSpawn(_targetSpawnService, _turret);
 
@@ -105,7 +99,7 @@ namespace GameManagement
             }
 
             _projectileService = new ProjectileSpawnService(_projectileTypesConfig,
-                _projectilesActiveTransform, _turret.DamagableMask, _movablesSystem, _lifetimedSystem);
+                _turret.DamagableMask, _movablesSystem, _lifetimedSystem);
 
             var projectileTypesData = _projectileTypesConfig.GetData();
 
@@ -116,7 +110,7 @@ namespace GameManagement
                 var projectilePool = _spawnModeController
                     .CreatePool<Projectile>(projectileData.Prefab,
                     typeInitCount,
-                    _projectilesPoolTransform);
+                    _projectilesTransform);
 
                 _projectileService.AddPool(projectileData.Type, projectilePool);
             }
