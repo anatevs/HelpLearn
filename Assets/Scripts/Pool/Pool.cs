@@ -7,6 +7,8 @@ namespace Gameplay
     public class Pool<T> : IPool<T>, IInfoPool, IPrewarmPool
         where T : MonoBehaviour, IPoolable
     {
+        public event Action<T> OnNewInstantiated;
+
         public event Action<int> OnPoolSizeChanged;
         public event Action<int> OnCurrentFreeChanged;
         public event Action<int> OnRepeatUsingChanged;
@@ -79,6 +81,8 @@ namespace Gameplay
             OnPoolSizeChanged?.Invoke(1);
 
             item.transform.SetParent(_parentTransform);
+
+            OnNewInstantiated?.Invoke(item);
 
             return item;
         }

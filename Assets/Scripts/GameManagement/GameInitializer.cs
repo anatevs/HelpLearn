@@ -62,7 +62,7 @@ namespace GameManagement
 
         private TargetSpawnService _targetSpawnService;
 
-        private ProjectileSpawnService _projectileService;
+        private ProjectileSpawnService _projectileSpawnService;
 
         private SpawnCounterService _spawnCounterService;
 
@@ -98,7 +98,7 @@ namespace GameManagement
                 _projectilePoolInitCount = _targetSpawnAdjuster.ProjectilesInitCount;
             }
 
-            _projectileService = new ProjectileSpawnService(_projectileTypesConfig,
+            _projectileSpawnService = new ProjectileSpawnService(_projectileTypesConfig,
                 _turret.DamagableMask, _movablesSystem, _lifetimedSystem);
 
             var projectileTypesData = _projectileTypesConfig.GetData();
@@ -112,23 +112,26 @@ namespace GameManagement
                     typeInitCount,
                     _projectilesTransform);
 
-                _projectileService.AddPool(projectileData.Type, projectilePool);
+                _projectileSpawnService.AddPool(projectileData.Type, projectilePool);
             }
 
-            _turret.Init(_projectileService);
+            _turret.Init(_projectileSpawnService);
 
             _spawnCounterService = new SpawnCounterService();
             _spawnInfoController.Init(_spawnCounterService);
             _performancePresenter.Init(_spawnCounterService);
 
             _spawnCounterService.AddSpawnService(_targetSpawnService, _titlesConfig.TargetsTitle);
-            _spawnCounterService.AddSpawnService(_projectileService, _titlesConfig.ProjectilesTitle);
+            _spawnCounterService.AddSpawnService(_projectileSpawnService, _titlesConfig.ProjectilesTitle);
         }
 
         private void OnDestroy()
         {
             _spawnCounterService.Dispose();
             _modePresenter.Dispose();
+
+            _projectileSpawnService.Dispose();
+            _targetSpawnService.Dispose();
         }
     }
 }

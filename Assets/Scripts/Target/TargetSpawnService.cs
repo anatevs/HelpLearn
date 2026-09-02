@@ -5,7 +5,8 @@ using System.Collections.Generic;
 namespace Gameplay
 {
     public class TargetSpawnService :
-        ISpawnService
+        ISpawnService,
+        IDisposable
     {
         public event Action OnSpawned;
         public event Action OnUnspawned;
@@ -18,6 +19,8 @@ namespace Gameplay
 
         private readonly List<IInfoPool> _infoPools;
 
+        private readonly TargetsService _targetService;
+
         public TargetSpawnService(IPool<Target> pool, MovablesSystem movablesSystem)
         {
             _pool = pool;
@@ -29,6 +32,14 @@ namespace Gameplay
 
                 _infoPools.Add(infoPool);
             }
+
+            _targetService = new TargetsService(this);
+            _targetService.AddPool(pool);
+        }
+
+        public void Dispose()
+        {
+            _targetService.Dispose();
         }
 
         public Target Spawn(Transform spawnPoint, float speed)
@@ -41,8 +52,6 @@ namespace Gameplay
 
             target.Activate(true);
 
-            target.OnKilled += Unspawn;
-
             OnSpawned?.Invoke();
 
             _movablesSystem.AddMovable(target);
@@ -52,13 +61,11 @@ namespace Gameplay
 
         public void Unspawn(Target target)
         {
-            target.OnKilled -= Unspawn;
-
             _movablesSystem.RemoveMovable(target);
 
             target.SetParameters(0, Vector3.zero);
 
-            _pool?.Release(target);
+            _pool.Release(target);
 
             OnUnspawned?.Invoke();
         }

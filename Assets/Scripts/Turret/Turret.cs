@@ -16,7 +16,7 @@ namespace Gameplay
         [SerializeField]
         private LayerMask _damagableMask;
 
-        private ProjectileSpawnService _projectileService;
+        private ProjectileSpawnService _projectileSpawner;
 
         private WaitForSeconds[] _shootWait;
 
@@ -29,7 +29,7 @@ namespace Gameplay
                 _shootWait[i] = new WaitForSeconds(_barrelData[i].ShootPeriod);
             }
 
-            _projectileService = projectileService;
+            _projectileSpawner = projectileService;
 
             if (gameObject.activeSelf)
             {
@@ -60,7 +60,7 @@ namespace Gameplay
 
             while (true)
             {
-                _projectileService.Spawn(barrelData.ShootPoint, barrelData.ProjectileSpeed, barrelData.ProjectileLifetime, barrelData.ProjectileType);
+                _projectileSpawner.Spawn(barrelData.ShootPoint, barrelData.ProjectileSpeed, barrelData.ProjectileLifetime, barrelData.ProjectileType);
 
                 yield return shootWait;
             }

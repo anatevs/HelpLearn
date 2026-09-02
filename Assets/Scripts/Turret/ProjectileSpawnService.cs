@@ -5,14 +5,14 @@ using UnityEngine;
 namespace Gameplay
 {
     public class ProjectileSpawnService :
-        ISpawnService
+        ISpawnService, IDisposable
     {
         public event Action OnSpawned;
         public event Action OnUnspawned;
 
         public List<IInfoPool> InfoPools => _infoPools;
 
-        private Dictionary<ProjectileType, ProjectileTypeData> _typesData;
+        private readonly Dictionary<ProjectileType, ProjectileTypeData> _typesData;
 
         private readonly LayerMask _damagableMask;
 
@@ -24,6 +24,8 @@ namespace Gameplay
 
         private List<IInfoPool> _infoPools;
 
+        private readonly ProjectilesService _projectileService;
+
         public ProjectileSpawnService(ProjectileTypesConfig typesConfig,
             LayerMask damagableMask,
             MovablesSystem movablesSystem,
@@ -33,6 +35,13 @@ namespace Gameplay
             _damagableMask = damagableMask;
             _movablesSystem = movablesSystem;
             _lifetimedSystem = lifetimedSystem;
+
+            _projectileService = new ProjectilesService(this);
+        }
+
+        public void Dispose()
+        {
+            _projectileService.Dispose();
         }
 
         public void AddPool(ProjectileType projectileType, IPool<Projectile> pool)
@@ -45,6 +54,8 @@ namespace Gameplay
 
                 _infoPools.Add(infoPool);
             }
+
+            _projectileService.AddPool(pool);
         }
 
         public void Spawn(Transform startPoint, float speed, float lifetime, ProjectileType projectileType)
@@ -59,8 +70,6 @@ namespace Gameplay
 
             projectile.SetParameters(speed, lifetime, _damagableMask, projectileType);
 
-            projectile.OnDestroyed += Unspawn;
-
             projectile.Activate(true);
 
             OnSpawned?.Invoke();
@@ -69,10 +78,8 @@ namespace Gameplay
             _lifetimedSystem.AddLifetimed(projectile);
         }
 
-        private void Unspawn(Projectile projectile)
+        public void Unspawn(Projectile projectile)
         {
-            projectile.OnDestroyed -= Unspawn;
-
             _movablesSystem.RemoveMovable(projectile);
             _lifetimedSystem.RemoveLifetimed(projectile);
 

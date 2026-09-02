@@ -61,11 +61,6 @@ namespace Gameplay
             _rb.MovePosition(nextPos);
         }
 
-        private void OnDisable()
-        {
-            OnKilled = null;
-        }
-
         private void OnTriggerEnter(Collider other)
         {
             if ((_destroyLayers & (1 << other.gameObject.layer)) != 0)

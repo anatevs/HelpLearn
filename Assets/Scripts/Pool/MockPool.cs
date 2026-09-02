@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Gameplay
 {
     public class MockPool<T> : IPool<T> where T : MonoBehaviour
     {
+        public event Action<T> OnNewInstantiated;
+
         private readonly T _prefab;
 
         private Transform _parentTransform;
@@ -18,6 +21,8 @@ namespace Gameplay
         {
             var item = UnityEngine.Object.Instantiate(_prefab);
             item.transform.SetParent(_parentTransform);
+
+            OnNewInstantiated?.Invoke(item);
 
             return UnityEngine.Object.Instantiate(_prefab);
         }
