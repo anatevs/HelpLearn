@@ -72,7 +72,12 @@ namespace GameManagement
         {
             _modePresenter = new ModePresenter(_modeView, _spawnModeController);
 
-            var targetPool = _spawnModeController
+            if (_targetSpawnAdjuster.IsTargetsOn)
+            {
+                _targetPoolInitCount = _targetSpawnAdjuster.TargetsAmount;
+            }
+
+                var targetPool = _spawnModeController
                 .CreatePool<Target>(_targetConfig.Prefab,
                 _targetPoolInitCount,
                 _targetsTransform);
@@ -88,10 +93,7 @@ namespace GameManagement
                     point.Init(_targetSpawnService);
                 }
             }
-            else
-            {
-                _targetPoolInitCount = _targetSpawnAdjuster.TargetsAmount;
-            }
+
 
             if (_targetSpawnAdjuster.IsProjectilesOn)
             {

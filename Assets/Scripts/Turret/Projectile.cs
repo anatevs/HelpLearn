@@ -27,6 +27,8 @@ namespace Gameplay
 
         private Collider _collider;
 
+        private bool _isActive;
+
         private void Awake()
         {
             _collider = GetComponent<Collider>();
@@ -40,6 +42,8 @@ namespace Gameplay
             {
                 renderer.enabled = isActive;
             }
+
+            _isActive = isActive;
         }
 
         public void SetParameters(float speed, float lifetime, LayerMask damagableMask, ProjectileType type)
@@ -73,12 +77,18 @@ namespace Gameplay
 
         private void OnTriggerEnter(Collider other)
         {
+            if (!_isActive)
+            {
+                return;
+            }
+
             if ((_damagableMask & (1 << other.gameObject.layer)) != 0
                 && other.gameObject.TryGetComponent<Target>(out var target))
             {
                 target.Kill();
             }
 
+            _isActive = false;
             OnDestroyed?.Invoke(this);
         }
     }

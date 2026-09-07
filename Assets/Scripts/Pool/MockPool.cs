@@ -24,7 +24,7 @@ namespace Gameplay
 
             OnNewInstantiated?.Invoke(item);
 
-            return UnityEngine.Object.Instantiate(_prefab);
+            return item;
         }
 
         public void Release(T item)

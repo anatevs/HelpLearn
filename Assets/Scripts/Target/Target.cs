@@ -27,6 +27,8 @@ namespace Gameplay
 
         private Collider _collider;
 
+        private bool _isActive;
+
         private void Awake()
         {
             _rb = GetComponent<Rigidbody>();
@@ -45,6 +47,8 @@ namespace Gameplay
             _animator.enabled = isActive;
 
             enabled = isActive;
+
+            _isActive = isActive;
         }
 
         public void SetParameters(float speed, Vector3 moveDirection)
@@ -71,6 +75,12 @@ namespace Gameplay
 
         public void Kill()
         {
+            if (!_isActive)
+            {
+                return;
+            }
+
+            _isActive = false;
             OnKilled?.Invoke(this);
         }
     }
