@@ -15,7 +15,7 @@ namespace UI
         {
             var view = Instantiate(_viewPrefab);
 
-            view.transform.SetParent(transform);
+            view.transform.SetParent(transform, false);
 
             view.SetToggleGroup(_toggleGroup);
 

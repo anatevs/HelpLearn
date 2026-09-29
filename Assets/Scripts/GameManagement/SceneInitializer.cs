@@ -1,11 +1,16 @@
 ﻿using Gameplay;
 using UI;
 using UnityEngine;
+using System.Collections.Generic;
+using Assets.Input;
 
 namespace GameManagement
 {
     public sealed class SceneInitializer : MonoBehaviour
     {
+        [SerializeField]
+        private InputHandler _input;
+
         [SerializeField]
         private Player _player;
 
@@ -26,6 +31,9 @@ namespace GameManagement
 
         [SerializeField]
         private DoorsManager _doorsManager;
+
+        [SerializeField]
+        private SelectableObjectsManager _selectableObjectsManager;
 
         [SerializeField]
         private EndGameView _endGameView;
@@ -56,6 +64,8 @@ namespace GameManagement
 
         private GameStatesManager _gameStatesManager;
 
+        private PausablesManager _pausablesManager;
+
         private void Awake()
         {
             ConstuctServices();
@@ -65,6 +75,10 @@ namespace GameManagement
             ConstructControllers();
 
             Init();
+
+            _pausablesManager = new PausablesManager();
+            _pausablesManager.Add(_player);
+            _pausablesManager.Add(_selectableObjectsManager);
         }
 
         private void Start()
@@ -77,6 +91,9 @@ namespace GameManagement
             _player.OnPlayerKilled += HandleLoseGame;
             _restartGameController.OnRestartClicked += ResetLevel;
             _wavesManager.OnAllWavesCompleted += HandleWinGame;
+
+            _wavesManager.OnWaveCompleted += HandleWaveCompleted;
+            _wavesManager.OnWaveStarted += HandleWaveStart;
         }
 
         private void OnDisable()
@@ -84,11 +101,16 @@ namespace GameManagement
             _player.OnPlayerKilled -= HandleLoseGame;
             _restartGameController.OnRestartClicked -= ResetLevel;
             _wavesManager.OnAllWavesCompleted -= HandleWinGame;
+
+            _wavesManager.OnWaveCompleted -= HandleWaveCompleted;
+            _wavesManager.OnWaveStarted -= HandleWaveStart;
         }
 
         public void Init()
         {
             _weaponStorage.Init();
+
+            _selectableObjectsManager.Init(_input);
         }
 
         private void ResetLevel()
@@ -101,19 +123,20 @@ namespace GameManagement
             _enemySpawnService.ResetLevel();
             _barrelsSevice.ResetLevel();
             _doorsManager.ResetLevel();
+            _selectableObjectsManager.ResetLevel();
             _scoreStorage.Init(_player.DataConfig.StartScore);
             _turretManager.ResetLevel();
 
             _wavesManager.ResetLevel();
             _wavesPanelView.ResetLevel();
 
-            var playState = new PlayingGameState();
+            var playState = new PlayingGameState(_pausablesManager);
             _gameStatesManager.SetState(playState);
         }
 
         private void ConstuctServices()
         {
-            _player.Construct(_weaponStorage);
+            _player.Construct(_weaponStorage, _input);
 
             _weaponStorage.Construct(_projectileSpawnService);
 
@@ -147,14 +170,24 @@ namespace GameManagement
 
         private void HandleLoseGame()
         {
-            var endState = new LoseGameState(_endGameController);
+            var endState = new LoseGameState(_endGameController, _pausablesManager);
             _gameStatesManager.SetState(endState);
         }
 
         private void HandleWinGame()
         {
-            var endGame = new WinGameState(_endGameController);
+            var endGame = new WinGameState(_endGameController, _pausablesManager);
             _gameStatesManager.SetState(endGame);
+        }
+
+        private void HandleWaveCompleted(WaveCompletedInfo waveInfo, bool allEnded)
+        {
+            _pausablesManager.Pause();
+        }
+
+        private void HandleWaveStart()
+        {
+            _pausablesManager.Resume();
         }
     }
 }

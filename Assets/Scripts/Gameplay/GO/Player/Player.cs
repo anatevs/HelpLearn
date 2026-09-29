@@ -1,4 +1,5 @@
 ﻿using Assets.Input;
+using GameManagement;
 using System;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace Gameplay
     [RequireComponent(typeof(HPComponent))]
     [RequireComponent(typeof(WeaponComponent))]
     [RequireComponent(typeof(FallComponent))]
-    public sealed class Player : MonoBehaviour
+    public sealed class Player : MonoBehaviour, IPausable
     {
         public event Action OnPlayerKilled;
 
@@ -17,9 +18,6 @@ namespace Gameplay
         public WeaponComponent Weapon => _weapon;
 
         public PlayerDataConfig DataConfig => _dataConfig;
-
-        [SerializeField]
-        private InputHandler _input;
 
         [SerializeField]
         private PlayerMovementConfig _movementConfig;
@@ -32,6 +30,8 @@ namespace Gameplay
 
         [SerializeField]
         private Collider _undergroundPlane;
+
+        private InputHandler _input;
 
         private HPComponent _hp;
 
@@ -47,6 +47,7 @@ namespace Gameplay
 
         private Vector3 _startPosition;
 
+        private bool _isPlaying = false;
 
         private void OnDisable()
         {
@@ -61,9 +62,12 @@ namespace Gameplay
 
         private void Update()
         {
-            _lookDirection = (_input.LookPoint - transform.position).normalized;
+            if (!_isPlaying)
+            {
+                return;
+            }
 
-            _lookDirection.y = 0;
+            _lookDirection = _input.GetLookDirection(transform);
 
             _viewRotation.Rotate(_lookDirection, _movementConfig.RotationSpeed, Time.deltaTime);
 
@@ -75,8 +79,10 @@ namespace Gameplay
             _movement.MoveFixedUpd(_input.Move);
         }
 
-        public void Construct(WeaponStorage weaponStorage)
+        public void Construct(WeaponStorage weaponStorage, InputHandler input)
         {
+            _input = input;
+
             _movement = GetComponent<MoveRBComponent>();
             _movement.Construct(_movementConfig);
 
@@ -87,7 +93,6 @@ namespace Gameplay
             _startPosition = transform.position;
 
             _weaponStorage = weaponStorage;
-
 
             _input.OnJupmed += _movement.Jump;
             _input.OnShoot += Shoot;
@@ -112,11 +117,15 @@ namespace Gameplay
         public void Pause()
         {
             _movement.Pause();
+
+            _isPlaying = false;
         }
 
         public void Resume()
         {
             _movement.Resume();
+
+            _isPlaying = true;
         }
 
         public void ChangeWeapon(Weapon newWeapon)
@@ -133,6 +142,11 @@ namespace Gameplay
 
         private void Shoot()
         {
+            if (!_isPlaying)
+            {
+                return;
+            }
+
             _weapon.Shoot();
         }
 

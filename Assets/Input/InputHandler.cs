@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace Assets.Input
 {
-    public sealed class InputHandler : MonoBehaviour
+    public abstract class InputHandler : MonoBehaviour
     {
         public event Action OnJupmed;
 
@@ -19,26 +19,24 @@ namespace Assets.Input
 
         public Vector3 Move => _move;
 
-        public Vector3 LookPoint => _lookPoint;
-
         [SerializeField]
         private LayerMask _selectablesLayer;
 
+        protected PlayerActions _inputActions;
+
+        protected Vector3 _castPoint;
+
+        protected bool _isOverUI = false;
+
         private Vector3 _move;
-
-        private Vector3 _lookPoint;
-
-        private PlayerActions _inputActions;
 
         private Vector2 _inputMove;
 
         private Camera _camera;
 
-        private bool _isOverUI = false;
-
-        private bool _isOverSelectable = false;
-
         private float _castDistance = 300f;
+
+        public abstract Vector3 GetLookDirection(Transform playerTransform);
 
         private void Awake()
         {
@@ -47,82 +45,70 @@ namespace Assets.Input
             _camera = Camera.main;
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             _inputActions.Enable();
 
             _inputActions.Game.Jump.performed += HandleJump;
-            _inputActions.Game.Attack.performed += HandleClick;
         }
 
-        private void OnDisable()
+        protected virtual void OnDisable()
         {
             _inputActions.Game.Jump.performed -= HandleJump;
-            _inputActions.Game.Attack.performed -= HandleClick;
 
             _inputActions.Disable();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             _isOverUI = EventSystem.current.IsPointerOverGameObject();
 
-            if (!_isOverUI)
+            _inputMove = _inputActions.Game.Move.ReadValue<Vector2>();
+
+            _move.x = _inputMove.x;
+            _move.z = _inputMove.y;
+
+            _move = _move.normalized;
+        }
+
+        protected bool IsScreenPointOverSelectable(Vector2 point, out RaycastHit hitInfo)
+        {
+            if (Physics.Raycast(_camera.ScreenPointToRay(point), out hitInfo, _castDistance))
             {
-                _inputMove = _inputActions.Game.Move.ReadValue<Vector2>();
+                _castPoint = hitInfo.point;
 
-                _move.x = _inputMove.x;
-                _move.z = _inputMove.y;
-
-                _move = _move.normalized;
-
-                var lookPointScreen = _inputActions.Game.Look.ReadValue<Vector2>();
-
-                if (Physics.Raycast(_camera.ScreenPointToRay(lookPointScreen), out var hitInfo, _castDistance))
+                if (((1 << hitInfo.collider.gameObject.layer) & _selectablesLayer) != 0)
                 {
-                    _lookPoint = hitInfo.point;
-
-                    if (((1<< hitInfo.collider.gameObject.layer) & _selectablesLayer) != 0)
-                    {
-                        if (!_isOverSelectable)
-                        {
-                            OnSelectableHovered?.Invoke(hitInfo.collider.gameObject);
-                        }
-
-                        _isOverSelectable = true;
-                    }
-                    else
-                    {
-                        if (_isOverSelectable)
-                        {
-                            OnSelectableOut?.Invoke();
-                        }
-
-                        _isOverSelectable = false;
-                    }
+                    return true;
                 }
             }
+
+            return false;
         }
 
         private void HandleJump(InputAction.CallbackContext context)
         {
-            if (!_isOverUI)
-            {
-                OnJupmed?.Invoke();
-            }
+            OnJupmed?.Invoke();
         }
 
-        private void HandleClick(InputAction.CallbackContext context)
+        protected void RaiseShoot()
         {
-            if (!_isOverUI && !_isOverSelectable)
-            {
-                OnShoot?.Invoke();
-            }
+            OnShoot?.Invoke();
+        }
 
-            if (_isOverSelectable && !_isOverUI)
-            {
-                OnSelectableClicked?.Invoke();
-            }
+        protected void RaiseSelectableClick()
+        {
+            OnSelectableClicked?.Invoke();
+        }
+
+        protected void RaiseSelectableHovered(GameObject go)
+        {
+            OnSelectableHovered?.Invoke(go);
+        }
+
+        protected void RaiseSelectableOut()
+        {
+            OnSelectableOut?.Invoke();
         }
     }
 }
