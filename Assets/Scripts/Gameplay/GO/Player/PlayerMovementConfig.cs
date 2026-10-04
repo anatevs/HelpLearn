@@ -9,9 +9,7 @@ namespace Gameplay
         public LayerMask GroundedLayers => _groundedLayers;
         public float GravityMultiplier => _gravityMultiplier;
         public float WalkSpeed => _walkSpeed;
-        public float RunSpeed => _runSpeed;
         public float RotationSpeed => _rotSpeed;
-        public float[] XRotRange => _xRotRange;
 
         public float JupmForce => _jumpForce;
         public float JumpFallMultiplier => _jumpFallMultiplier;
@@ -26,9 +24,6 @@ namespace Gameplay
         private float _walkSpeed = 1f;
 
         [SerializeField]
-        private float _runSpeed = 2f;
-
-        [SerializeField]
         private float _jumpForce = 10f;
 
         [SerializeField]
@@ -36,8 +31,5 @@ namespace Gameplay
 
         [SerializeField]
         private float _rotSpeed = 20f;
-
-        [SerializeField]
-        private float[] _xRotRange = { -45f, 45f };
     }
 }

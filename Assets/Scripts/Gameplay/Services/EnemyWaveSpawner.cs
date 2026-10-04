@@ -18,9 +18,9 @@ namespace Gameplay
 
             foreach (var info in _waveEnemyInfo)
             {
-                _names.Add(info.Prefab.Config.Name);
-                _counters.Add(info.Prefab.Config.Name, info.Count);
-                _prefabs.Add(info.Prefab.Config.Name, info.Prefab);
+                _names.Add(info.Prefab.Name);
+                _counters.Add(info.Prefab.Name, info.Count);
+                _prefabs.Add(info.Prefab.Name, info.Prefab);
             }
         }
 

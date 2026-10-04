@@ -20,18 +20,14 @@ namespace Gameplay
         public PlayerDataConfig DataConfig => _dataConfig;
 
         [SerializeField]
-        private PlayerMovementConfig _movementConfig;
-
-        [SerializeField]
         private PlayerDataConfig _dataConfig;
 
         [SerializeField]
         private RotationComponent _viewRotation;
 
-        [SerializeField]
-        private Collider _undergroundPlane;
-
         private InputHandler _input;
+
+        private PlayerMovementConfig _movementConfig;
 
         private HPComponent _hp;
 
@@ -77,6 +73,11 @@ namespace Gameplay
         private void FixedUpdate()
         {
             _movement.MoveFixedUpd(_input.Move);
+        }
+
+        public void SetConfig(PlayerMovementConfig movementConfig)
+        {
+            _movementConfig = movementConfig;
         }
 
         public void Construct(WeaponStorage weaponStorage, InputHandler input)

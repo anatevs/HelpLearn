@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.OnScreen;
@@ -11,13 +10,11 @@ namespace Assets.Input
     {
         public void OnPointerDown(PointerEventData data)
         {
-            Debug.Log($"DOWN  id={data.pointerId} button={data.button}");
             SendValueToControl(0.0f);
         }
 
         public void OnPointerUp(PointerEventData data)
         {
-            Debug.Log($"UP    id={data.pointerId} button={data.button}");
             SendValueToControl(1.0f);
         }
 

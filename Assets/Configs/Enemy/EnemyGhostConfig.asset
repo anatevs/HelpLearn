@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81ddcd08be122af42b450af3ae60168a, type: 3}
   m_Name: EnemyGhostConfig
   m_EditorClassIdentifier: 
-  _name: EnemyGhost
   _hp: 2
   _rotationSpeed: 1
   _followSpeed: 2
   _stopDistance: 1.5
+  _damageConfig: {fileID: 11400000, guid: 8dd12b1e27c391d408838a34437d6a37, type: 2}
   _killReward: 1
   _mapIconColor: {r: 0.45490196, g: 0.45490196, b: 0.45490196, a: 1}

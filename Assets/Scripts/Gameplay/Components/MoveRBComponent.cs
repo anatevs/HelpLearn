@@ -43,7 +43,12 @@ namespace Gameplay
                 }
             }
 
-            _rb.AddForce(_addGravity, ForceMode.Acceleration);
+            if (_rb.linearVelocity.y < 0 || _isJumping)
+            {
+                _rb.AddForce(_addGravity, ForceMode.Acceleration);
+            }
+
+            //_rb.AddForce(_addGravity, ForceMode.Acceleration);
         }
 
         public void Jump()

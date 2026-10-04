@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameManagement;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,8 @@ namespace Gameplay
 
         private Player _player;
 
+        private ObjectsConfigsGetter _configsGetter;
+
         private EnemyWaveSpawner _waveSpawner;
 
         private WaitForSeconds _spawnWait;
@@ -32,9 +35,10 @@ namespace Gameplay
 
         private readonly Dictionary<string, Pool<Enemy>> _pools = new();
 
-        public void Construct(Player player)
+        public void Construct(Player player, ObjectsConfigsGetter configsGetter)
         {
             _player = player;
+            _configsGetter = configsGetter;
 
             _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
         }
@@ -77,7 +81,7 @@ namespace Gameplay
 
             enemy.transform.position = Vector3.zero;
 
-            _pools[enemy.Config.Name].Unspawn(enemy);
+            _pools[enemy.Name].Unspawn(enemy);
         }
 
         public void SpawnEnemies(EnemyWaveConfig waveConfig)
@@ -91,7 +95,7 @@ namespace Gameplay
 
             foreach (var info in waveConfig.WaveInfo)
             {
-                _pools.TryAdd(info.Prefab.Config.Name,
+                _pools.TryAdd(info.Prefab.Name,
                     new Pool<Enemy>(info.Prefab, _config.PoolInitCount, _poolTransform));
             }
 
@@ -110,7 +114,9 @@ namespace Gameplay
                 return false;
             }
 
-            enemy.Init(_player);
+            var enemyConfig = _configsGetter.GetEnemyConfig(enemy.Name);
+
+            enemy.Init(_player, enemyConfig);
 
             enemy.gameObject.SetActive(true);
 

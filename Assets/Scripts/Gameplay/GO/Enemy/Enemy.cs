@@ -12,8 +12,10 @@ namespace Gameplay
 
         public EnemyConfig Config => _config;
 
+        public string Name => _name;
+
         [SerializeField]
-        private EnemyConfig _config;
+        private string _name;
 
         [SerializeField]
         private TouchDamageConfig _damageConfig;
@@ -21,6 +23,7 @@ namespace Gameplay
         [SerializeField]
         private TouchDamage _touchDamage;
 
+        private EnemyConfig _config;
         private HPComponent _hp;
         private NavMeshAgent _agent;
         private Player _player;
@@ -28,8 +31,6 @@ namespace Gameplay
         private void Awake()
         {
             _hp = GetComponent<HPComponent>();
-
-            _hp.Init(_config.HP);
 
             _agent = GetComponent<NavMeshAgent>();
         }
@@ -49,13 +50,15 @@ namespace Gameplay
             _agent.SetDestination(_player.transform.position);
         }
 
-        public void Init(Player player)
+        public void Init(Player player, EnemyConfig enemyConfig)
         {
+            _config = enemyConfig;
+
             _player = player;
 
             _hp.Init(_config.HP);
 
-            _touchDamage.Init(player.HP, _damageConfig);
+            _touchDamage.Init(player.HP, _config.DamageConfig);
 
             _agent.speed = _config.FollowSpeed;
             _agent.stoppingDistance = _config.StopDistance;

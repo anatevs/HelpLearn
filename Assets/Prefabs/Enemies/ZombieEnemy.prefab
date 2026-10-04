@@ -229,6 +229,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87afc06e06374af4eb599c4c2b30f320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _name: EnemyZombie
   _config: {fileID: 11400000, guid: ff7091189a04bf441a61607365904a38, type: 2}
   _damageConfig: {fileID: 11400000, guid: 7e7dc9373c5e4114fa4646babafe2885, type: 2}
   _touchDamage: {fileID: 3290394079572467152}

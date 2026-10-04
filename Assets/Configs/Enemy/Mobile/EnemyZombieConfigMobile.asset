@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81ddcd08be122af42b450af3ae60168a, type: 3}
+  m_Name: EnemyZombieConfigMobile
+  m_EditorClassIdentifier: 
+  _hp: 3
+  _rotationSpeed: 1
+  _followSpeed: 2.6
+  _stopDistance: 1
+  _damageConfig: {fileID: 11400000, guid: 71c14ab7535aeea4d9332164a0f297dc, type: 2}
+  _killReward: 2
+  _mapIconColor: {r: 0.6679245, g: 0.29582486, b: 0.28607333, a: 1}

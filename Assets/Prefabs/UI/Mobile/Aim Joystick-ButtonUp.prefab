@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 640736248552520515}
   - component: {fileID: 2569775371154971813}
   m_Layer: 5
-  m_Name: Aim Button
+  m_Name: Aim Joystick-ButtonUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

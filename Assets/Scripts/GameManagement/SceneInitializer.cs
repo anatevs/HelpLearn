@@ -9,7 +9,7 @@ namespace GameManagement
     public sealed class SceneInitializer : MonoBehaviour
     {
         [SerializeField]
-        private InputHandler _input;
+        private DeviceTypeAdjuter _deviceTypeAdjuter;
 
         [SerializeField]
         private Player _player;
@@ -56,6 +56,8 @@ namespace GameManagement
         [SerializeField]
         private MinimapController _minimapController;
 
+        private InputHandler _input;
+
         private ScoreStorage _scoreStorage;
         private PlayerStatsController _playerStatsController;
         private EndGameController _endGameController;
@@ -68,6 +70,8 @@ namespace GameManagement
 
         private void Awake()
         {
+            
+
             ConstuctServices();
 
             ConstructPlainClasses();
@@ -136,11 +140,19 @@ namespace GameManagement
 
         private void ConstuctServices()
         {
+            _deviceTypeAdjuter.Init();
+
+            var configsGetter = _deviceTypeAdjuter.ConfigsGetter;
+
+            _player.SetConfig(configsGetter.GetPlayerConfig());
+
+            _input = _deviceTypeAdjuter.Input;
+
             _player.Construct(_weaponStorage, _input);
 
             _weaponStorage.Construct(_projectileSpawnService);
 
-            _enemySpawnService.Construct(_player);
+            _enemySpawnService.Construct(_player, configsGetter);
 
             _wavesManager.Constuct(_enemySpawnService);
 
