@@ -9,7 +9,7 @@ namespace Assets.Input
 
         private bool _isRotationFixed = false;
 
-        private float _zeroZoneSqr = 0.001f;
+        private float _zeroZoneSqr = 0.0001f;
 
         protected override void OnEnable()
         {

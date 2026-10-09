@@ -47,8 +47,6 @@ namespace Gameplay
             {
                 _rb.AddForce(_addGravity, ForceMode.Acceleration);
             }
-
-            //_rb.AddForce(_addGravity, ForceMode.Acceleration);
         }
 
         public void Jump()

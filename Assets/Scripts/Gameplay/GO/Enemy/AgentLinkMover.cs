@@ -18,20 +18,38 @@ namespace Gameplay
         public OffMeshLinkMoveMethod m_Method = OffMeshLinkMoveMethod.Parabola;
         public AnimationCurve m_Curve = new AnimationCurve();
 
-        IEnumerator Start()
+        private Coroutine _linkCheckCoroutine;
+
+        private void OnEnable()
+        {
+            _linkCheckCoroutine = StartCoroutine(HandleLinkCoroutine());
+        }
+
+        private void OnDisable()
+        {
+            if (_linkCheckCoroutine != null)
+            {
+                StopCoroutine(_linkCheckCoroutine);
+            }
+        }
+
+        private IEnumerator HandleLinkCoroutine()
         {
             NavMeshAgent agent = GetComponent<NavMeshAgent>();
+
             agent.autoTraverseOffMeshLink = false;
+
             while (true)
             {
                 if (agent.isOnOffMeshLink)
                 {
                     if (m_Method == OffMeshLinkMoveMethod.NormalSpeed)
-                        yield return StartCoroutine(NormalSpeed(agent));
+                        yield return NormalSpeed(agent);
                     else if (m_Method == OffMeshLinkMoveMethod.Parabola)
-                        yield return StartCoroutine(Parabola(agent, 2.0f, 0.5f));
+                        yield return Parabola(agent, 2.0f, 0.5f);
                     else if (m_Method == OffMeshLinkMoveMethod.Curve)
-                        yield return StartCoroutine(Curve(agent, 0.5f));
+                        yield return Curve(agent, 0.5f);
+
                     agent.CompleteOffMeshLink();
                 }
                 yield return null;
@@ -52,9 +70,14 @@ namespace Gameplay
         IEnumerator Parabola(NavMeshAgent agent, float height, float duration)
         {
             OffMeshLinkData data = agent.currentOffMeshLinkData;
+
             Vector3 startPos = agent.transform.position;
             Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
+
+            agent.updatePosition = false;
+
             float normalizedTime = 0.0f;
+
             while (normalizedTime < 1.0f)
             {
                 float yOffset = height * 4.0f * (normalizedTime - normalizedTime * normalizedTime);
@@ -62,6 +85,10 @@ namespace Gameplay
                 normalizedTime += Time.deltaTime / duration;
                 yield return null;
             }
+
+            agent.transform.position = endPos;
+
+            agent.updatePosition = true;
         }
 
         IEnumerator Curve(NavMeshAgent agent, float duration)

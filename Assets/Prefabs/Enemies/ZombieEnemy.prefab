@@ -230,7 +230,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: EnemyZombie
-  _config: {fileID: 11400000, guid: ff7091189a04bf441a61607365904a38, type: 2}
   _damageConfig: {fileID: 11400000, guid: 7e7dc9373c5e4114fa4646babafe2885, type: 2}
   _touchDamage: {fileID: 3290394079572467152}
 --- !u!195 &9087396831823675783
@@ -274,6 +273,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _isInParab: 0
+  normalizedTime: 0
+  startPos: {x: 0, y: 0, z: 0}
+  endPos: {x: 0, y: 0, z: 0}
 --- !u!114 &-7022592781224204682
 MonoBehaviour:
   m_ObjectHideFlags: 0

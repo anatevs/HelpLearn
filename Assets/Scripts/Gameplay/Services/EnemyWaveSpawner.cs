@@ -11,6 +11,11 @@ namespace Gameplay
         private readonly Dictionary<string, int> _counters = new();
         private readonly Dictionary<string, Enemy> _prefabs = new();
 
+
+#if UNITY_EDITOR
+        private int _spawnCounter = 0;
+#endif
+
         public EnemyWaveSpawner(EnemyWaveConfig enemyWaveConfig)
         {
             _waveConfig = enemyWaveConfig;
@@ -55,6 +60,10 @@ namespace Gameplay
 
             enemy.transform.position = _waveConfig.GetRandomLocation().position;
 
+#if UNITY_EDITOR
+            enemy.name = $"{name} {_spawnCounter}";
+            _spawnCounter++;
+#endif
             return true;
         }
 

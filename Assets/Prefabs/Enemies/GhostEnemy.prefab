@@ -173,6 +173,7 @@ GameObject:
   - component: {fileID: 6784571321155221769}
   - component: {fileID: 3363891105955286784}
   - component: {fileID: 5535450479711245281}
+  - component: {fileID: 6891057858817317695}
   - component: {fileID: 4275243915219937417}
   - component: {fileID: 1969105037481668270}
   m_Layer: 0
@@ -274,7 +275,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _name: EnemyGhost
-  _config: {fileID: 11400000, guid: 6783405cab5d0c445805d2efbd040acb, type: 2}
   _damageConfig: {fileID: 11400000, guid: 8dd12b1e27c391d408838a34437d6a37, type: 2}
   _touchDamage: {fileID: 2932194336935230288}
 --- !u!195 &5535450479711245281
@@ -299,6 +299,29 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &6891057858817317695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8341944943538648352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0f88a692af5fd34fbe22d451509cecd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Method: 2
+  m_Curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _isInParab: 0
+  normalizedTime: 0
+  startPos: {x: 0, y: 0, z: 0}
+  endPos: {x: 0, y: 0, z: 0}
 --- !u!120 &4275243915219937417
 LineRenderer:
   serializedVersion: 2
