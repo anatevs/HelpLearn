@@ -1,7 +1,7 @@
 ﻿using EventBusNamespace;
-using GameManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using VContainer;
 
 namespace UI
 {
@@ -33,17 +33,26 @@ namespace UI
         private EndGameView _endGameView;
 
         [SerializeField]
-        private EventBus _eventBus;
-
-        [SerializeField]
         private GameObject _playingMenu;
 
-        private void OnEnable()
+        [SerializeField]
+        private RestartButton _restartButton;
+
+        [SerializeField]
+        private GameStateView _gameStateView;
+
+        private EventBus _eventBus;
+
+        [Inject]
+        public void Construct(EventBus eventBus)
         {
+            _eventBus = eventBus;
+
+            _restartButton.Construct(_eventBus);
+            _gameStateView.Construct(_eventBus);
+
             _pauseButton.onClick.AddListener(SetPause);
             _resumeButton.onClick.AddListener(SetResume);
-
-            //_eventBus.Subscribe<ChangeGameStateEvent>(SetLoseWin);
         }
 
         private void OnDisable()
@@ -91,7 +100,6 @@ namespace UI
 
             _resumeButton.gameObject.SetActive(!isPlaying);
 
-            //_eventBus.RaiseEvent(stateEvent);
             _showEventsView.gameObject.SetActive(!isPlaying);
         }
 

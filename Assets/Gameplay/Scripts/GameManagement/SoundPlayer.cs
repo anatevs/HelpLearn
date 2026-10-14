@@ -1,5 +1,6 @@
 ﻿using EventBusNamespace;
 using UnityEngine;
+using VContainer;
 
 namespace GameManagement
 {
@@ -11,22 +12,33 @@ namespace GameManagement
         [SerializeField]
         private AudioSource _audioSource;
 
-        [SerializeField]
         private EventBus _eventBus;
 
-        private void Awake()
+        [Inject]
+        public void Construct(EventBus eventBus)
         {
-            _config.Init();
-        }
+            _eventBus = eventBus;
 
-        private void OnEnable()
-        {
             _eventBus.Subscribe<EnemyKilledEvent>(PlayEnemyKilled);
             _eventBus.Subscribe<GameWinEvent>(PlayWin);
             _eventBus.Subscribe<GameLoseEvent>(PlayLose);
             _eventBus.Subscribe<ItemPickedEvent>(PlayPickItem);
             _eventBus.Subscribe<ShotEvent>(PlayShot);
         }
+
+        private void Awake()
+        {
+            _config.Init();
+        }
+
+        //private void OnEnable()
+        //{
+        //    _eventBus.Subscribe<EnemyKilledEvent>(PlayEnemyKilled);
+        //    _eventBus.Subscribe<GameWinEvent>(PlayWin);
+        //    _eventBus.Subscribe<GameLoseEvent>(PlayLose);
+        //    _eventBus.Subscribe<ItemPickedEvent>(PlayPickItem);
+        //    _eventBus.Subscribe<ShotEvent>(PlayShot);
+        //}
 
         private void OnDisable()
         {

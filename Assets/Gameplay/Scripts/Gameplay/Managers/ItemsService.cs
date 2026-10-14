@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 namespace Gameplay
 {
@@ -16,7 +17,6 @@ namespace Gameplay
         [SerializeField]
         private Transform _activeItemsTransform;
 
-        [SerializeField]
         private EventBus _eventBus;
 
         private readonly Dictionary<string, Pool<Item>> _pools = new();
@@ -29,8 +29,10 @@ namespace Gameplay
 
         private Coroutine _spawnCoroutine;
 
-        private void OnEnable()
+        [Inject]
+        public void Construct(EventBus eventBus)
         {
+            _eventBus = eventBus;
             _eventBus.Subscribe<ItemPickedEvent>(Unspawn);
         }
 
@@ -98,6 +100,8 @@ namespace Gameplay
                 item.transform.position = pos;
 
                 item.gameObject.SetActive(true);
+
+                item.Init(_eventBus);
 
                 yield return _spawnWait;
             }

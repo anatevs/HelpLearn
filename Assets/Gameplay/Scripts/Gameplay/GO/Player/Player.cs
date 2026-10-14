@@ -18,7 +18,6 @@ namespace Gameplay
         [SerializeField]
         private GameConfig _config;
 
-        [SerializeField]
         private EventBus _eventBus;
 
         private RotationZComponent _rotation;
@@ -30,20 +29,25 @@ namespace Gameplay
 
         private ProjectileSpawnService _projectileService;
 
-        public void Construct(ProjectileSpawnService projectileService)
+        public void Construct(ProjectileSpawnService projectileService,
+            EventBus eventBus)
         {
             _projectileService = projectileService;
 
+            _shot = GetComponent<ShotComponent>();
             _shot.Init(_projectileService);
+
+            _eventBus = eventBus;
+
+            _input.Construct(_eventBus);
         }
 
         private void Awake()
         {
             _rotation = GetComponent<RotationZComponent>();
             _movement = GetComponent<MovementComponent>();
-            _shot = GetComponent<ShotComponent>();
-            _hp = GetComponent<HPComponent>();
 
+            _hp = GetComponent<HPComponent>();
             _hp.Init(_config.HP);
 
             _initPos = transform.position;

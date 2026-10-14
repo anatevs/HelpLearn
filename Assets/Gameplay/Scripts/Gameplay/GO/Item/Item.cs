@@ -11,8 +11,12 @@ namespace Gameplay
         [SerializeField]
         private ItemConfig _config;
 
-        [SerializeField]
         private EventBus _eventBus;
+
+        public void Init(EventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
 
         private void Awake()
         {

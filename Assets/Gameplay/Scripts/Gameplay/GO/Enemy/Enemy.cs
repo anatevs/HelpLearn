@@ -21,7 +21,6 @@ namespace Gameplay
         [SerializeField]
         private AttackDetector _attackDetector;
 
-        [SerializeField]
         private EventBus _eventBus;
 
         private MovementComponent _movement;
@@ -72,13 +71,17 @@ namespace Gameplay
             _currentStrategy?.ActUpdate();
         }
 
-        public void Init(AttackStrategy attackBehaviour, ProjectileSpawnService projectileService)
+        public void Init(AttackStrategy attackBehaviour,
+            ProjectileSpawnService projectileService,
+            EventBus eventBus)
         {
             _hp.Init(_config.HP);
             _attackStrategy = attackBehaviour;
 
             _projectileService = projectileService;
             _shot.Init(_projectileService);
+
+            _eventBus = eventBus;
         }
 
         public void SetStrategy(EnemyStrategy behaviour)

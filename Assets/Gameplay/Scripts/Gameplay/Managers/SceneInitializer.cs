@@ -1,16 +1,13 @@
 ﻿using EventBusNamespace;
-using GameManagement;
 using UI;
 using UnityEngine;
+using VContainer;
 
 namespace Gameplay
 {
     public sealed class SceneInitializer : MonoBehaviour
     {
-        [SerializeField]
-        private InstancesService _instancesService;
-
-        [SerializeField]
+        //[SerializeField]
         private EventBus _eventBus;
 
         [SerializeField]
@@ -35,30 +32,24 @@ namespace Gameplay
 
         private PlayerCountersController _playerCountersController;
 
-        private void OnEnable()
+        [Inject]
+        public void Construct(EnemySpawnService enemySpawnService,
+            ProjectileSpawnService projectileSpawnService,
+            ItemsService itemsService,
+            CanvasView canvasView,
+            PlayerCountersController playerCountersController,
+            EventBus eventBus)
         {
-            _eventBus.Subscribe<RestartEvent>(ResetLevel);
-        }
+            _enemySpawnService = enemySpawnService;
+            _projectileSpawnService = projectileSpawnService;
+            _itemsService = itemsService;
+            _canvasView = canvasView;
+            _playerCountersController = playerCountersController;
 
-        private void OnDisable()
-        {
-            _eventBus.Unsubscribe<RestartEvent>(ResetLevel);
-        }
+            _eventBus = eventBus;
 
-        private void Start()
-        {
+
             _patrolZones.Init();
-
-            _enemySpawnService = _instancesService.GetInstance<EnemySpawnService>();
-
-            _projectileSpawnService = _instancesService.GetInstance<ProjectileSpawnService>();
-
-            _itemsService = _instancesService.GetInstance<ItemsService>();
-
-            _canvasView = _instancesService.GetInstance<CanvasView>();
-
-            _playerCountersController = _instancesService.GetInstance<PlayerCountersController>();
-
 
             _projectileSpawnService.Init();
 
@@ -75,10 +66,51 @@ namespace Gameplay
 
             _eventBus.RaiseEvent(new GamePlayingEvent());
 
+            _player.Construct(_projectileSpawnService, _eventBus);
+            _enemySpawnService.ConstructInit(_player, _patrolZones.Locations, _projectileSpawnService);
 
-            _player.Construct(_projectileSpawnService);
-            _enemySpawnService.Construct(_player, _patrolZones.Locations, _projectileSpawnService);
+
+
+            _eventBus.Subscribe<RestartEvent>(ResetLevel);
         }
+
+
+        private void OnEnable()
+        {
+            if (_eventBus != null)
+            {
+                _eventBus.Subscribe<RestartEvent>(ResetLevel);
+            }
+        }
+
+        private void OnDisable()
+        {
+            _eventBus.Unsubscribe<RestartEvent>(ResetLevel);
+        }
+
+
+        //private void Start()
+        //{
+        //    _patrolZones.Init();
+
+        //    _projectileSpawnService.Init();
+
+        //    _itemsService.Init();
+
+
+        //    var scoreStorage = new ScoreStorage(_startScore, _player.Config.WinScore, _eventBus);
+        //    var pickedStorage = new PickedItemsStorage(_startPickedItems);
+
+
+        //    _canvasView.Init();
+
+        //    _playerCountersController.Init(_canvasView, _player, scoreStorage, pickedStorage);
+
+        //    _eventBus.RaiseEvent(new GamePlayingEvent());
+
+        //    _player.Construct(_projectileSpawnService, _eventBus);
+        //    _enemySpawnService.ConstructInit(_player, _patrolZones.Locations, _projectileSpawnService);
+        //}
 
         public void ResetLevel(RestartEvent e)
         {

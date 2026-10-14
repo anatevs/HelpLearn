@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using EventBusNamespace;
 
 namespace UI
@@ -7,7 +6,7 @@ namespace UI
     public sealed class EndGameView : MonoBehaviour
     {
         [SerializeField]
-        private Button _restartButton;
+        private RestartButton _restartButton;
 
         [SerializeField]
         private GameObject _loseView;
@@ -17,19 +16,11 @@ namespace UI
 
         private EventBus _eventBus;
 
-        private void OnEnable()
-        {
-            _restartButton.onClick.AddListener(Restart);
-        }
-
-        private void OnDisable()
-        {
-            _restartButton.onClick.RemoveListener(Restart);
-        }
-
         public void Init(EventBus eventBus)
         {
             _eventBus = eventBus;
+
+            _restartButton.Construct(_eventBus);
         }
 
         public void ShowWinLose(bool isWin)
@@ -43,11 +34,6 @@ namespace UI
         public void Hide()
         {
             gameObject.SetActive(false);
-        }
-
-        private void Restart()
-        {
-            _eventBus.RaiseEvent(new RestartEvent());
         }
     }
 }

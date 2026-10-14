@@ -4,26 +4,51 @@ using UnityEngine.UI;
 
 namespace UI
 {
+    [RequireComponent(typeof(Button))]
     public class RestartButton : MonoBehaviour
     {
-        [SerializeField]
         private EventBus _eventBus;
 
-        private Button _restartButton;
+        private Button _button;
+
+        private bool _isSubscribed = false;
+
+        public void Construct(EventBus eventBus)
+        {
+            _eventBus = eventBus;
+
+            if (!_isSubscribed)
+            {
+                _button = GetComponent<Button>();
+                _button.onClick.AddListener(Restart);
+
+                _isSubscribed = true;
+            }
+        }
 
         private void Awake()
         {
-            _restartButton = GetComponent<Button>();
+            _button = GetComponent<Button>();
         }
 
         private void OnEnable()
         {
-            _restartButton.onClick.AddListener(Restart);
+            if (_eventBus != null && !_isSubscribed)
+            {
+                _button.onClick.AddListener(Restart);
+
+                _isSubscribed = true;
+            }
         }
 
         private void OnDisable()
         {
-            _restartButton.onClick.RemoveListener(Restart);
+            if (_isSubscribed)
+            {
+                _button.onClick.RemoveListener(Restart);
+
+                _isSubscribed = false;
+            }
         }
 
         private void Restart()

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 namespace Gameplay
 {
@@ -20,7 +21,6 @@ namespace Gameplay
         [SerializeField]
         private Transform _enemiesTransform;
 
-        [SerializeField]
         private EventBus _eventBus;
 
         private Player _player;
@@ -38,8 +38,10 @@ namespace Gameplay
         private ProjectileSpawnService _projectileService;
 
 
-        private void OnEnable()
+        [Inject]
+        public void Construct(EventBus eventBus)
         {
+            _eventBus = eventBus;
             _eventBus.Subscribe<EnemyKilledEvent>(Unspawn);
         }
 
@@ -48,7 +50,7 @@ namespace Gameplay
             _eventBus.Unsubscribe<EnemyKilledEvent>(Unspawn);
         }
 
-        public void Construct(Player player, PatrolLocation[] locations,
+        public void ConstructInit(Player player, PatrolLocation[] locations,
             ProjectileSpawnService projectileService)
         {
             _player = player;
@@ -118,7 +120,7 @@ namespace Gameplay
         {
             var enemy = _spawner.GetRandomEnemy(_pools, _enemiesTransform);
 
-            enemy.Init(new AttackStrategy(enemy, _player.transform), _projectileService);
+            enemy.Init(new AttackStrategy(enemy, _player.transform), _projectileService, _eventBus);
 
             var setup = _setupActions[enemy.Config.StartStrategy];
 

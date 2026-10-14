@@ -14,7 +14,6 @@ namespace Gameplay
 
         public Vector3 MoveDirection => _moveDirection;
 
-        [SerializeField]
         private EventBus _eventBus;
 
         private InputSystem_Actions _actions;
@@ -28,6 +27,15 @@ namespace Gameplay
         private Vector3 _moveDirection;
 
         private bool _isOverUI = false;
+
+        private bool _isSubscribed = false;
+
+        public void Construct(EventBus eventBus)
+        {
+            _eventBus = eventBus;
+
+            SubscribeEventBus();
+        }
 
         private void Awake()
         {
@@ -47,7 +55,10 @@ namespace Gameplay
 
             _actions.Player.Attack.performed += Shot;
 
-            SubscribeEventBus();
+            if (_eventBus != null)
+            {
+                SubscribeEventBus();
+            }
         }
 
         private void OnDisable()
@@ -93,22 +104,31 @@ namespace Gameplay
 
         private void SubscribeEventBus()
         {
-            _eventBus.Subscribe<GamePlayingEvent>(SetPlaying);
-            _eventBus.Subscribe<GameInitEvent>(SetUnplaying);
-            _eventBus.Subscribe<GamePausedEvent>(SetUnplaying);
-            _eventBus.Subscribe<GameWinEvent>(SetUnplaying);
-            _eventBus.Subscribe<GameLoseEvent>(SetUnplaying);
+            if (!_isSubscribed)
+            {
+                _eventBus.Subscribe<GamePlayingEvent>(SetPlaying);
+                _eventBus.Subscribe<GameInitEvent>(SetUnplaying);
+                _eventBus.Subscribe<GamePausedEvent>(SetUnplaying);
+                _eventBus.Subscribe<GameWinEvent>(SetUnplaying);
+                _eventBus.Subscribe<GameLoseEvent>(SetUnplaying);
+
+                _isSubscribed = true;
+            }
         }
 
         private void UnsubcribeEventBus()
         {
-            _eventBus.Unsubscribe<GamePlayingEvent>(SetPlaying);
-            _eventBus.Unsubscribe<GameInitEvent>(SetUnplaying);
-            _eventBus.Unsubscribe<GamePausedEvent>(SetUnplaying);
-            _eventBus.Unsubscribe<GameWinEvent>(SetUnplaying);
-            _eventBus.Unsubscribe<GameLoseEvent>(SetUnplaying);
-        }
+            if (_isSubscribed)
+            {
+                _eventBus.Unsubscribe<GamePlayingEvent>(SetPlaying);
+                _eventBus.Unsubscribe<GameInitEvent>(SetUnplaying);
+                _eventBus.Unsubscribe<GamePausedEvent>(SetUnplaying);
+                _eventBus.Unsubscribe<GameWinEvent>(SetUnplaying);
+                _eventBus.Unsubscribe<GameLoseEvent>(SetUnplaying);
 
+                _isSubscribed = false;
+            }
+        }
 
         private void SetPlaying(GamePlayingEvent _)
         {

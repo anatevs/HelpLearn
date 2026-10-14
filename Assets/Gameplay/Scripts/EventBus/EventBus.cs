@@ -1,13 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace EventBusNamespace
 {
-    [CreateAssetMenu(fileName = "EventBus",
-        menuName = "Configs/GameSystem/EventBus")]
-    public class EventBus : ScriptableObject
+    public class EventBus
     {
         public event Action<IGameEvent> OnGameEvent;
         public IReadOnlyList<IGameEvent> Events => _events;
