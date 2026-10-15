@@ -1,4 +1,5 @@
 ﻿using EventBusNamespace;
+using GameManagement;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,11 +8,9 @@ using VContainer;
 
 namespace Gameplay
 {
-    public sealed class EnemySpawnService : MonoBehaviour
+    public sealed class EnemySpawnService : MonoBehaviour,
+        IResetable
     {
-        [SerializeField]
-        private EnemySpawnConfig _config;
-
         [SerializeField]
         private EnemySpawner _spawner;
 
@@ -20,6 +19,8 @@ namespace Gameplay
 
         [SerializeField]
         private Transform _enemiesTransform;
+
+        private EnemySpawnConfig _config;
 
         private EventBus _eventBus;
 
@@ -39,9 +40,12 @@ namespace Gameplay
 
 
         [Inject]
-        public void Construct(EventBus eventBus)
+        public void Construct(EventBus eventBus,
+            ProjectileSpawnService projectileService)
         {
             _eventBus = eventBus;
+            _projectileService = projectileService;
+
             _eventBus.Subscribe<EnemyKilledEvent>(Unspawn);
         }
 
@@ -50,14 +54,13 @@ namespace Gameplay
             _eventBus.Unsubscribe<EnemyKilledEvent>(Unspawn);
         }
 
-        public void ConstructInit(Player player, PatrolLocation[] locations,
-            ProjectileSpawnService projectileService)
+        public void InitOnScene(EnemySpawnConfig config, Player player, PatrolLocation[] locations)
         {
+            _config = config;
+
             _player = player;
 
             _locations = locations;
-
-            _projectileService = projectileService;
 
             _spawner.Init(_pools, _config.PoolInitCount, _poolTransform);
 
@@ -65,8 +68,6 @@ namespace Gameplay
             _setupActions.Add(EnemyStrategyType.Patrol, SetupPatrolling);
 
             _spawnWait = new WaitForSeconds(_config.SpawnPeriod);
-
-            Reset();
         }
 
         public void Reset()
@@ -102,6 +103,8 @@ namespace Gameplay
             enemy.SetStrategy(null);
 
             enemy.transform.position = Vector3.zero;
+
+            enemy.Clear();
 
             _pools[enemy.Config.Name].Unspawn(enemy);
         }

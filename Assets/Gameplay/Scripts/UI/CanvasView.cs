@@ -51,17 +51,19 @@ namespace UI
             _restartButton.Construct(_eventBus);
             _gameStateView.Construct(_eventBus);
 
+            _restartButton.Subscribe();
             _pauseButton.onClick.AddListener(SetPause);
             _resumeButton.onClick.AddListener(SetResume);
         }
 
         private void OnDisable()
         {
+            _restartButton.Unsubscribe();
             _pauseButton.onClick.RemoveListener(SetPause);
             _resumeButton.onClick.RemoveListener(SetResume);
         }
 
-        public void Init()
+        public void InitOnScene()
         {
             gameObject.SetActive(true);
 

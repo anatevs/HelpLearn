@@ -8,9 +8,6 @@ using GameManagement;
 
 public class RootLifetimeScope : LifetimeScope
 {
-    //[SerializeField]
-    //private EventBus _eventBus;
-
     [SerializeField]
     private EnemySpawnService _enemyServicePrefab;
 
@@ -36,8 +33,8 @@ public class RootLifetimeScope : LifetimeScope
 
     private void RegisterPrefabServices(IContainerBuilder builder)
     {
-        ImmediateRegisterMBFromPrefab(_enemyServicePrefab, builder);
         ImmediateRegisterMBFromPrefab(_projectileSpawnServicePrefab, builder);
+        ImmediateRegisterMBFromPrefab(_enemyServicePrefab, builder);
         ImmediateRegisterMBFromPrefab(_itemServicePrefab, builder);
         ImmediateRegisterMBFromPrefab(_canvasViewPrefab, builder);
         ImmediateRegisterMBFromPrefab(_soundPlayerPrefab, builder);
@@ -45,28 +42,17 @@ public class RootLifetimeScope : LifetimeScope
 
     private void ImmediateRegisterPlainClasses(IContainerBuilder builder)
     {
-        //var gameStates = new GameStateService(_eventBus);
+        builder.Register<GameStateService>(Lifetime.Singleton)
+            .AsImplementedInterfaces().AsSelf();
 
-        //builder.RegisterComponent(gameStates);
+        builder.Register<PlayerCountersController>(Lifetime.Singleton)
+            .AsImplementedInterfaces().AsSelf();
 
-        //var countersController = new PlayerCountersController(_eventBus);
+        builder.Register<SaveService>(Lifetime.Singleton)
+            .AsImplementedInterfaces().AsSelf();
 
-        //builder.RegisterComponent(countersController);
-
-        //var saveService = new SaveService(_eventBus);
-
-        //builder.RegisterComponent(saveService);
-
-
-        builder.Register<GameStateService>(Lifetime.Singleton);
-        builder.Register<PlayerCountersController>(Lifetime.Singleton);
-        builder.Register<SaveService>(Lifetime.Singleton);
-
-
-
-        builder.Register<GameStateUIController>(Lifetime.Singleton);
-            //.WithParameter(_eventBus);
-
+        builder.Register<GameStateUIController>(Lifetime.Singleton)
+            .AsImplementedInterfaces().AsSelf();
 
         builder.RegisterBuildCallback(resolver =>
         {
@@ -87,6 +73,8 @@ public class RootLifetimeScope : LifetimeScope
 
         DontDestroyOnLoad(instanceGO);
 
-        builder.RegisterComponent<T>(instance);
+        builder.RegisterComponent<T>(instance)
+            .AsImplementedInterfaces()
+            .AsSelf();
     }
 }

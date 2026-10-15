@@ -11,44 +11,21 @@ namespace UI
 
         private Button _button;
 
-        private bool _isSubscribed = false;
-
         public void Construct(EventBus eventBus)
         {
             _eventBus = eventBus;
 
-            if (!_isSubscribed)
-            {
-                _button = GetComponent<Button>();
-                _button.onClick.AddListener(Restart);
-
-                _isSubscribed = true;
-            }
-        }
-
-        private void Awake()
-        {
             _button = GetComponent<Button>();
         }
 
-        private void OnEnable()
+        public void Subscribe()
         {
-            if (_eventBus != null && !_isSubscribed)
-            {
-                _button.onClick.AddListener(Restart);
-
-                _isSubscribed = true;
-            }
+            _button.onClick.AddListener(Restart);
         }
 
-        private void OnDisable()
+        public void Unsubscribe()
         {
-            if (_isSubscribed)
-            {
-                _button.onClick.RemoveListener(Restart);
-
-                _isSubscribed = false;
-            }
+            _button.onClick.RemoveListener(Restart);
         }
 
         private void Restart()

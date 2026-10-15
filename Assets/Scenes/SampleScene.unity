@@ -273,11 +273,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06bc8f2d4ebbee54591430e8b9004650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
-  _player: {fileID: 1345598535}
   _patrolZones: {fileID: 42142370}
   _startScore: 0
   _startPickedItems: 0
+  _enemySpawnConfig: {fileID: 11400000, guid: 3bbffc7b5d86cf94e9e39d9b6e2aa32e, type: 2}
+  _itemsConfig: {fileID: 11400000, guid: 57a26b11d09ea6948974be3ecb2ebdc2, type: 2}
 --- !u!1 &147241894
 GameObject:
   m_ObjectHideFlags: 0
@@ -1051,7 +1051,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff565bad5b2e6c24f9ea3f82adbf22a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
 --- !u!4 &1007530914
 Transform:
   m_ObjectHideFlags: 0
@@ -1084,6 +1083,8 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   _sceneInitializer: {fileID: 140319141}
+  _inputHandler: {fileID: 1007530913}
+  _player: {fileID: 1345598535}
 --- !u!1 &1036883763
 GameObject:
   m_ObjectHideFlags: 0
@@ -1307,9 +1308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83ee55c44b61ef044a377ab2697df17a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _input: {fileID: 1007530913}
   _config: {fileID: 11400000, guid: 642fc3677a3df4e42a5dc17d587add23, type: 2}
-  _eventBus: {fileID: 11400000, guid: 252b4681b93eac145b8cb9aed8f8e68a, type: 2}
 --- !u!114 &1345598536
 MonoBehaviour:
   m_ObjectHideFlags: 0

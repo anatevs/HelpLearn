@@ -1,5 +1,7 @@
 using EventBusNamespace;
+using GameManagement;
 using UnityEngine;
+using VContainer;
 
 namespace Gameplay
 {
@@ -7,16 +9,15 @@ namespace Gameplay
     [RequireComponent(typeof(MovementComponent))]
     [RequireComponent(typeof(ShotComponent))]
     [RequireComponent(typeof(HPComponent))]
-    public sealed class Player : MonoBehaviour
+    public sealed class Player : MonoBehaviour,
+        IResetable
     {
         public GameConfig Config => _config;
-        public HPComponent HPComponent => _hp;
-
-        [SerializeField]
-        private InputHandler _input;
 
         [SerializeField]
         private GameConfig _config;
+
+        private InputHandler _input;
 
         private EventBus _eventBus;
 
@@ -29,9 +30,12 @@ namespace Gameplay
 
         private ProjectileSpawnService _projectileService;
 
-        public void Construct(ProjectileSpawnService projectileService,
+        [Inject]
+        public void Construct(InputHandler input,
+            ProjectileSpawnService projectileService,
             EventBus eventBus)
         {
+            _input = input;
             _projectileService = projectileService;
 
             _shot = GetComponent<ShotComponent>();

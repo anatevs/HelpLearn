@@ -1,4 +1,5 @@
 ﻿using EventBusNamespace;
+using GameManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,16 +7,16 @@ using VContainer;
 
 namespace Gameplay
 {
-    public sealed class ItemsService : MonoBehaviour
+    public sealed class ItemsService : MonoBehaviour,
+        IResetable
     {
-        [SerializeField]
-        private ItemServiceConfig _config;
-
         [SerializeField]
         private Transform _poolTransform;
 
         [SerializeField]
         private Transform _activeItemsTransform;
+
+        private ItemServiceConfig _config;
 
         private EventBus _eventBus;
 
@@ -41,13 +42,10 @@ namespace Gameplay
             _eventBus.Unsubscribe<ItemPickedEvent>(Unspawn);
         }
 
-        public void Init()
+        public void InitOnScene(ItemServiceConfig config)
         {
-            Init(_config);
-        }
+            _config = config;
 
-        private void Init(ItemServiceConfig config)
-        {
             _itemNames = new string[config.Prefabs.Length];
 
             for(int i = 0; i < config.Prefabs.Length; i++)
@@ -62,8 +60,6 @@ namespace Gameplay
             _spawnWait = new WaitForSeconds(config.SpawnPeriod);
 
             _posRange = (config.XRange, config.YRange);
-
-            Reset();
         }
 
         public void Reset()

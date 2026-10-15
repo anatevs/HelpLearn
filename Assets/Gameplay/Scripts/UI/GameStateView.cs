@@ -1,7 +1,6 @@
 ﻿using EventBusNamespace;
 using TMPro;
 using UnityEngine;
-using VContainer;
 
 namespace UI
 {

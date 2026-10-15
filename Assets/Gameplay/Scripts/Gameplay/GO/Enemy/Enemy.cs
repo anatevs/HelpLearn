@@ -35,8 +35,6 @@ namespace Gameplay
 
         private AttackStrategy _attackStrategy;
 
-        private ProjectileSpawnService _projectileService;
-
         private void Awake()
         {
             _movement = GetComponent<MovementComponent>();
@@ -78,10 +76,16 @@ namespace Gameplay
             _hp.Init(_config.HP);
             _attackStrategy = attackBehaviour;
 
-            _projectileService = projectileService;
-            _shot.Init(_projectileService);
+            _shot.Init(projectileService);
 
             _eventBus = eventBus;
+        }
+
+        public void Clear()
+        {
+            SetStrategy(null);
+            _shot.Init(null);
+            _eventBus = null;
         }
 
         public void SetStrategy(EnemyStrategy behaviour)

@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using VContainer;
 
 namespace Gameplay
 {
@@ -30,14 +31,17 @@ namespace Gameplay
 
         private bool _isSubscribed = false;
 
+        [Inject]
         public void Construct(EventBus eventBus)
         {
             _eventBus = eventBus;
 
+            Init();
+
             SubscribeEventBus();
         }
 
-        private void Awake()
+        private void Init()
         {
             _actions = new();
 

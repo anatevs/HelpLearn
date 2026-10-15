@@ -1,15 +1,17 @@
 ﻿using EventBusNamespace;
 using System;
 using UI;
+using GameManagement;
 
 namespace Gameplay
 {
     public sealed class PlayerCountersController : 
+        IResetable,
         IDisposable
     {
         private readonly EventBus _eventBus;
 
-        private CanvasView _canvasView;
+        private readonly CanvasView _canvasView;
 
         private Player _player;
 
@@ -17,9 +19,12 @@ namespace Gameplay
 
         private CounterController<ItemPickedEvent> _pickedController;
 
-        public PlayerCountersController(EventBus eventBus)
+        public PlayerCountersController(EventBus eventBus,
+            CanvasView canvasView)
         {
             _eventBus = eventBus;
+            _canvasView = canvasView;
+
             _eventBus.Subscribe<PlayerDamageEvent>(HandlePlayerDamage);
             _eventBus.Subscribe<EnemyKilledEvent>(HandleEnemyKill);
         }
@@ -30,20 +35,15 @@ namespace Gameplay
             _eventBus.Unsubscribe<EnemyKilledEvent>(HandleEnemyKill);
         }
 
-        public void Init(CanvasView canvasView,
-            Player player,
+        public void InitOnScene(Player player,
             ScoreStorage scoreStorage,
             PickedItemsStorage pickedItemsStorage)
         {
-            _canvasView = canvasView;
-
             _player = player;
 
             _scoreController = new(scoreStorage, _canvasView.ScoreView, _eventBus);
 
             _pickedController = new(pickedItemsStorage, _canvasView.PickedItemsView, _eventBus);
-
-            Reset();
         }
 
         public void Reset()

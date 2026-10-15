@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using GameManagement;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay
 {
-    public sealed class ProjectileSpawnService : MonoBehaviour
+    public sealed class ProjectileSpawnService : MonoBehaviour,
+        IResetable
     {
         [SerializeField]
         private ProjectileSpawnConfig _config;
@@ -18,11 +20,9 @@ namespace Gameplay
 
         private readonly HashSet<Projectile> _activeProjectiles = new();
 
-        public void Init()
+        public void InitOnScene()
         {
             _pool = new Pool<Projectile>(_config.Prefab, _config.PoolInitCount, _poolTransform);
-
-            Reset();
         }
 
         public void Reset()

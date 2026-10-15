@@ -28,11 +28,15 @@ namespace UI
             _loseView.SetActive(!isWin);
             _winView.SetActive(isWin);
 
+            _restartButton.Subscribe();
+
             gameObject.SetActive(true);
         }
 
         public void Hide()
         {
+            _restartButton.Unsubscribe();
+
             gameObject.SetActive(false);
         }
     }

@@ -1,4 +1,6 @@
 ﻿using EventBusNamespace;
+using GameManagement;
+using System.Collections.Generic;
 using UI;
 using UnityEngine;
 using VContainer;
@@ -7,12 +9,6 @@ namespace Gameplay
 {
     public sealed class SceneInitializer : MonoBehaviour
     {
-        //[SerializeField]
-        private EventBus _eventBus;
-
-        [SerializeField]
-        private Player _player;
-
         [SerializeField]
         private PatrolZones _patrolZones;
 
@@ -21,6 +17,18 @@ namespace Gameplay
 
         [SerializeField]
         private int _startPickedItems = 0;
+
+        [SerializeField]
+        private EnemySpawnConfig _enemySpawnConfig;
+
+        [SerializeField]
+        private ItemServiceConfig _itemsConfig;
+
+        private EventBus _eventBus;
+
+        private Player _player;
+
+        private IEnumerable<IResetable> _resetables;
 
         private EnemySpawnService _enemySpawnService;
 
@@ -38,7 +46,9 @@ namespace Gameplay
             ItemsService itemsService,
             CanvasView canvasView,
             PlayerCountersController playerCountersController,
-            EventBus eventBus)
+            EventBus eventBus,
+            Player player,
+            IEnumerable<IResetable> resetables)
         {
             _enemySpawnService = enemySpawnService;
             _projectileSpawnService = projectileSpawnService;
@@ -47,29 +57,26 @@ namespace Gameplay
             _playerCountersController = playerCountersController;
 
             _eventBus = eventBus;
+            _player = player;
 
+            _resetables = resetables;
 
             _patrolZones.Init();
 
-            _projectileSpawnService.Init();
+            _projectileSpawnService.InitOnScene();
 
-            _itemsService.Init();
+            _itemsService.InitOnScene(_itemsConfig);
 
+            _canvasView.InitOnScene();
 
             var scoreStorage = new ScoreStorage(_startScore, _player.Config.WinScore, _eventBus);
             var pickedStorage = new PickedItemsStorage(_startPickedItems);
 
+            _playerCountersController.InitOnScene(_player, scoreStorage, pickedStorage);
 
-            _canvasView.Init();
+            _enemySpawnService.InitOnScene(_enemySpawnConfig, _player, _patrolZones.Locations);
 
-            _playerCountersController.Init(_canvasView, _player, scoreStorage, pickedStorage);
-
-            _eventBus.RaiseEvent(new GamePlayingEvent());
-
-            _player.Construct(_projectileSpawnService, _eventBus);
-            _enemySpawnService.ConstructInit(_player, _patrolZones.Locations, _projectileSpawnService);
-
-
+            ResetLevel();
 
             _eventBus.Subscribe<RestartEvent>(ResetLevel);
         }
@@ -88,39 +95,17 @@ namespace Gameplay
             _eventBus.Unsubscribe<RestartEvent>(ResetLevel);
         }
 
-
-        //private void Start()
-        //{
-        //    _patrolZones.Init();
-
-        //    _projectileSpawnService.Init();
-
-        //    _itemsService.Init();
-
-
-        //    var scoreStorage = new ScoreStorage(_startScore, _player.Config.WinScore, _eventBus);
-        //    var pickedStorage = new PickedItemsStorage(_startPickedItems);
-
-
-        //    _canvasView.Init();
-
-        //    _playerCountersController.Init(_canvasView, _player, scoreStorage, pickedStorage);
-
-        //    _eventBus.RaiseEvent(new GamePlayingEvent());
-
-        //    _player.Construct(_projectileSpawnService, _eventBus);
-        //    _enemySpawnService.ConstructInit(_player, _patrolZones.Locations, _projectileSpawnService);
-        //}
-
         public void ResetLevel(RestartEvent e)
         {
-            _enemySpawnService.Reset();
+            ResetLevel();
+        }
 
-            _projectileSpawnService.Reset();
-
-            _itemsService.Reset();
-
-            _playerCountersController.Reset();
+        private void ResetLevel()
+        {
+            foreach (var resetable in _resetables)
+            {
+                resetable.Reset();
+            }
 
             _eventBus.RaiseEvent(new GamePlayingEvent());
         }
