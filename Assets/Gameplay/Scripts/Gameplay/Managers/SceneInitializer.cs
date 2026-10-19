@@ -22,7 +22,7 @@ namespace Gameplay
         private EnemySpawnConfig _enemySpawnConfig;
 
         [SerializeField]
-        private ItemServiceConfig _itemsConfig;
+        private ItemSpawnConfig _itemsConfig;
 
         private EventBus _eventBus;
 

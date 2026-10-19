@@ -1,11 +1,14 @@
 ﻿using EventBusNamespace;
 using UnityEngine;
+using VContainer;
 
 namespace Gameplay
 {
     [RequireComponent(typeof(Collider2D))]
-    public sealed class Item : MonoBehaviour
+    public sealed class Item : MonoBehaviour, INamed
     {
+        public string Name => _config.Name;
+
         public ItemConfig Config => _config;
 
         [SerializeField]
@@ -13,7 +16,8 @@ namespace Gameplay
 
         private EventBus _eventBus;
 
-        public void Init(EventBus eventBus)
+        [Inject]
+        public void Construct(EventBus eventBus)
         {
             _eventBus = eventBus;
         }

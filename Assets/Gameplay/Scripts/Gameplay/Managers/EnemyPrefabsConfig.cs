@@ -2,9 +2,9 @@
 
 namespace Gameplay
 {
-    [CreateAssetMenu(fileName = "EnemySetConfig",
-        menuName = "Configs/EnemySet")]
-    public class EnemySetConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "EnemyPrefabsConfig",
+        menuName = "Configs/EnemyPrefabs")]
+    public class EnemyPrefabsConfig : ScriptableObject
     {
         public Enemy[] Prefabs => _prefabs;
 

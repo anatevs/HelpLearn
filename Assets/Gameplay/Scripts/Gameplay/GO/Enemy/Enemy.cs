@@ -7,8 +7,9 @@ namespace Gameplay
     [RequireComponent(typeof(RotationZComponent))]
     [RequireComponent(typeof(ShotComponent))]
     [RequireComponent(typeof(HPComponent))]
-    public sealed class Enemy : MonoBehaviour
+    public sealed class Enemy : MonoBehaviour, INamed
     {
+        public string Name => _config.Name;
         public MovementComponent Movement => _movement;
         public RotationZComponent Rotation => _rotation;
         public ShotComponent Shot => _shot;

@@ -3,32 +3,35 @@ using UnityEngine;
 
 namespace Gameplay
 {
-    public class EnemySpawner : MonoBehaviour
+    public class EnemySpawner
     {
-        [SerializeField]
-        private EnemySetConfig _setConfig;
+        private readonly Dictionary<string, PoolWithFactory<Enemy>> _pools;
+
+        private readonly Transform _spawnTransform;
 
         private string[] _enemyNames;
 
-        public void Init(Dictionary<string, Pool<Enemy>> pools, int poolInitCount, Transform poolTransform)
+        public EnemySpawner(Dictionary<string, PoolWithFactory<Enemy>> pools, Transform activeTransform)
         {
-            _enemyNames = new string[_setConfig.Prefabs.Length];
+            _pools = pools;
+            _spawnTransform = activeTransform;
+        }
 
-            for (int i = 0; i < _setConfig.Prefabs.Length; i++)
+        public void InitOnScene(EnemySpawnConfig spawnConfig)
+        {
+            _enemyNames = new string[spawnConfig.Prefabs.Length];
+
+            for (int i = 0; i < spawnConfig.Prefabs.Length; i++)
             {
-                var enemy = _setConfig.Prefabs[i];
-
-                pools.Add(enemy.Config.Name, new Pool<Enemy>(enemy, poolInitCount, poolTransform));
-
-                _enemyNames[i] = enemy.Config.Name;
+                _enemyNames[i] = spawnConfig.Prefabs[i].Name;
             }
         }
 
-        public Enemy GetRandomEnemy(Dictionary<string, Pool<Enemy>> pools, Transform spawnedTransform)
+        public Enemy GetRandomEnemy()
         {
             var name = _enemyNames[Random.Range(0, _enemyNames.Length)];
 
-            return pools[name].Spawn(spawnedTransform);
+            return _pools[name].Spawn(_spawnTransform);
         }
     }
 }

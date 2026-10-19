@@ -16,11 +16,15 @@ namespace Gameplay
         [SerializeField]
         private Transform _activeItemsTransform;
 
-        private ItemServiceConfig _config;
+        [SerializeField]
+        private ItemSpawnConfig _config;
+
+        [SerializeField]
+        private int _poolInitCount = 10;
 
         private EventBus _eventBus;
 
-        private readonly Dictionary<string, Pool<Item>> _pools = new();
+        private readonly Dictionary<string, PoolWithFactory<Item>> _pools = new();
 
         private string[] _itemNames;
 
@@ -30,11 +34,17 @@ namespace Gameplay
 
         private Coroutine _spawnCoroutine;
 
+
         [Inject]
-        public void Construct(EventBus eventBus)
+        public void Construct(EventBus eventBus, IObjectsFactory<Item> itemsFacrory)
         {
             _eventBus = eventBus;
             _eventBus.Subscribe<ItemPickedEvent>(Unspawn);
+
+            foreach (var itemName in itemsFacrory.Names)
+            {
+                _pools.Add(itemName, new PoolWithFactory<Item>(itemsFacrory, _poolInitCount, _poolTransform, itemName));
+            }
         }
 
         private void OnDisable()
@@ -42,7 +52,7 @@ namespace Gameplay
             _eventBus.Unsubscribe<ItemPickedEvent>(Unspawn);
         }
 
-        public void InitOnScene(ItemServiceConfig config)
+        public void InitOnScene(ItemSpawnConfig config)
         {
             _config = config;
 
@@ -51,8 +61,6 @@ namespace Gameplay
             for(int i = 0; i < config.Prefabs.Length; i++)
             {
                 var prefab = config.Prefabs[i];
-
-                _pools.Add(prefab.Config.Name, new Pool<Item>(prefab, config.InitPoolCount, _poolTransform));
 
                 _itemNames[i] = prefab.Config.Name;
             }
@@ -97,7 +105,7 @@ namespace Gameplay
 
                 item.gameObject.SetActive(true);
 
-                item.Init(_eventBus);
+                item.Construct(_eventBus);
 
                 yield return _spawnWait;
             }

@@ -23,12 +23,31 @@ public class RootLifetimeScope : LifetimeScope
     [SerializeField]
     private SoundPlayer _soundPlayerPrefab;
 
+    [SerializeField]
+    private ItemsPrefabsConfig _itemsPrefabsConfig;
+
+    [SerializeField]
+    private EnemyPrefabsConfig _enemyPrefabsConfig;
+
     protected override void Configure(IContainerBuilder builder)
     {
         builder.Register<EventBus>(Lifetime.Singleton);
 
+        RegisterFactories(builder);
+
         RegisterPrefabServices(builder);
         ImmediateRegisterPlainClasses(builder);
+    }
+
+    private void RegisterFactories(IContainerBuilder builder)
+    {
+        builder.Register<SimpleFactory<Item>>(Lifetime.Singleton)
+            .WithParameter<Item[]>(_itemsPrefabsConfig.Prefabs)
+            .AsImplementedInterfaces();
+
+        builder.Register<SimpleFactory<Enemy>>(Lifetime.Singleton)
+            .WithParameter<Enemy[]>(_enemyPrefabsConfig.Prefabs)
+            .AsImplementedInterfaces();
     }
 
     private void RegisterPrefabServices(IContainerBuilder builder)

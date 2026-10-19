@@ -12,13 +12,15 @@ namespace Gameplay
         IResetable
     {
         [SerializeField]
-        private EnemySpawner _spawner;
-
-        [SerializeField]
         private Transform _poolTransform;
 
         [SerializeField]
         private Transform _enemiesTransform;
+
+        [SerializeField]
+        private int _poolInitCount = 10;
+
+        private EnemySpawner _spawner;
 
         private EnemySpawnConfig _config;
 
@@ -28,7 +30,7 @@ namespace Gameplay
 
         private PatrolLocation[] _locations;
 
-        private readonly Dictionary<string, Pool<Enemy>> _pools = new();
+        private readonly Dictionary<string, PoolWithFactory<Enemy>> _pools = new();
 
         private readonly Dictionary<EnemyStrategyType, Action<Enemy>> _setupActions = new();
 
@@ -38,15 +40,22 @@ namespace Gameplay
 
         private ProjectileSpawnService _projectileService;
 
-
         [Inject]
         public void Construct(EventBus eventBus,
-            ProjectileSpawnService projectileService)
+            ProjectileSpawnService projectileService,
+            IObjectsFactory<Enemy> factory)
         {
             _eventBus = eventBus;
             _projectileService = projectileService;
 
             _eventBus.Subscribe<EnemyKilledEvent>(Unspawn);
+
+            foreach (var name in factory.Names)
+            {
+                _pools.Add(name, new PoolWithFactory<Enemy>(factory, _poolInitCount, _poolTransform, name));
+            }
+
+            _spawner = new EnemySpawner(_pools, _enemiesTransform);
         }
 
         private void OnDisable()
@@ -62,7 +71,7 @@ namespace Gameplay
 
             _locations = locations;
 
-            _spawner.Init(_pools, _config.PoolInitCount, _poolTransform);
+            _spawner.InitOnScene(config);
 
             _setupActions.Add(EnemyStrategyType.Attack, SetupAttacking);
             _setupActions.Add(EnemyStrategyType.Patrol, SetupPatrolling);
@@ -121,7 +130,7 @@ namespace Gameplay
 
         private void SpawnRandom()
         {
-            var enemy = _spawner.GetRandomEnemy(_pools, _enemiesTransform);
+            var enemy = _spawner.GetRandomEnemy();
 
             enemy.Init(new AttackStrategy(enemy, _player.transform), _projectileService, _eventBus);
 

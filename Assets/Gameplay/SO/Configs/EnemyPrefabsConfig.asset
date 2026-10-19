@@ -9,16 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18e6d93368189084fae905ecd7cbbb90, type: 3}
-  m_Name: ItemServiceConfig
+  m_Script: {fileID: 11500000, guid: 8ae4fd77d38620b4fa01db2753a707b9, type: 3}
+  m_Name: EnemyPrefabsConfig
   m_EditorClassIdentifier: 
   _prefabs:
-  - {fileID: 1791690385213799676, guid: ad542c1316bb56344be4d7ff7ccd0b0c, type: 3}
-  _xRange:
-  - -40
-  - 40
-  _yRange:
-  - -20
-  - 20
-  _spawnPeriod: 10
-  _initPoolCount: 10
+  - {fileID: 6115490535625203245, guid: 820f0612105edad44bd0776eb3c15ec2, type: 3}
+  - {fileID: 6115490535625203245, guid: 622ae0a501021ca4eacb5ed33b485bf1, type: 3}

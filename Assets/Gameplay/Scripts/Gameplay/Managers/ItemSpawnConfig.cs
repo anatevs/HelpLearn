@@ -2,15 +2,14 @@
 
 namespace Gameplay
 {
-    [CreateAssetMenu(fileName = "ItemServiceConfig",
-        menuName = "Configs/ItemService")]
-    public sealed class ItemServiceConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "ItemsSpawnConfig",
+        menuName = "Configs/ItemsSpawn")]
+    public sealed class ItemSpawnConfig : ScriptableObject
     {
         public Item[] Prefabs => _prefabs;
         public float[] XRange => _xRange;
         public float[] YRange => _yRange;
         public float SpawnPeriod => _spawnPeriod;
-        public int InitPoolCount => _initPoolCount;
 
         [SerializeField]
         private Item[] _prefabs;
@@ -23,8 +22,5 @@ namespace Gameplay
 
         [SerializeField]
         private float _spawnPeriod = 10f;
-
-        [SerializeField]
-        private int _initPoolCount = 10;
     }
 }

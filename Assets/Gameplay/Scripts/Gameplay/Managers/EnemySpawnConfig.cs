@@ -6,15 +6,15 @@ namespace Gameplay
         menuName = "Configs/EnemySpawn")]
     public sealed class EnemySpawnConfig : ScriptableObject
     {
-        public int PoolInitCount => _poolInitCount;
+        public Enemy[] Prefabs => _prefabs;
 
         public float SpawnPeriod => _spawnPeriod;
 
         [SerializeField]
-        private float _spawnPeriod = 5f;
+        private Enemy[] _prefabs;
 
         [SerializeField]
-        private int _poolInitCount = 10;
+        private float _spawnPeriod = 5f;
 
         [SerializeField]
         private float[] _xSpawnRange = new float[2];

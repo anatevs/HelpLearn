@@ -19,6 +19,9 @@ namespace GameManagement
             _path = Path.Combine(Application.persistentDataPath, _filename);
 
             SetTitle();
+
+
+            Debug.Log($"path: {_path}");
         }
 
         public void SetTitle()
