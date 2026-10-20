@@ -62,7 +62,7 @@ namespace Gameplay
             {
                 var prefab = config.Prefabs[i];
 
-                _itemNames[i] = prefab.Config.Name;
+                _itemNames[i] = prefab.Name;
             }
 
             _spawnWait = new WaitForSeconds(config.SpawnPeriod);
@@ -122,7 +122,7 @@ namespace Gameplay
         {
             item.transform.position = Vector3.zero;
 
-            _pools[item.Config.Name].Unspawn(item);
+            _pools[item.Name].Unspawn(item);
         }
     }
 }

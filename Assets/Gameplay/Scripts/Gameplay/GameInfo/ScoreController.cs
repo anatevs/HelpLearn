@@ -5,7 +5,7 @@ namespace Gameplay
 {
     public sealed class ScoreController : CounterController<ScoreChangedEvent>
     {
-        public ScoreController(CounterStorage storage, CounterView counterView, EventBus eventBus) :
+        public ScoreController(ScoreStorage storage, CounterView counterView, EventBus eventBus) :
             base(storage, counterView, eventBus)
         {
         }

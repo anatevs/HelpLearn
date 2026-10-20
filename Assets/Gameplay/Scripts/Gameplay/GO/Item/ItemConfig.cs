@@ -9,6 +9,6 @@ namespace Gameplay
         public string Name => _name;
 
         [SerializeField]
-        private string _name;
+        private string _name = "";
     }
 }

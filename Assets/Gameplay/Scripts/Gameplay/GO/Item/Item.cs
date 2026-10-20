@@ -9,8 +9,6 @@ namespace Gameplay
     {
         public string Name => _config.Name;
 
-        public ItemConfig Config => _config;
-
         [SerializeField]
         private ItemConfig _config;
 

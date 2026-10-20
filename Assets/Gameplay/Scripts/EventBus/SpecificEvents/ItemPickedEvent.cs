@@ -8,7 +8,7 @@ namespace EventBusNamespace
         {
             _name = "Item picked";
 
-            _description = $"Item name: {item.Config.Name}";
+            _description = $"Item name: {item.Name}";
         }
     }
 }
