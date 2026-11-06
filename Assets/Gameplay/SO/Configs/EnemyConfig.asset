@@ -13,8 +13,15 @@ MonoBehaviour:
   m_Name: EnemyConfig
   m_EditorClassIdentifier: 
   _name: Enemy0
+  _prefabReference:
+    m_AssetGUID: 9c402f2ed25deb2458c26050ab06bb45
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
   _hp: 3
   _rotationSpeed: 50
+  _startStrategy: 0
   _patrolSpeed: 2
   _followSpeed: 1
   _detectDistance: 3

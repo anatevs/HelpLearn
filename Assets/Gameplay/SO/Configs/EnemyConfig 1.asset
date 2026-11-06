@@ -13,6 +13,12 @@ MonoBehaviour:
   m_Name: EnemyConfig 1
   m_EditorClassIdentifier: 
   _name: Enemy1
+  _prefabReference:
+    m_AssetGUID: dfe219f83cc23e8408f916b3dbb8b19d
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
   _hp: 5
   _rotationSpeed: 50
   _startStrategy: 1

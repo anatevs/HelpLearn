@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Level1
+  m_EditorClassIdentifier: 
+  m_GroupName: Level1
+  m_GUID: bd476b65583647648b47726a28b79ac1
+  m_SerializeEntries:
+  - m_GUID: 9c402f2ed25deb2458c26050ab06bb45
+    m_Address: Assets/Gameplay/Prefabs/Enemy0.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Enemy
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ccd3da8b98fe7b94e9f61a915c1e130b
+    m_Address: Assets/Gameplay/Prefabs/Item.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Item
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dfe219f83cc23e8408f916b3dbb8b19d
+    m_Address: Assets/Gameplay/Prefabs/Enemy1.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Enemy
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f6666d656ae631746abcd56d4d585ddb
+    m_Address: Assets/Gameplay/Prefabs/Projectile.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Projectile
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3c6ffa38a1030e7418928b4c4732e15f, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 519ddf06edef08340b16c736b29ccfee, type: 2}
+    - {fileID: 11400000, guid: 9b2624d5724e1d74dbed783846336559, type: 2}

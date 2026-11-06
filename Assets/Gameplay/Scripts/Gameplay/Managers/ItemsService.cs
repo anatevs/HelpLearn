@@ -56,11 +56,11 @@ namespace Gameplay
         {
             _config = config;
 
-            _itemNames = new string[config.Prefabs.Length];
+            _itemNames = new string[config.Configs.Length];
 
-            for(int i = 0; i < config.Prefabs.Length; i++)
+            for(int i = 0; i < config.Configs.Length; i++)
             {
-                var prefab = config.Prefabs[i];
+                var prefab = config.Configs[i];
 
                 _itemNames[i] = prefab.Name;
             }

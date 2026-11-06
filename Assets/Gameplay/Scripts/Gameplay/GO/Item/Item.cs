@@ -9,7 +9,6 @@ namespace Gameplay
     {
         public string Name => _config.Name;
 
-        [SerializeField]
         private ItemConfig _config;
 
         private EventBus _eventBus;
@@ -31,6 +30,11 @@ namespace Gameplay
             {
                 _eventBus.RaiseEvent(new ItemPickedEvent(this));
             }
+        }
+
+        public void SetConfig(ItemConfig config)
+        {
+            _config = config;
         }
     }
 }

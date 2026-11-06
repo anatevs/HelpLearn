@@ -6,12 +6,12 @@ namespace Gameplay
         menuName = "Configs/EnemySpawn")]
     public sealed class EnemySpawnConfig : ScriptableObject
     {
-        public Enemy[] Prefabs => _prefabs;
+        public EnemyConfig[] Configs => _enemyConfigs;
 
         public float SpawnPeriod => _spawnPeriod;
 
         [SerializeField]
-        private Enemy[] _prefabs;
+        private EnemyConfig[] _enemyConfigs;
 
         [SerializeField]
         private float _spawnPeriod = 5f;

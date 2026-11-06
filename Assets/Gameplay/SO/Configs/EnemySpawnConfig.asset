@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c47bf7e680382e458d3f6f5c46be01a, type: 3}
   m_Name: EnemySpawnConfig
   m_EditorClassIdentifier: 
-  _prefabs:
-  - {fileID: 6115490535625203245, guid: 820f0612105edad44bd0776eb3c15ec2, type: 3}
-  - {fileID: 6115490535625203245, guid: 622ae0a501021ca4eacb5ed33b485bf1, type: 3}
+  _enemyConfigs:
+  - {fileID: 11400000, guid: b61de6a7bb4c00f4ebf190d6cc6b9d52, type: 2}
+  - {fileID: 11400000, guid: ccdae89d7a5e5c042b5799334689b041, type: 2}
   _spawnPeriod: 10
-  _poolInitCount: 10
   _xSpawnRange:
   - -16
   - 16

@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f28f155e4fcf8442938cbda9283a3d8, type: 3}
   m_Name: ProjectileSpawnConfig
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 2339907463900550738, guid: e2447f60eaa77874fad6770ad679c96a, type: 3}
+  _prefabReference:
+    m_AssetGUID: f6666d656ae631746abcd56d4d585ddb
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_SubObjectGUID: 
+    m_EditorAssetChanged: 0
   _speed: 6
   _damage: 1
   _poolInitCount: 10

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 197568d4b501ab948a93905597051e22, type: 3}
   m_Name: ItemsSpawnConfig
   m_EditorClassIdentifier: 
-  _prefabs:
-  - {fileID: 1791690385213799676, guid: ad542c1316bb56344be4d7ff7ccd0b0c, type: 3}
+  _configs:
+  - {fileID: 11400000, guid: 12e3020d1784b1f4086269183f3670e7, type: 2}
   _xRange:
   - -40
   - 40

@@ -19,11 +19,11 @@ namespace Gameplay
 
         public void InitOnScene(EnemySpawnConfig spawnConfig)
         {
-            _enemyNames = new string[spawnConfig.Prefabs.Length];
+            _enemyNames = new string[spawnConfig.Configs.Length];
 
-            for (int i = 0; i < spawnConfig.Prefabs.Length; i++)
+            for (int i = 0; i < spawnConfig.Configs.Length; i++)
             {
-                _enemyNames[i] = spawnConfig.Prefabs[i].Name;
+                _enemyNames[i] = spawnConfig.Configs[i].Name;
             }
         }
 

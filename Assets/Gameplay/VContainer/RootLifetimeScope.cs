@@ -5,58 +5,60 @@ using EventBusNamespace;
 using Gameplay;
 using UI;
 using GameManagement;
+using AssetsLoading;
 
 public class RootLifetimeScope : LifetimeScope
 {
-    [SerializeField]
-    private EnemySpawnService _enemyServicePrefab;
+    private AssetsLoader _assetsLoader;
+    private SceneSpawnsConfig _sceneSpawnsConfig;
 
-    [SerializeField]
-    private ProjectileSpawnService _projectileSpawnServicePrefab;
-
-    [SerializeField]
-    private ItemsService _itemServicePrefab;
-
-    [SerializeField]
-    private CanvasView _canvasViewPrefab;
-
-    [SerializeField]
-    private SoundPlayer _soundPlayerPrefab;
-
-    [SerializeField]
-    private ItemsPrefabsConfig _itemsPrefabsConfig;
-
-    [SerializeField]
-    private EnemyPrefabsConfig _enemyPrefabsConfig;
+    public void SetLoaderInfo(AssetsLoader assetsLoader, SceneSpawnsConfig sceneSpawnsConfig)
+    {
+        _assetsLoader = assetsLoader;
+        _sceneSpawnsConfig = sceneSpawnsConfig;
+    }
 
     protected override void Configure(IContainerBuilder builder)
     {
+        builder.RegisterComponent(_assetsLoader)
+            .AsImplementedInterfaces();
+
         builder.Register<EventBus>(Lifetime.Singleton);
 
         RegisterFactories(builder);
 
         RegisterPrefabServices(builder);
+
         ImmediateRegisterPlainClasses(builder);
+
+        builder.Register<SceneLoader>(Lifetime.Singleton);
     }
 
     private void RegisterFactories(IContainerBuilder builder)
     {
-        builder.Register<SimpleFactory<Item>>(Lifetime.Singleton)
-            .WithParameter<Item[]>(_itemsPrefabsConfig.Prefabs)
+        builder.Register<EnemyFactory>(container =>
+        {
+            return new EnemyFactory(container, _sceneSpawnsConfig.EnemySpawnConfig.Configs);
+        },
+        Lifetime.Singleton)
             .AsImplementedInterfaces();
 
-        builder.Register<SimpleFactory<Enemy>>(Lifetime.Singleton)
-            .WithParameter<Enemy[]>(_enemyPrefabsConfig.Prefabs)
+
+        builder.Register<ItemsFactory>(container =>
+        {
+            return new ItemsFactory(container, _sceneSpawnsConfig.ItemSpawnConfig.Configs);
+        },
+        Lifetime.Singleton)
             .AsImplementedInterfaces();
     }
 
     private void RegisterPrefabServices(IContainerBuilder builder)
     {
-        ImmediateRegisterMBFromPrefab(_projectileSpawnServicePrefab, builder);
-        ImmediateRegisterMBFromPrefab(_enemyServicePrefab, builder);
-        ImmediateRegisterMBFromPrefab(_itemServicePrefab, builder);
-        ImmediateRegisterMBFromPrefab(_canvasViewPrefab, builder);
-        ImmediateRegisterMBFromPrefab(_soundPlayerPrefab, builder);
+        RegisterService<ProjectileSpawnService>(builder);
+        RegisterService<EnemySpawnService>(builder);
+        RegisterService<ItemsService>(builder);
+        RegisterService<CanvasView>(builder);
+        RegisterService<SoundPlayer>(builder);
     }
 
     private void ImmediateRegisterPlainClasses(IContainerBuilder builder)
@@ -83,14 +85,20 @@ public class RootLifetimeScope : LifetimeScope
         });
     }
 
-    private void ImmediateRegisterMBFromPrefab<T>(T prefab, IContainerBuilder builder) where T : MonoBehaviour
+    private void RegisterService<T>(IContainerBuilder builder) where T : MonoBehaviour
     {
-        GameObject instanceGO = Instantiate(prefab.gameObject);
+        var instanceGO = _assetsLoader.GetServiceGO<T>();
 
-        T instance = instanceGO.GetComponent<T>();
+        var instance = instanceGO.GetComponent<T>();
+
+        RegisterDDOL<T>(instance, builder);
+    }
+
+    private void RegisterDDOL<T>(T instance, IContainerBuilder builder) where T : MonoBehaviour
+    {
         instance.name = instance.GetType().Name;
 
-        DontDestroyOnLoad(instanceGO);
+        DontDestroyOnLoad(instance.gameObject);
 
         builder.RegisterComponent<T>(instance)
             .AsImplementedInterfaces()

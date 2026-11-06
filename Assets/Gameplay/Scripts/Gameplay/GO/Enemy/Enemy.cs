@@ -17,10 +17,9 @@ namespace Gameplay
         public string StrategyName => _currentStrategy?.GetType().Name;
 
         [SerializeField]
-        private EnemyConfig _config;
-
-        [SerializeField]
         private AttackDetector _attackDetector;
+
+        private EnemyConfig _config;
 
         private EventBus _eventBus;
 
@@ -46,11 +45,7 @@ namespace Gameplay
 
             _hp = GetComponent<HPComponent>();
 
-            _hp.Init(_config.HP);
-
             _attackDetector.Init();
-
-            _attackDetector.SetDetectDistance(_config.DetectDistance);
         }
 
         private void OnEnable()
@@ -68,6 +63,13 @@ namespace Gameplay
         private void Update()
         {
             _currentStrategy?.ActUpdate();
+        }
+
+        public void SetConfig(EnemyConfig config)
+        {
+            _config = config;
+            _hp.Init(_config.HP);
+            _attackDetector.SetDetectDistance(_config.DetectDistance);
         }
 
         public void Init(AttackStrategy attackBehaviour,

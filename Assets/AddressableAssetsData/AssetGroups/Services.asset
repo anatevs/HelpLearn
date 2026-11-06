@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Services
+  m_EditorClassIdentifier: 
+  m_GroupName: Services
+  m_GUID: 06689da11c226db4ea5a7217ae8b6089
+  m_SerializeEntries:
+  - m_GUID: 2044a48549facbc4ba783560e0396277
+    m_Address: Assets/Gameplay/Prefabs/GameServices/ItemService.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5f6fe7f4f91b65a49a90658631c709ad
+    m_Address: Assets/Gameplay/Prefabs/GameServices/Canvas.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 945016cc4f8ef194ab60a13e60180d04
+    m_Address: Assets/Gameplay/Prefabs/GameServices/Enemies.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c484eb7f82705a74181fa00ae34333d5
+    m_Address: Assets/Gameplay/Prefabs/GameServices/SoundPlayer.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7089debec206374a9ea59ea79cfd21f
+    m_Address: Assets/Gameplay/Prefabs/GameServices/Projectiles.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3c6ffa38a1030e7418928b4c4732e15f, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: c417d44ca94405f4ca2c2018118c555a, type: 2}
+    - {fileID: 11400000, guid: 3abea7192b8ab774989079088eb52eb7, type: 2}

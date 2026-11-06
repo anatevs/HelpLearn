@@ -6,13 +6,13 @@ namespace Gameplay
         menuName = "Configs/ItemsSpawn")]
     public sealed class ItemSpawnConfig : ScriptableObject
     {
-        public Item[] Prefabs => _prefabs;
+        public ItemConfig[] Configs => _configs;
         public float[] XRange => _xRange;
         public float[] YRange => _yRange;
         public float SpawnPeriod => _spawnPeriod;
 
         [SerializeField]
-        private Item[] _prefabs;
+        private ItemConfig[] _configs;
 
         [SerializeField]
         private float[] _xRange = new float[2];

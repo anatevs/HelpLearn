@@ -2,16 +2,21 @@
 
 namespace Gameplay
 {
-    public class ItemsFactory : ObjectsFactory<Item>
+    public class ItemsFactory : SimpleFactory<Item>
     {
-        public ItemsFactory(IObjectResolver resolver, Item[] prefab)
-            : base(resolver, prefab)
+        public ItemsFactory(IObjectResolver resolver, IPrefabConfig<Item>[] configs)
+            : base (resolver, configs)
         {
+
         }
 
         public override Item Create(string name)
         {
-            return GetFromPrefab(name);
+            var instance = base.Create(name);
+
+            instance.SetConfig((ItemConfig)_configs[name]);
+
+            return instance;
         }
     }
 }

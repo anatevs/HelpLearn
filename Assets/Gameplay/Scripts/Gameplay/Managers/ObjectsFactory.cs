@@ -5,21 +5,31 @@ using VContainer.Unity;
 
 namespace Gameplay
 {
-    public abstract class ObjectsFactory<T> : IObjectsFactory<T> where T : Component, INamed
+    public abstract class ObjectsFactory<T> : IObjectsFactory<T> where T : MonoBehaviour, INamed
     {
-        public IEnumerable<string> Names => _prefabs.Keys;
+        public IEnumerable<string> Names => _configs.Keys;
 
         protected readonly IObjectResolver _container;
 
         protected readonly Dictionary<string, T> _prefabs = new();
 
-        public ObjectsFactory(IObjectResolver resolver, T[] prefabs)
+
+        protected readonly Dictionary<string, IPrefabConfig<T>> _configs = new();
+
+        protected ObjectsFactory(IObjectResolver resolver, IPrefabConfig<T>[] configs)
         {
             _container = resolver;
 
-            for (int i = 0; i < prefabs.Length; i++)
+            SetConfigs(configs);
+        }
+
+        public void SetConfigs(IPrefabConfig<T>[] configs)
+        {
+            _configs.Clear();
+
+            for (int i = 0; i < configs.Length; i++)
             {
-                _prefabs.Add(prefabs[i].Name, prefabs[i]);
+                _configs.Add(configs[i].Name, configs[i]);
             }
         }
 
@@ -27,7 +37,7 @@ namespace Gameplay
 
         protected virtual T GetFromPrefab(string name)
         {
-            return _container.Instantiate(_prefabs[name]);
+            return _container.Instantiate(_configs[name].Prefab);
         }
     }
 }

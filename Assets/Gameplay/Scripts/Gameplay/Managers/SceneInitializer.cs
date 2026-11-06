@@ -19,10 +19,7 @@ namespace Gameplay
         private int _startPickedItems = 0;
 
         [SerializeField]
-        private EnemySpawnConfig _enemySpawnConfig;
-
-        [SerializeField]
-        private ItemSpawnConfig _itemsConfig;
+        private SceneSpawnsConfig _sceneSpawnsConfig;
 
         private EventBus _eventBus;
 
@@ -63,9 +60,9 @@ namespace Gameplay
 
             _patrolZones.Init();
 
-            _projectileSpawnService.InitOnScene();
+            _projectileSpawnService.InitOnScene(_sceneSpawnsConfig.ProjectileSpawnConfig);
 
-            _itemsService.InitOnScene(_itemsConfig);
+            _itemsService.InitOnScene(_sceneSpawnsConfig.ItemSpawnConfig);
 
             _canvasView.InitOnScene();
 
@@ -74,7 +71,7 @@ namespace Gameplay
 
             _playerCountersController.InitOnScene(_player, scoreStorage, pickedStorage);
 
-            _enemySpawnService.InitOnScene(_enemySpawnConfig, _player, _patrolZones.Locations);
+            _enemySpawnService.InitOnScene(_sceneSpawnsConfig.EnemySpawnConfig, _player, _patrolZones.Locations);
 
             ResetLevel();
 

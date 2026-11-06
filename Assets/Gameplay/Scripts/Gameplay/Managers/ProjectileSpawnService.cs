@@ -8,20 +8,20 @@ namespace Gameplay
         IResetable
     {
         [SerializeField]
-        private ProjectileSpawnConfig _config;
-
-        [SerializeField]
         private Transform _poolTransform;
 
         [SerializeField]
         private Transform _projectilesTransform;
 
+        private ProjectileSpawnConfig _config;
+
         private Pool<Projectile> _pool;
 
         private readonly HashSet<Projectile> _activeProjectiles = new();
 
-        public void InitOnScene()
+        public void InitOnScene(ProjectileSpawnConfig config)
         {
+            _config = config;
             _pool = new Pool<Projectile>(_config.Prefab, _config.PoolInitCount, _poolTransform);
         }
 
