@@ -25,6 +25,8 @@ namespace GameManagement
 
         private void Awake()
         {
+            DontDestroyOnLoad(gameObject);
+
             _assetsLoader = new AssetsLoader(_serviceAssets);
         }
 

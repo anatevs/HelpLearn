@@ -25,13 +25,8 @@ namespace AssetsLoading
 
         public void Dispose()
         {
-            foreach (var serviceHandle in _serviceHandles)
-            {
-                if (serviceHandle.IsValid())
-                {
-                    serviceHandle.Release();
-                }
-            }
+            ReleaseHandles(_serviceHandles);
+            ReleaseHandles(_levelHandles);
         }
 
         public async Task LoadServiceGO<T>() where T : MonoBehaviour
@@ -68,6 +63,11 @@ namespace AssetsLoading
             }
 
             return instance;
+        }
+
+        public void ClearLevelAssets()
+        {
+            ReleaseHandles(_levelHandles);
         }
 
         public async Task<GameObject> LoadLevelGO(AssetReference assetReference)
@@ -110,6 +110,19 @@ namespace AssetsLoading
             handle.Release();
 
             return prefabs;
+        }
+
+        private void ReleaseHandles(List<AsyncOperationHandle<GameObject>> handles)
+        {
+            foreach (var handle in handles)
+            {
+                if (handle.IsValid())
+                {
+                    handle.Release();
+                }
+            }
+
+            handles.Clear();
         }
     }
 }
