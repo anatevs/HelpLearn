@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _enemyConfig: {fileID: 11400000, guid: 3bbffc7b5d86cf94e9e39d9b6e2aa32e, type: 2}
   _itemConfig: {fileID: 11400000, guid: 57a26b11d09ea6948974be3ecb2ebdc2, type: 2}
+  _itemSpritesLabel: ItemVisual
   _projectileConfig: {fileID: 11400000, guid: 302b880b21d71fd4e848d4f60eab9796, type: 2}

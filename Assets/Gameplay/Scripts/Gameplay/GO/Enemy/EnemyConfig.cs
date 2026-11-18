@@ -14,7 +14,7 @@ namespace Gameplay
         }
 
         public string Name => _name;
-        public AssetReference PrefabReference => _prefabReference;
+        public AssetReferenceGameObject PrefabReference => _prefabReference;
         public int HP => _hp;
         public float RotationSpeed => _rotationSpeed;
         public EnemyStrategyType StartStrategy => _startStrategy;
@@ -30,7 +30,7 @@ namespace Gameplay
         private string _name;
 
         [SerializeField]
-        private AssetReference _prefabReference;
+        private AssetReferenceGameObject _prefabReference;
 
         [SerializeField]
         private int _hp;

@@ -16,6 +16,7 @@ MonoBehaviour:
   m_currentHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
+  m_DisableWriteTypeTree: 0
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -42,6 +43,7 @@ MonoBehaviour:
   m_BundleRedirectLimit: -1
   m_SharedBundleSettings: 0
   m_SharedBundleSettingsCustomGroupIndex: 0
+  m_simulatedLoadDelay: 0.1
   m_ContiguousBundles: 1
   m_StripUnityVersionFromBundleBuild: 0
   m_DisableVisibleSubAssetRepresentations: 0
@@ -61,6 +63,7 @@ MonoBehaviour:
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
   - {fileID: 11400000, guid: b333fa6b08632c24ba1c2856bf58cac7, type: 2}
+  - {fileID: 11400000, guid: de9c8668bb8dce84ca10055ff5c9a895, type: 2}
   - {fileID: 11400000, guid: 2f12ca7b5904bd1489ae0a580cdf28bd, type: 2}
   - {fileID: 11400000, guid: f1c2c7e3c18769d4f8f08348f3409665, type: 2}
   m_BuildSettings:
@@ -102,9 +105,7 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
-    - Enemy
-    - Item
-    - Projectile
+    - ItemVisual
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: b8b03d228234fb6438074d35f3f314e0, type: 2}

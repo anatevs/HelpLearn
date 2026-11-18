@@ -9,6 +9,7 @@ namespace GameManagement
     {
         public EnemySpawnConfig EnemySpawnConfig => _enemyConfig;
         public ItemSpawnConfig ItemSpawnConfig => _itemConfig;
+        public string ItemSpritesLabel => _itemSpritesLabel;
         public ProjectileSpawnConfig ProjectileSpawnConfig => _projectileConfig;
 
         [SerializeField]
@@ -16,6 +17,9 @@ namespace GameManagement
 
         [SerializeField]
         private ItemSpawnConfig _itemConfig;
+
+        [SerializeField]
+        private string _itemSpritesLabel;
 
         [SerializeField]
         private ProjectileSpawnConfig _projectileConfig;

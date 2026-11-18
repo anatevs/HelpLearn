@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  m_GroupName: UI
+  m_GUID: 790440af80ddb504392d5e7a2abf9516
+  m_SerializeEntries:
+  - m_GUID: 241bdbcfb034a184c99427060d57316b
+    m_Address: Assets/Gameplay/Prefabs/UI/RestartButton.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c9716958e0243f6419d204d8c7010a87
+    m_Address: Assets/Gameplay/Prefabs/UI/Score.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 3c6ffa38a1030e7418928b4c4732e15f, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 18edffe2efb73cc459e52eee0ea4dfeb, type: 2}
+    - {fileID: 11400000, guid: 7607296642338d846828f3cd2814f9e2, type: 2}

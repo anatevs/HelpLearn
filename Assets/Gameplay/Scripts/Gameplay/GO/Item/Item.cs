@@ -9,6 +9,9 @@ namespace Gameplay
     {
         public string Name => _config.Name;
 
+        [SerializeField]
+        private SpriteRenderer _visualRenderer;
+
         private ItemConfig _config;
 
         private EventBus _eventBus;
@@ -35,6 +38,11 @@ namespace Gameplay
         public void SetConfig(ItemConfig config)
         {
             _config = config;
+        }
+
+        public void SetSprite(Sprite sprite)
+        {
+            _visualRenderer.sprite = sprite;
         }
     }
 }

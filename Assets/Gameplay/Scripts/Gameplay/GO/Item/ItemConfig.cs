@@ -15,10 +15,10 @@ namespace Gameplay
 
         public string Name => _name;
 
-        public AssetReference PrefabReference => _prefabReference;
+        public AssetReferenceGameObject PrefabReference => _prefabReference;
 
         [SerializeField]
-        private AssetReference _prefabReference;
+        private AssetReferenceGameObject _prefabReference;
 
         [SerializeField]
         private string _name = "";

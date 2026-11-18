@@ -15,7 +15,7 @@ namespace AssetsLoading
 
         private readonly List<AsyncOperationHandle<GameObject>> _serviceHandles = new();
 
-        private readonly List<AsyncOperationHandle<GameObject>> _levelHandles = new();
+        private readonly List<AsyncOperationHandle> _levelHandles = new();
 
         public AssetsLoader(ServiceAssetsConfig serviceAssetsConfig)
         {
@@ -70,7 +70,7 @@ namespace AssetsLoading
             ReleaseHandles(_levelHandles);
         }
 
-        public async Task<GameObject> LoadLevelGO(AssetReference assetReference)
+        public async Task<GameObject> LoadLevelGO(AssetReferenceGameObject assetReference)
         {
             var handle = await LoadGO(assetReference);
             var go = handle.Result;
@@ -80,9 +80,9 @@ namespace AssetsLoading
             return go;
         }
 
-        private async Task<AsyncOperationHandle<GameObject>> LoadGO(AssetReference assetReference)
+        private async Task<AsyncOperationHandle<GameObject>> LoadGO(AssetReferenceGameObject assetReference)
         {
-            var handle = assetReference.LoadAssetAsync<GameObject>();
+            var handle = assetReference.LoadAssetAsync();
 
             await handle.Task;
 
@@ -95,11 +95,11 @@ namespace AssetsLoading
             return handle;
         }
 
-        private async Task<IList<GameObject>> LoadGOByLabel(string label)
+        public async Task<IList<T>> LoadLevelObjectsByLabel<T>(string label)
         {
-            var handle = Addressables.LoadAssetsAsync<GameObject>(label);
+            var handle = Addressables.LoadAssetsAsync<T>(label);
 
-            var prefabs = await handle.Task;
+            var objects = await handle.Task;
 
             if (handle.Status != AsyncOperationStatus.Succeeded)
             {
@@ -107,9 +107,9 @@ namespace AssetsLoading
                 throw new Exception($"Unable to load assets with lable {label}");
             }
 
-            handle.Release();
+            _levelHandles.Add(handle);
 
-            return prefabs;
+            return objects;
         }
 
         private void ReleaseHandles(List<AsyncOperationHandle<GameObject>> handles)
@@ -123,6 +123,17 @@ namespace AssetsLoading
             }
 
             handles.Clear();
+        }
+
+        private void ReleaseHandles(List<AsyncOperationHandle> handles)
+        {
+            foreach (var handle in handles)
+            {
+                if (handle.IsValid())
+                {
+                    handle.Release();
+                }
+            }
         }
     }
 }

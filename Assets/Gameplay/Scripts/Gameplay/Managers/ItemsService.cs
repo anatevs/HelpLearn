@@ -34,6 +34,7 @@ namespace Gameplay
 
         private Coroutine _spawnCoroutine;
 
+        private bool _hasRandomSprites = false;
 
         [Inject]
         public void Construct(EventBus eventBus, IObjectsFactory<Item> itemsFacrory)
@@ -68,6 +69,8 @@ namespace Gameplay
             _spawnWait = new WaitForSeconds(config.SpawnPeriod);
 
             _posRange = (config.XRange, config.YRange);
+
+            _hasRandomSprites = _config.Sprites != null && _config.Sprites.Count > 0;
         }
 
         public void Reset()
@@ -103,6 +106,8 @@ namespace Gameplay
 
                 item.transform.position = pos;
 
+                SetRandomSprite(item);
+
                 item.gameObject.SetActive(true);
 
                 item.Construct(_eventBus);
@@ -123,6 +128,16 @@ namespace Gameplay
             item.transform.position = Vector3.zero;
 
             _pools[item.Name].Unspawn(item);
+        }
+
+        private void SetRandomSprite(Item item)
+        {
+            if (_hasRandomSprites)
+            {
+                var sprite = _config.Sprites[Random.Range(0, _config.Sprites.Count)];
+
+                item.SetSprite(sprite);
+            }
         }
     }
 }

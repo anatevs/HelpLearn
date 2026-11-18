@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Gameplay
 {
@@ -11,6 +12,8 @@ namespace Gameplay
         public float[] YRange => _yRange;
         public float SpawnPeriod => _spawnPeriod;
 
+        public IList<Sprite> Sprites => _sprites;
+
         [SerializeField]
         private ItemConfig[] _configs;
 
@@ -22,5 +25,12 @@ namespace Gameplay
 
         [SerializeField]
         private float _spawnPeriod = 10f;
+
+        private IList<Sprite> _sprites;
+
+        public void SetSprites(IList<Sprite> sprites)
+        {
+            _sprites = sprites;
+        }
     }
 }

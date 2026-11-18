@@ -15,7 +15,7 @@ namespace Gameplay
 
         public string Name => "Projectile";
 
-        public AssetReference PrefabReference => _prefabReference;
+        public AssetReferenceGameObject PrefabReference => _prefabReference;
         public float Speed => _speed;
         public int Damage => _damage;
         public int PoolInitCount => _poolInitCount;
@@ -23,7 +23,7 @@ namespace Gameplay
         private Projectile _prefab;
 
         [SerializeField]
-        private AssetReference _prefabReference;
+        private AssetReferenceGameObject _prefabReference;
 
         [SerializeField]
         private float _speed;

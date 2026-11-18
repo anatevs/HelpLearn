@@ -67,12 +67,23 @@ namespace GameManagement
                 await LoadLevelConfigPrefab(enemyConfigs[i]);
             }
 
-            var itemConfigs = _spawnsConfig.ItemSpawnConfig.Configs;
+
+            var itemsSpawnConfig = _spawnsConfig.ItemSpawnConfig;
+
+            var itemConfigs = itemsSpawnConfig.Configs;
 
             for (int i = 0; i < itemConfigs.Length; i++)
             {
                 await LoadLevelConfigPrefab(itemConfigs[i]);
             }
+
+            if (!String.IsNullOrEmpty(_spawnsConfig.ItemSpritesLabel))
+            {
+                var itemSprites = await _assetsLoader.LoadLevelObjectsByLabel<Sprite>(_spawnsConfig.ItemSpritesLabel);
+
+                itemsSpawnConfig.SetSprites(itemSprites);
+            }
+
 
             await LoadLevelConfigPrefab(_spawnsConfig.ProjectileSpawnConfig);
         }

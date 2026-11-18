@@ -27,9 +27,9 @@ namespace AssetsLoading
         [SerializeField]
         private TypeAssetData _itemsAssetData;
 
-        private readonly Dictionary<Type, AssetReference> _assetReferences = new();
+        private readonly Dictionary<Type, AssetReferenceGameObject> _assetReferences = new();
 
-        public AssetReference GetAsset<T>() where T : MonoBehaviour
+        public AssetReferenceGameObject GetAsset<T>() where T : MonoBehaviour
         {
             if (!_assetReferences.TryGetValue(typeof(T), out var asset))
             {
@@ -60,6 +60,6 @@ namespace AssetsLoading
     public struct TypeAssetData
     {
         public Type Type;
-        public AssetReference Asset;
+        public AssetReferenceGameObject Asset;
     }
 }

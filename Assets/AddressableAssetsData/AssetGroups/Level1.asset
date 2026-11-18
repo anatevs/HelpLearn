@@ -15,29 +15,43 @@ MonoBehaviour:
   m_GroupName: Level1
   m_GUID: bd476b65583647648b47726a28b79ac1
   m_SerializeEntries:
+  - m_GUID: 2756d9c2a7552e14dac091463a846efd
+    m_Address: Assets/Art/ItemsView/GreenItem.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ItemVisual
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3e45c825007d3bf4d862c0492ecb7c5f
+    m_Address: Assets/Art/ItemsView/BlueItem.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ItemVisual
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9c402f2ed25deb2458c26050ab06bb45
     m_Address: Assets/Gameplay/Prefabs/Enemy0.prefab
     m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a39d36790c981874db0f01b39c452248
+    m_Address: Assets/Art/ItemsView/YellowItem.png
+    m_ReadOnly: 0
     m_SerializedLabels:
-    - Enemy
+    - ItemVisual
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ccd3da8b98fe7b94e9f61a915c1e130b
     m_Address: Assets/Gameplay/Prefabs/Item.prefab
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - Item
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dfe219f83cc23e8408f916b3dbb8b19d
     m_Address: Assets/Gameplay/Prefabs/Enemy1.prefab
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - Enemy
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f6666d656ae631746abcd56d4d585ddb
     m_Address: Assets/Gameplay/Prefabs/Projectile.prefab
     m_ReadOnly: 0
-    m_SerializedLabels:
-    - Projectile
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 3c6ffa38a1030e7418928b4c4732e15f, type: 2}
