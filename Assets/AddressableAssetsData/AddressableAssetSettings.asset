@@ -15,10 +15,10 @@ MonoBehaviour:
   m_DefaultGroup: d0abe8110b836ca4e94e8edb45a8a6fb
   m_currentHash:
     serializedVersion: 2
-    Hash: 00000000000000000000000000000000
+    Hash: 6d2eebf51fe33bf70169d278809b54eb
   m_DisableWriteTypeTree: 0
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_InternalIdNamingMode: 0
@@ -64,7 +64,9 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: b333fa6b08632c24ba1c2856bf58cac7, type: 2}
   - {fileID: 11400000, guid: de9c8668bb8dce84ca10055ff5c9a895, type: 2}
+  - {fileID: 11400000, guid: 50a2d4da19a40ce459180c8461122a3f, type: 2}
   - {fileID: 11400000, guid: 2f12ca7b5904bd1489ae0a580cdf28bd, type: 2}
+  - {fileID: 11400000, guid: 1a7a214741537704b8b20099bacb24ab, type: 2}
   - {fileID: 11400000, guid: f1c2c7e3c18769d4f8f08348f3409665, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
@@ -80,7 +82,7 @@ MonoBehaviour:
       - m_Id: 4e6dd2f0846a7ad4495d6da17e80ab98
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: 9577ec854ef4ccc488cd7905eceb0a1b
-        m_Value: <undefined>
+        m_Value: 'https://anatevs.github.io/addressables-learn-host/[BuildTarget]'
       - m_Id: da00451d637e4c14a9204d4b4406f9e4
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
       - m_Id: eab0cef11b103894caeefc558decc3db
